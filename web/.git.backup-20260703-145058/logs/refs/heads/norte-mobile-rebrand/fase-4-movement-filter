@@ -1,0 +1,4 @@
+0000000000000000000000000000000000000000 c942ca39c44ddae72e6f36084cd24bb247b26904 Eric Rangel <erangel.carmona@gmail.com> 1783066232 -0600	branch: Created from HEAD
+c942ca39c44ddae72e6f36084cd24bb247b26904 cc10f68e25fb82c715ff7c4fe418eac3eaebb491 Eric Rangel <erangel.carmona@gmail.com> 1783066775 -0600	commit: feat(records): wire movement-filter into summary-by-month
+cc10f68e25fb82c715ff7c4fe418eac3eaebb491 2fb76228415092f640dc7ee89566335a6d218705 Eric Rangel <erangel.carmona@gmail.com> 1783066886 -0600	commit: docs(sdd): mark Fase 4 tasks complete
+2fb76228415092f640dc7ee89566335a6d218705 28daf7ce9e60dcad218f0b53e6585afc04c29bcc Eric Rangel <erangel.carmona@gmail.com> 1783067165 -0600	commit: docs(sdd): log Fase 4 verify results (PASS, clean)

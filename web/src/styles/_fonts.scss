@@ -1,0 +1,22 @@
+// Self-hosted Norte typefaces (Sora / Manrope). Both are shipped as a single
+// variable-font woff2 per family covering the weight range this app needs,
+// which avoids downloading duplicate static instances per weight and keeps
+// the CSS budget in check. See design.md ADR-5 — self-hosting is a deliberate
+// choice over a Google Fonts `<link>` (render-blocking third-party request)
+// or base64-embedding (bloats the stylesheet, defeats HTTP caching).
+
+@font-face {
+  font-family: 'Sora';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/assets/fonts/sora-variable.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/assets/fonts/manrope-variable.woff2') format('woff2');
+}

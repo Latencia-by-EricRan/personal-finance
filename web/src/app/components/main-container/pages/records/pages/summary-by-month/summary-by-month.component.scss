@@ -1,0 +1,11 @@
+.summary-by-month {
+  background-color: var(--bg);
+  color: var(--text);
+  min-height: 100%;
+}
+
+.summary-by-month__empty {
+  color: var(--text-dim);
+  padding: 1rem;
+  text-align: center;
+}

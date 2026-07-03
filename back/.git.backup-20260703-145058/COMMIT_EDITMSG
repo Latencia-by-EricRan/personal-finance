@@ -1,0 +1,18 @@
+feat(docker): add Dockerfile and wire an api service into compose.yaml
+
+Multi-stage Dockerfile (node:22.22.3-alpine, matching .nvmrc):
+- deps: shared npm ci layer
+- dev: hot-reload target (npm run dev), expects source bind-mounted
+- build + prod-deps + prod: compiles via tsc, installs prod-only deps,
+  runs the compiled dist/ with npm start
+
+compose.yaml gets a new api service (defaults to the dev target so
+`docker compose up` matches the existing local dev experience), depending
+on mongodb's existing healthcheck. MONGO_CONN_STR is overridden via
+environment: to the mongodb service's Docker-network hostname, since
+.env's 127.0.0.1 value is only correct for a process running on the host.
+
+Verified: docker compose build + up -d brings up both services; GET
+/docs/openapi.json returns 200 and POST /auth/login with bad credentials
+returns 401 (proving the containerized API reaches MongoDB through the
+compose network, not just that the container is running).

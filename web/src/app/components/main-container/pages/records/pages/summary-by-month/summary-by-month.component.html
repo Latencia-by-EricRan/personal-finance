@@ -1,0 +1,25 @@
+<div class="summary-by-month h-100">
+  @if (respMovements$ | async; as respMovements) {
+    @let movements = filteredMovements() ?? respMovements.movements;
+    @let summary = respMovements.summary;
+
+    <app-movement-summary [summary]="summary" />
+
+    <app-movement-filter (filterChange)="onFilterChange($event)" />
+
+    @if (movements.length === 0) {
+      <p class="summary-by-month__empty">No hay movimientos que coincidan con el filtro.</p>
+    } @else {
+      @for (movement of movements; track movement._id) {
+        <app-movement-card [movement]="movement" />
+      }
+    }
+  } @else {
+    <p>No se pudieron cargar los movimientos.</p>
+  }
+  <div class="fixed-bottom btn-add-movement w-100">
+    <button mat-fab color="primary" routerLink="/records/movement/add" class="w-100">
+      <mat-icon fontIcon="add" />
+    </button>
+  </div>
+</div>

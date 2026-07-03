@@ -1,0 +1,43 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+[remote "origin"]
+	url = git@github.com:Latencia-by-EricRan/personal-finance-front-web.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "main"]
+	remote = origin
+	merge = refs/heads/main
+[branch "dev"]
+	remote = origin
+	merge = refs/heads/dev
+[branch "feat/movement-add-form"]
+	remote = origin
+	merge = refs/heads/feat/movement-add-form
+[branch "tracker/norte-mobile-rebrand"]
+	remote = origin
+	merge = refs/heads/tracker/norte-mobile-rebrand
+[branch "norte-mobile-rebrand/fase-0-fundaciones"]
+	remote = origin
+	merge = refs/heads/norte-mobile-rebrand/fase-0-fundaciones
+[branch "chore/track-claude-md-and-skill-registry"]
+	remote = origin
+	merge = refs/heads/chore/track-claude-md-and-skill-registry
+[branch "norte-mobile-rebrand/fase-1-servicios"]
+	remote = origin
+	merge = refs/heads/norte-mobile-rebrand/fase-1-servicios
+[branch "norte-mobile-rebrand/fase-2-rebrand"]
+	remote = origin
+	merge = refs/heads/norte-mobile-rebrand/fase-2-rebrand
+[branch "norte-mobile-rebrand/fase-3-movement-add"]
+	remote = origin
+	merge = refs/heads/norte-mobile-rebrand/fase-3-movement-add
+[branch "norte-mobile-rebrand/fase-4-movement-filter"]
+	remote = origin
+	merge = refs/heads/norte-mobile-rebrand/fase-4-movement-filter
+[branch "norte-mobile-rebrand/fase-5-cuentas"]
+	remote = origin
+	merge = refs/heads/norte-mobile-rebrand/fase-5-cuentas

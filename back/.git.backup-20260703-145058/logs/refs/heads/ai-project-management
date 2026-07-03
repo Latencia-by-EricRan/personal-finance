@@ -1,0 +1,5 @@
+0000000000000000000000000000000000000000 041de9754d96c3fbf5715e0cd209589da99e1b0d Eric Rangel <erangel.carmona@gmail.com> 1782201657 -0600	branch: Created from HEAD
+041de9754d96c3fbf5715e0cd209589da99e1b0d fd9fb521bf1603f1bfbc3ce5c9d5537c72389f98 Eric Rangel <erangel.carmona@gmail.com> 1782201657 -0600	commit: docs: add code review report
+fd9fb521bf1603f1bfbc3ce5c9d5537c72389f98 fd9fb521bf1603f1bfbc3ce5c9d5537c72389f98 Eric Rangel <erangel.carmona@gmail.com> 1782202511 -0600	Branch: renamed refs/heads/project-design-ai to refs/heads/ai-project-management
+fd9fb521bf1603f1bfbc3ce5c9d5537c72389f98 b08a18ec224565006ee76818c13b468f08d36833 Eric Rangel <erangel.carmona@gmail.com> 1782203545 -0600	commit: feat: add task-tracker skill and update project conventions
+b08a18ec224565006ee76818c13b468f08d36833 fc5f85f924bfd612db18811e4f1ae8c66795758c Eric Rangel <erangel.carmona@gmail.com> 1782209076 -0600	commit: chore: add tasks, openspec artifacts and update gitignore

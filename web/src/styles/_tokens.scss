@@ -1,0 +1,28 @@
+// Norte design tokens — single source of truth for color/typography values.
+// Dark mode is the default (`:root`); `:root[data-theme='light']` overrides
+// the subset of tokens that change in light mode. No component should
+// reference a raw color literal — always go through one of these custom
+// properties.
+
+:root {
+  --bg: #0e0f13;
+  --surface: #16181f;
+  --surface-2: #1e2129;
+  --border: #2a2e39;
+  --text: #f3f5f7;
+  --text-dim: #9aa2b1;
+  --gold: #d4af37;
+  --income: #3fb98c;
+  --expense: #e5484d;
+  --font-display: 'Sora', system-ui, sans-serif;
+  --font-body: 'Manrope', system-ui, sans-serif;
+}
+
+:root[data-theme='light'] {
+  --bg: #f7f8fa;
+  --surface: #ffffff;
+  --surface-2: #eef0f4;
+  --border: #d9dce3;
+  --text: #14161b;
+  --text-dim: #5b6472;
+}

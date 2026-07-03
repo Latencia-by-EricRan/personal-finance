@@ -1,0 +1,2 @@
+0000000000000000000000000000000000000000 ea962f351f4563b6fbb69f03c2bb17bc5e94512e Eric Rangel <dreamereric28@gmail.com> 1782861788 -0600	branch: Created from HEAD
+ea962f351f4563b6fbb69f03c2bb17bc5e94512e e5f35da9baa2ae79c740c47d10d6c59375b69680 Eric Rangel <dreamereric28@gmail.com> 1782861822 -0600	commit: fix(validation): include Icon in category checkKeys whitelist (VAL-05)

@@ -1,0 +1,2 @@
+0000000000000000000000000000000000000000 23161f3b16f5b0b52f00b6d4834f9aaf2bfa0e73 Eric Rangel <dreamereric28@gmail.com> 1782861947 -0600	branch: Created from HEAD
+23161f3b16f5b0b52f00b6d4834f9aaf2bfa0e73 2c6099eadcf2ff3719f0b14bc528badcc8547dea Eric Rangel <dreamereric28@gmail.com> 1782861984 -0600	commit: fix(validation): remove duplicate Card chain in movement paramBodyValidate (VAL-06)

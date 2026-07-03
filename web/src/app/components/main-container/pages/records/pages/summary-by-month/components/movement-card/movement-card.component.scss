@@ -1,0 +1,40 @@
+
+$size-padding-y: 0.25em;
+$size-padding-x: 0.5em;
+
+$size-margin: 0.5em;
+$size-font-icon: 1.3em;
+$size-circle: 2em;
+
+.movement-card {
+  background-color: var(--surface-2);
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  color: var(--text);
+  cursor: pointer;
+  margin: $size-margin;
+  padding: $size-padding-y 0 $size-padding-y $size-padding-x;
+}
+
+.circle {
+  align-items: center;
+  background-color: var(--surface);
+  border-radius: 50%;
+  color: var(--gold);
+  display: flex;
+  height: $size-circle;
+  justify-content: center;
+  width: $size-circle;
+}
+
+.mat-icon {
+  font-size: $size-font-icon;
+  height: $size-font-icon;
+  line-height: 1.25em;
+  width: $size-font-icon;
+
+  &::before {
+    font-size: calc($size-font-icon - 10%);
+    margin: 0 auto;
+  }
+}

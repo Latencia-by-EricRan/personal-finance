@@ -1,0 +1,37 @@
+<div class="login">
+  <form class="login__form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <h1 class="login__title">Norte</h1>
+
+    <label class="login__label" for="email">Email</label>
+    <input
+      id="email"
+      type="email"
+      class="login__input"
+      formControlName="email"
+      autocomplete="email"
+    />
+    @if (form.controls.email.invalid && form.controls.email.touched) {
+      <p class="login__field-error">Enter a valid email.</p>
+    }
+
+    <label class="login__label" for="password">Password</label>
+    <input
+      id="password"
+      type="password"
+      class="login__input"
+      formControlName="password"
+      autocomplete="current-password"
+    />
+    @if (form.controls.password.invalid && form.controls.password.touched) {
+      <p class="login__field-error">Password is required.</p>
+    }
+
+    @if (errorMessage()) {
+      <p class="login__error">{{ errorMessage() }}</p>
+    }
+
+    <button class="login__submit" type="submit" [disabled]="form.invalid">
+      Log in
+    </button>
+  </form>
+</div>

@@ -1,0 +1,12 @@
+0000000000000000000000000000000000000000 576fcbb33554956b0d52e5b5fae78096ffa793b5 Eric Rangel <erangel.carmona@gmail.com> 1783049990 -0600	branch: Created from HEAD
+576fcbb33554956b0d52e5b5fae78096ffa793b5 d43e82a7a00d367781db2db97e5e32497cede164 Eric Rangel <erangel.carmona@gmail.com> 1783050399 -0600	commit: fix(styles): remove stale Sass build artifact and add Norte design tokens
+d43e82a7a00d367781db2db97e5e32497cede164 097712b12402c2be150e94f972f8acd8f14614c5 Eric Rangel <erangel.carmona@gmail.com> 1783050424 -0600	commit: feat(styles): add Norte design tokens and self-hosted fonts
+097712b12402c2be150e94f972f8acd8f14614c5 c18e21cb5b3c2bf7e49fd0f9bca2e1b306ec11c9 Eric Rangel <erangel.carmona@gmail.com> 1783050438 -0600	commit: feat(config): add environment files for API base URL
+c18e21cb5b3c2bf7e49fd0f9bca2e1b306ec11c9 872297f26403c5879ce98647742a13d1f1c26c43 Eric Rangel <erangel.carmona@gmail.com> 1783050971 -0600	commit: feat(auth): add SSR-safe TokenStorageService
+872297f26403c5879ce98647742a13d1f1c26c43 53056b8391ea9dc8801fe9dce3eb93de641c96d6 Eric Rangel <erangel.carmona@gmail.com> 1783050979 -0600	commit: feat(auth): add AuthService with login/logout and auth models
+53056b8391ea9dc8801fe9dce3eb93de641c96d6 138ad2b21ace631be1c48dff9b7c1fdc0e6f2d6a Eric Rangel <erangel.carmona@gmail.com> 1783050986 -0600	commit: feat(auth): add authInterceptor with 401 session handling
+138ad2b21ace631be1c48dff9b7c1fdc0e6f2d6a bb44d5b8d8675c554add4f66aae23c42574da7dd Eric Rangel <erangel.carmona@gmail.com> 1783050992 -0600	commit: feat(auth): add authGuard and top-level auth barrel
+bb44d5b8d8675c554add4f66aae23c42574da7dd 6cbf33d13471376fe8f153fb9a4eebb9e0cb7b23 Eric Rangel <erangel.carmona@gmail.com> 1783051091 -0600	commit: feat(auth): add LoginComponent (real login screen)
+6cbf33d13471376fe8f153fb9a4eebb9e0cb7b23 f003489610b38e5ae400c707111277ebe4fb8013 Eric Rangel <erangel.carmona@gmail.com> 1783051220 -0600	commit: feat(auth): wire authInterceptor and authGuard into app bootstrap
+f003489610b38e5ae400c707111277ebe4fb8013 e188bd23ecf1e7a0fe1edce93a0bd000b53634de Eric Rangel <erangel.carmona@gmail.com> 1783051853 -0600	commit: docs(sdd): mark Fase 0 tasks complete, log verify results
+e188bd23ecf1e7a0fe1edce93a0bd000b53634de 17a561b0ddde9d884c44993998c0061d259c1222 Eric Rangel <erangel.carmona@gmail.com> 1783051870 -0600	commit: docs(sdd): add proposal, design, specs and api-reference for norte-mobile-rebrand

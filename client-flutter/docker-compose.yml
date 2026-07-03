@@ -1,0 +1,12 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+      - /app/build
+    working_dir: /app
+    command: >
+      sh -c "flutter pub get &&
+             flutter run -d web-server --web-hostname=0.0.0.0 --web-port=8080"

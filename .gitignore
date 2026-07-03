@@ -1,0 +1,7 @@
+# Local AI runtime state
+.atl/
+.claude/
+
+# IDE / OS
+.idea/
+.DS_Store

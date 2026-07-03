@@ -1,0 +1,3 @@
+0000000000000000000000000000000000000000 82b9f18e2dec1c8e59143c1d5749b4c5299b72a7 Eric Rangel <dreamereric28@gmail.com> 1782859469 -0600	branch: Created from origin/dev
+82b9f18e2dec1c8e59143c1d5749b4c5299b72a7 dbdb439a4082a1fd2a5038f6e4e96f0473eec33b Eric Rangel <dreamereric28@gmail.com> 1782859613 -0600	commit: fix(validation): require Type, Amount and Category on movement create (VAL-02)
+dbdb439a4082a1fd2a5038f6e4e96f0473eec33b 70bde07b11aec58d07112714369c87642cfdb295 Eric Rangel <dreamereric28@gmail.com> 1782859654 -0600	commit (amend): fix(validation): require Type, Amount and Category on movement create (VAL-02)

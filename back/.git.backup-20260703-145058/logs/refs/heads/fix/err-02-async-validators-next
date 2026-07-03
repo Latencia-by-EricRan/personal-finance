@@ -1,0 +1,2 @@
+0000000000000000000000000000000000000000 06ee9704c7c4620563ee435d4e6f9fb6d8b0ca4e Eric Rangel <dreamereric28@gmail.com> 1782808263 -0600	branch: Created from HEAD
+06ee9704c7c4620563ee435d4e6f9fb6d8b0ca4e 997f192636ea617c547f86953c2658a9758ef1e1 Eric Rangel <dreamereric28@gmail.com> 1782808298 -0600	commit: fix(error-handling): call next(error) instead of throw in async validators (ERR-02)

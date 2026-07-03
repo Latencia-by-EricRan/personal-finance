@@ -1,0 +1,37 @@
+services:
+    mongodb:
+        image: mongo:8
+        restart: unless-stopped
+        ports:
+            - '127.0.0.1:27017:27017'
+        volumes:
+            - personal-finance-mongodb:/data/db
+        healthcheck:
+            test: ['CMD', 'mongosh', '--quiet', '--eval', 'db.adminCommand({ ping: 1 }).ok']
+            interval: 5s
+            timeout: 5s
+            retries: 12
+            start_period: 5s
+
+    api:
+        build:
+            context: .
+            target: dev
+        restart: unless-stopped
+        depends_on:
+            mongodb:
+                condition: service_healthy
+        env_file:
+            - .env
+        environment:
+            # Overrides the host-oriented value from .env: inside the compose network
+            # the mongo container is reachable by its service name, not 127.0.0.1.
+            MONGO_CONN_STR: mongodb://mongodb:27017
+        ports:
+            - '3000:3000'
+        volumes:
+            - .:/app
+            - /app/node_modules
+
+volumes:
+    personal-finance-mongodb:

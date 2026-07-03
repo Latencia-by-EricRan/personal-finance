@@ -1,0 +1,67 @@
+<div class="transfer-sheet">
+  <h2 class="transfer-sheet__title">Transferir entre cuentas</h2>
+
+  <form class="transfer-sheet__form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label class="transfer-sheet__label" for="from">Origen</label>
+    <select id="from" class="transfer-sheet__input" formControlName="from">
+      <option value="">Seleccioná una cuenta</option>
+      @for (acc of accounts(); track acc._id) {
+        <option [value]="acc._id ?? ''">{{ acc.Name }}</option>
+      }
+    </select>
+
+    <label class="transfer-sheet__label" for="to">Destino</label>
+    <select id="to" class="transfer-sheet__input" formControlName="to">
+      <option value="">Seleccioná una cuenta</option>
+      @for (acc of accounts(); track acc._id) {
+        <option [value]="acc._id ?? ''">{{ acc.Name }}</option>
+      }
+    </select>
+    @if (form.errors?.['sameAccount'] && form.controls.to.touched) {
+      <p class="field-error">El origen y el destino no pueden ser la misma cuenta.</p>
+    }
+
+    <label class="transfer-sheet__label" for="amount">Monto</label>
+    <input
+      id="amount"
+      type="number"
+      step="0.01"
+      class="transfer-sheet__input"
+      formControlName="amount"
+    />
+    @if (form.controls.amount.invalid && form.controls.amount.touched) {
+      <p class="field-error">Ingresá un monto mayor a 0.</p>
+    }
+
+    <label class="transfer-sheet__label" for="date">Fecha</label>
+    <input id="date" type="date" class="transfer-sheet__input" formControlName="date" />
+
+    <label class="transfer-sheet__label" for="description">Descripción</label>
+    <textarea
+      id="description"
+      class="transfer-sheet__input transfer-sheet__textarea"
+      formControlName="description"
+    ></textarea>
+
+    @if (errorMessage()) {
+      <p class="transfer-sheet__error">{{ errorMessage() }}</p>
+    }
+
+    <div class="transfer-sheet__actions">
+      <button
+        type="button"
+        class="transfer-sheet__cancel"
+        (click)="onCancel()"
+      >
+        Cancelar
+      </button>
+      <button
+        type="submit"
+        class="transfer-sheet__submit"
+        [disabled]="form.invalid || submitting()"
+      >
+        Transferir
+      </button>
+    </div>
+  </form>
+</div>

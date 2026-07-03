@@ -1,0 +1,3 @@
+0000000000000000000000000000000000000000 6794deac87f1b86c08491cf5d3cece92449211fb Eric Rangel <dreamereric28@gmail.com> 1782795329 -0600	branch: Created from origin/dev
+6794deac87f1b86c08491cf5d3cece92449211fb c45122f3930bb4742fe34c4a90e8f96d00fd0637 Eric Rangel <dreamereric28@gmail.com> 1782795461 -0600	commit: fix(security): prevent internal error objects from leaking to client (SEC-05)
+c45122f3930bb4742fe34c4a90e8f96d00fd0637 dd0325600da8a125e16cf5d70180cff6015e13de Eric Rangel <dreamereric28@gmail.com> 1782795906 -0600	merge origin/fix/sec-05-error-disclosure: Fast-forward

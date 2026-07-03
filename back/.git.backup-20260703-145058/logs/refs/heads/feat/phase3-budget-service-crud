@@ -1,0 +1,2 @@
+0000000000000000000000000000000000000000 d06d334c36fb708aeb79169c05377a3cd3f1f33a Eric Rangel <dreamereric28@gmail.com> 1782940484 -0600	branch: Created from HEAD
+d06d334c36fb708aeb79169c05377a3cd3f1f33a 173ac42944c9f0727743a4fc580559d98c05e07a Eric Rangel <dreamereric28@gmail.com> 1782941264 -0600	commit: feat(budget): add budget CRUD, consumption status, and OpenAPI docs

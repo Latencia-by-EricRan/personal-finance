@@ -1,0 +1,7 @@
+0000000000000000000000000000000000000000 c4a7ea487f95fc44fba2f07e42bde02b0a530891 Eric Rangel <erangel.carmona@gmail.com> 1783053159 -0600	branch: Created from HEAD
+c4a7ea487f95fc44fba2f07e42bde02b0a530891 08d44899703d86693028b8b1875ddfc2bc04d2f4 Eric Rangel <erangel.carmona@gmail.com> 1783064521 -0600	commit: refactor(records): retire summary-by-month compat barrel
+08d44899703d86693028b8b1875ddfc2bc04d2f4 1525ca3c74c4b08704386ec848efdda6b64db069 Eric Rangel <erangel.carmona@gmail.com> 1783064528 -0600	commit: feat(records): apply Norte tokens to movement-card
+1525ca3c74c4b08704386ec848efdda6b64db069 e9c2e91139b034ce9150d46f7da308b955fb07b0 Eric Rangel <erangel.carmona@gmail.com> 1783064535 -0600	commit: feat(records): apply Norte tokens to movement-summary
+e9c2e91139b034ce9150d46f7da308b955fb07b0 b80c93da15cd5f45e793ed09c0991c7253954262 Eric Rangel <erangel.carmona@gmail.com> 1783064545 -0600	commit: feat(records): apply Norte background/text tokens to summary-by-month
+b80c93da15cd5f45e793ed09c0991c7253954262 72fd990403cd1ff0938cc614c9c6cd1449a7ec17 Eric Rangel <erangel.carmona@gmail.com> 1783064855 -0600	commit: docs(sdd): mark Fase 2 tasks complete, log security incident
+72fd990403cd1ff0938cc614c9c6cd1449a7ec17 df495aa6df4b3375e5d6eae1167b51643cb6b391 Eric Rangel <erangel.carmona@gmail.com> 1783065180 -0600	commit: docs(sdd): log Fase 2 verify results (PASS, clean)

@@ -1,0 +1,3 @@
+0000000000000000000000000000000000000000 d06d334c36fb708aeb79169c05377a3cd3f1f33a Eric Rangel <dreamereric28@gmail.com> 1782947064 -0600	branch: Created from HEAD
+d06d334c36fb708aeb79169c05377a3cd3f1f33a e63cb882d90e0a2d4dc0bb0f0d7bc190cd165535 Eric Rangel <dreamereric28@gmail.com> 1782948392 -0600	commit: feat(recurring): add recurring transactions module with idempotent run
+e63cb882d90e0a2d4dc0bb0f0d7bc190cd165535 a28a0598d3ca43ed91a471b4b17654fdcf659740 Eric Rangel <dreamereric28@gmail.com> 1782948427 -0600	commit: fix(recurring): include openapi docs, route mount, and run() atomicity fix

@@ -1,0 +1,6 @@
+0000000000000000000000000000000000000000 09d6dd734e6b8c94826b92ac8d497eafc01dbac8 Eric Rangel <dreamereric28@gmail.com> 1782968061 -0600	branch: Created from HEAD
+09d6dd734e6b8c94826b92ac8d497eafc01dbac8 6ad8e342c052c9895d4f476553857a019bdc6718 Eric Rangel <dreamereric28@gmail.com> 1782968090 -0600	commit: fix(movement): allow partial PUT updates without Date, fix filter GET validation
+6ad8e342c052c9895d4f476553857a019bdc6718 9c84e0c5699b5fd5f181313c422a98b8171f59b4 Eric Rangel <dreamereric28@gmail.com> 1783020771 -0600	commit: feat(onboarding): add quickstart script, CI workflow, and MongoDB setup
+9c84e0c5699b5fd5f181313c422a98b8171f59b4 e9244200d9173f99ad092cf51b6ea25d1bfd9560 Eric Rangel <dreamereric28@gmail.com> 1783023394 -0600	commit: refactor(dev-tooling): make start-dev.sh delegate to scripts/onboarding.mjs
+e9244200d9173f99ad092cf51b6ea25d1bfd9560 11c08fb3156beef35c55d13af8d3efc92115a8ed Eric Rangel <dreamereric28@gmail.com> 1783095851 -0600	commit: fix(config): lower JWT_SECRET minimum length from 32 to 6 characters
+11c08fb3156beef35c55d13af8d3efc92115a8ed e82000e2605aedf35cdc390b809f8dacffe9c457 Eric Rangel <dreamereric28@gmail.com> 1783095860 -0600	commit: feat(docker): add Dockerfile and wire an api service into compose.yaml

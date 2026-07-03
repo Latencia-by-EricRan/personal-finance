@@ -1,0 +1,84 @@
+.transfer-sheet {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-top: 0.75rem;
+  padding: 1rem;
+}
+
+.transfer-sheet__title {
+  color: var(--text);
+  font-family: var(--font-display);
+  margin-bottom: 1rem;
+}
+
+.transfer-sheet__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.transfer-sheet__label {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+.transfer-sheet__input {
+  background-color: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--text);
+  padding: 0.5em;
+}
+
+.transfer-sheet__textarea {
+  min-height: 3em;
+  resize: vertical;
+}
+
+.field-error {
+  color: var(--expense);
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.transfer-sheet__error {
+  color: var(--expense);
+}
+
+.transfer-sheet__actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.transfer-sheet__cancel {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--text-dim);
+  cursor: pointer;
+  flex: 1;
+  padding: 0.75em;
+
+  &:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+}
+
+.transfer-sheet__submit {
+  background-color: var(--gold);
+  border: none;
+  border-radius: 5px;
+  color: var(--bg);
+  cursor: pointer;
+  flex: 1;
+  padding: 0.75em;
+
+  &:disabled {
+    background-color: var(--surface-2);
+    color: var(--text-dim);
+    cursor: not-allowed;
+  }
+}

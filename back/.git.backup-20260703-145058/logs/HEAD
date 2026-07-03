@@ -1,0 +1,227 @@
+0000000000000000000000000000000000000000 fa7f57c76dc4f527d5a4349c695503ebe72db446 Eric Rangel <erangel.carmona@gmail.com> 1731393043 -0600	commit (initial): Init Project
+fa7f57c76dc4f527d5a4349c695503ebe72db446 fa7f57c76dc4f527d5a4349c695503ebe72db446 Eric Rangel <erangel.carmona@gmail.com> 1731393200 -0600	checkout: moving from main to origin/dev
+fa7f57c76dc4f527d5a4349c695503ebe72db446 fa7f57c76dc4f527d5a4349c695503ebe72db446 Eric Rangel <erangel.carmona@gmail.com> 1731393589 -0600	checkout: moving from fa7f57c76dc4f527d5a4349c695503ebe72db446 to dev
+fa7f57c76dc4f527d5a4349c695503ebe72db446 ede7ac72752b5074e48086b57a435b2755ee8edf Eric Rangel <erangel.carmona@gmail.com> 1733791334 -0600	commit: Enhance Movement and Category Services and Routes
+ede7ac72752b5074e48086b57a435b2755ee8edf c3c74670d8112788ed66bdee1fdd9d298644e825 Eric Rangel <erangel.carmona@gmail.com> 1737603259 -0600	commit: Add endpoint for monthly movement summary and build script
+c3c74670d8112788ed66bdee1fdd9d298644e825 041de9754d96c3fbf5715e0cd209589da99e1b0d Eric Rangel <erangel.carmona@gmail.com> 1737604829 -0600	commit: Set default port to 80 and add start script in package.json
+041de9754d96c3fbf5715e0cd209589da99e1b0d fa7f57c76dc4f527d5a4349c695503ebe72db446 Eric Rangel <erangel.carmona@gmail.com> 1737604848 -0600	checkout: moving from dev to main
+fa7f57c76dc4f527d5a4349c695503ebe72db446 041de9754d96c3fbf5715e0cd209589da99e1b0d Eric Rangel <erangel.carmona@gmail.com> 1737604905 -0600	merge dev: Fast-forward
+041de9754d96c3fbf5715e0cd209589da99e1b0d 041de9754d96c3fbf5715e0cd209589da99e1b0d Eric Rangel <erangel.carmona@gmail.com> 1782201657 -0600	checkout: moving from main to project-design-ai
+041de9754d96c3fbf5715e0cd209589da99e1b0d fd9fb521bf1603f1bfbc3ce5c9d5537c72389f98 Eric Rangel <erangel.carmona@gmail.com> 1782201657 -0600	commit: docs: add code review report
+fd9fb521bf1603f1bfbc3ce5c9d5537c72389f98 0000000000000000000000000000000000000000 Eric Rangel <erangel.carmona@gmail.com> 1782202511 -0600	Branch: renamed refs/heads/project-design-ai to refs/heads/ai-project-management
+0000000000000000000000000000000000000000 fd9fb521bf1603f1bfbc3ce5c9d5537c72389f98 Eric Rangel <erangel.carmona@gmail.com> 1782202511 -0600	Branch: renamed refs/heads/project-design-ai to refs/heads/ai-project-management
+fd9fb521bf1603f1bfbc3ce5c9d5537c72389f98 b08a18ec224565006ee76818c13b468f08d36833 Eric Rangel <erangel.carmona@gmail.com> 1782203545 -0600	commit: feat: add task-tracker skill and update project conventions
+b08a18ec224565006ee76818c13b468f08d36833 fc5f85f924bfd612db18811e4f1ae8c66795758c Eric Rangel <erangel.carmona@gmail.com> 1782209076 -0600	commit: chore: add tasks, openspec artifacts and update gitignore
+fc5f85f924bfd612db18811e4f1ae8c66795758c fc5f85f924bfd612db18811e4f1ae8c66795758c Eric Rangel <erangel.carmona@gmail.com> 1782229146 -0600	checkout: moving from ai-project-management to fix/sec-01-untrack-env
+fc5f85f924bfd612db18811e4f1ae8c66795758c b68be47aba3efe56636a8d244ecf8699818002d9 Eric Rangel <erangel.carmona@gmail.com> 1782229231 -0600	commit: fix(security): stop tracking .env and fix gitignore rules
+b68be47aba3efe56636a8d244ecf8699818002d9 fc5f85f924bfd612db18811e4f1ae8c66795758c Eric Rangel <erangel.carmona@gmail.com> 1782229340 -0600	checkout: moving from fix/sec-01-untrack-env to ai-project-management
+fc5f85f924bfd612db18811e4f1ae8c66795758c fc5f85f924bfd612db18811e4f1ae8c66795758c Eric Rangel <erangel.carmona@gmail.com> 1782229340 -0600	checkout: moving from ai-project-management to chore/tool-08-env-example
+fc5f85f924bfd612db18811e4f1ae8c66795758c b68be47aba3efe56636a8d244ecf8699818002d9 Eric Rangel <erangel.carmona@gmail.com> 1782229360 -0600	checkout: moving from chore/tool-08-env-example to fix/sec-01-untrack-env
+b68be47aba3efe56636a8d244ecf8699818002d9 b68be47aba3efe56636a8d244ecf8699818002d9 Eric Rangel <erangel.carmona@gmail.com> 1782229360 -0600	checkout: moving from fix/sec-01-untrack-env to chore/tool-08-env-example
+b68be47aba3efe56636a8d244ecf8699818002d9 db4e05cc8a48bfe7a6005b6bc3c8a38c073bcb4f Eric Rangel <erangel.carmona@gmail.com> 1782229832 -0600	commit: chore(tooling): add .env.example for developer onboarding
+db4e05cc8a48bfe7a6005b6bc3c8a38c073bcb4f 086280796896f1085571a9a2bc6dbe7d331a85e7 Eric Rangel <erangel.carmona@gmail.com> 1782233044 -0600	checkout: moving from chore/tool-08-env-example to feat/sec-02-jwt-auth
+086280796896f1085571a9a2bc6dbe7d331a85e7 e926439279afc324b61a4f89d50689e7ee123d11 Eric Rangel <erangel.carmona@gmail.com> 1782233903 -0600	commit: feat(security): add single-user JWT authentication
+e926439279afc324b61a4f89d50689e7ee123d11 901eed5c106a212c73d64b1691052c19c6ce7a8d Eric Rangel <erangel.carmona@gmail.com> 1782712496 -0600	commit: fix(auth): use matchedData to consume validated request fields in login
+901eed5c106a212c73d64b1691052c19c6ce7a8d 041de9754d96c3fbf5715e0cd209589da99e1b0d gallant-youthful-euler <gallant-youthful-euler@claude.(none)> 1782791872 +0000	checkout: moving from feat/sec-02-jwt-auth to feat/sec-03-http-hardening
+041de9754d96c3fbf5715e0cd209589da99e1b0d 901eed5c106a212c73d64b1691052c19c6ce7a8d gallant-youthful-euler <gallant-youthful-euler@claude.(none)> 1782791895 +0000	checkout: moving from feat/sec-03-http-hardening to feat/sec-02-jwt-auth
+901eed5c106a212c73d64b1691052c19c6ce7a8d fffbf8dafd9e125fdb910d78f697ae2067d8b4ab Eric Rangel <dreamereric28@gmail.com> 1782792205 -0600	checkout: moving from feat/sec-02-jwt-auth to feat/sec-03-http-hardening
+fffbf8dafd9e125fdb910d78f697ae2067d8b4ab 041de9754d96c3fbf5715e0cd209589da99e1b0d Eric Rangel <dreamereric28@gmail.com> 1782793477 -0600	checkout: moving from feat/sec-03-http-hardening to dev
+041de9754d96c3fbf5715e0cd209589da99e1b0d 6794deac87f1b86c08491cf5d3cece92449211fb Eric Rangel <dreamereric28@gmail.com> 1782793567 -0600	merge origin/dev: Fast-forward
+6794deac87f1b86c08491cf5d3cece92449211fb 6794deac87f1b86c08491cf5d3cece92449211fb Eric Rangel <dreamereric28@gmail.com> 1782795030 -0600	checkout: moving from dev to fix/sec-04-mass-assignment
+6794deac87f1b86c08491cf5d3cece92449211fb 02df9a85295df56557e6a2f37416fdd2d5a93d4c Eric Rangel <dreamereric28@gmail.com> 1782795104 -0600	commit: fix(security): consume validated body via matchedData in movement filter
+02df9a85295df56557e6a2f37416fdd2d5a93d4c 6794deac87f1b86c08491cf5d3cece92449211fb Eric Rangel <dreamereric28@gmail.com> 1782795329 -0600	checkout: moving from fix/sec-04-mass-assignment to fix/sec-05-error-disclosure
+6794deac87f1b86c08491cf5d3cece92449211fb c45122f3930bb4742fe34c4a90e8f96d00fd0637 Eric Rangel <dreamereric28@gmail.com> 1782795461 -0600	commit: fix(security): prevent internal error objects from leaking to client (SEC-05)
+c45122f3930bb4742fe34c4a90e8f96d00fd0637 dd0325600da8a125e16cf5d70180cff6015e13de Eric Rangel <dreamereric28@gmail.com> 1782795906 -0600	merge origin/fix/sec-05-error-disclosure: Fast-forward
+dd0325600da8a125e16cf5d70180cff6015e13de 6794deac87f1b86c08491cf5d3cece92449211fb Eric Rangel <dreamereric28@gmail.com> 1782803860 -0600	checkout: moving from fix/sec-05-error-disclosure to dev
+6794deac87f1b86c08491cf5d3cece92449211fb 2a97de1f172e9b5fe323604dddd01818a27608a7 Eric Rangel <dreamereric28@gmail.com> 1782803886 -0600	merge origin/dev: Fast-forward
+2a97de1f172e9b5fe323604dddd01818a27608a7 2a97de1f172e9b5fe323604dddd01818a27608a7 Eric Rangel <dreamereric28@gmail.com> 1782804105 -0600	checkout: moving from dev to dev
+2a97de1f172e9b5fe323604dddd01818a27608a7 2a97de1f172e9b5fe323604dddd01818a27608a7 Eric Rangel <dreamereric28@gmail.com> 1782804106 -0600	checkout: moving from dev to fix/err-01-global-error-middleware
+2a97de1f172e9b5fe323604dddd01818a27608a7 31f839be1175be7c13daacc9afc63040ef5a3795 Eric Rangel <dreamereric28@gmail.com> 1782804139 -0600	commit: fix(error-handling): register global error middleware in Express (ERR-01)
+31f839be1175be7c13daacc9afc63040ef5a3795 83b8e4e8680277c7485e3e3b18222ff56a1daf79 Eric Rangel <dreamereric28@gmail.com> 1782804499 -0600	commit: feat(dependencies): update and add new packages for security and rate-limiting
+83b8e4e8680277c7485e3e3b18222ff56a1daf79 83b8e4e8680277c7485e3e3b18222ff56a1daf79 Eric Rangel <dreamereric28@gmail.com> 1782806080 -0600	reset: moving to HEAD
+83b8e4e8680277c7485e3e3b18222ff56a1daf79 2a97de1f172e9b5fe323604dddd01818a27608a7 Eric Rangel <dreamereric28@gmail.com> 1782806080 -0600	checkout: moving from fix/err-01-global-error-middleware to dev
+2a97de1f172e9b5fe323604dddd01818a27608a7 2a97de1f172e9b5fe323604dddd01818a27608a7 Eric Rangel <dreamereric28@gmail.com> 1782806080 -0600	checkout: moving from dev to fix/mongoose-v9-rootfilterquery
+2a97de1f172e9b5fe323604dddd01818a27608a7 ca354393064a01b28297b3274501f31edc8c66b2 Eric Rangel <dreamereric28@gmail.com> 1782806088 -0600	commit: fix(types): replace removed RootFilterQuery with Mongoose v9-compatible type
+ca354393064a01b28297b3274501f31edc8c66b2 dd84f05f5d785805dc2cf10004729a8f19ac5b04 Eric Rangel <dreamereric28@gmail.com> 1782806939 -0600	commit: feat(security): add dependencies for security enhancements
+dd84f05f5d785805dc2cf10004729a8f19ac5b04 2a97de1f172e9b5fe323604dddd01818a27608a7 Eric Rangel <dreamereric28@gmail.com> 1782807512 -0600	checkout: moving from fix/mongoose-v9-rootfilterquery to dev
+2a97de1f172e9b5fe323604dddd01818a27608a7 2a97de1f172e9b5fe323604dddd01818a27608a7 Eric Rangel <dreamereric28@gmail.com> 1782807884 -0600	checkout: moving from dev to dev
+2a97de1f172e9b5fe323604dddd01818a27608a7 06ee9704c7c4620563ee435d4e6f9fb6d8b0ca4e Eric Rangel <dreamereric28@gmail.com> 1782807885 -0600	pull origin dev: Fast-forward
+06ee9704c7c4620563ee435d4e6f9fb6d8b0ca4e 06ee9704c7c4620563ee435d4e6f9fb6d8b0ca4e Eric Rangel <dreamereric28@gmail.com> 1782808263 -0600	checkout: moving from dev to fix/err-02-async-validators-next
+06ee9704c7c4620563ee435d4e6f9fb6d8b0ca4e 997f192636ea617c547f86953c2658a9758ef1e1 Eric Rangel <dreamereric28@gmail.com> 1782808298 -0600	commit: fix(error-handling): call next(error) instead of throw in async validators (ERR-02)
+997f192636ea617c547f86953c2658a9758ef1e1 06ee9704c7c4620563ee435d4e6f9fb6d8b0ca4e Eric Rangel <dreamereric28@gmail.com> 1782808327 -0600	checkout: moving from fix/err-02-async-validators-next to dev
+06ee9704c7c4620563ee435d4e6f9fb6d8b0ca4e 06ee9704c7c4620563ee435d4e6f9fb6d8b0ca4e Eric Rangel <dreamereric28@gmail.com> 1782808539 -0600	checkout: moving from dev to fix/err-03-http-status-mapping
+06ee9704c7c4620563ee435d4e6f9fb6d8b0ca4e d32b99f51e8c4691cd4643a72fc85f034de92259 Eric Rangel <dreamereric28@gmail.com> 1782808596 -0600	commit: fix(error-handling): map Mongoose CastError/ValidationError to HTTP 400 (ERR-03)
+d32b99f51e8c4691cd4643a72fc85f034de92259 06ee9704c7c4620563ee435d4e6f9fb6d8b0ca4e Eric Rangel <dreamereric28@gmail.com> 1782808622 -0600	checkout: moving from fix/err-03-http-status-mapping to dev
+06ee9704c7c4620563ee435d4e6f9fb6d8b0ca4e 43e87e585656009cea180e1a473f485a389ff6a6 Eric Rangel <dreamereric28@gmail.com> 1782808623 -0600	pull origin dev: Fast-forward
+43e87e585656009cea180e1a473f485a389ff6a6 43e87e585656009cea180e1a473f485a389ff6a6 Eric Rangel <dreamereric28@gmail.com> 1782808895 -0600	checkout: moving from dev to fix/err-04-unified-error-contract
+43e87e585656009cea180e1a473f485a389ff6a6 b08e927c42b132a0ef9c5494bc2739932b8bd1c9 Eric Rangel <dreamereric28@gmail.com> 1782808957 -0600	commit: fix(error-handling): unify error response contract to { message, errors? } (ERR-04)
+b08e927c42b132a0ef9c5494bc2739932b8bd1c9 43e87e585656009cea180e1a473f485a389ff6a6 Eric Rangel <dreamereric28@gmail.com> 1782808983 -0600	checkout: moving from fix/err-04-unified-error-contract to dev
+43e87e585656009cea180e1a473f485a389ff6a6 43e87e585656009cea180e1a473f485a389ff6a6 Eric Rangel <dreamereric28@gmail.com> 1782809448 -0600	checkout: moving from dev to fix/err-05-mongodb-catch
+43e87e585656009cea180e1a473f485a389ff6a6 5a617e8ede1d36ebaeb3a41139aaeff08cc9de04 Eric Rangel <dreamereric28@gmail.com> 1782809499 -0600	commit: fix(error-handling): add .catch to MongoDB startup to prevent unhandled rejection (ERR-05)
+5a617e8ede1d36ebaeb3a41139aaeff08cc9de04 43e87e585656009cea180e1a473f485a389ff6a6 Eric Rangel <dreamereric28@gmail.com> 1782809525 -0600	checkout: moving from fix/err-05-mongodb-catch to dev
+43e87e585656009cea180e1a473f485a389ff6a6 f15c5ea74b49e90bcdf8d7dbf78ae66dc72b9eba Eric Rangel <dreamereric28@gmail.com> 1782809526 -0600	pull origin dev: Fast-forward
+f15c5ea74b49e90bcdf8d7dbf78ae66dc72b9eba 4e0142e8829fd73c6d302fd6ac5f07822e092e1f Eric Rangel <dreamereric28@gmail.com> 1782846163 -0600	merge origin/dev: Fast-forward
+4e0142e8829fd73c6d302fd6ac5f07822e092e1f 4e0142e8829fd73c6d302fd6ac5f07822e092e1f Eric Rangel <dreamereric28@gmail.com> 1782846174 -0600	branch: Reset to origin/dev
+4e0142e8829fd73c6d302fd6ac5f07822e092e1f 4e0142e8829fd73c6d302fd6ac5f07822e092e1f Eric Rangel <dreamereric28@gmail.com> 1782846174 -0600	checkout: moving from dev to dev
+4e0142e8829fd73c6d302fd6ac5f07822e092e1f 4e0142e8829fd73c6d302fd6ac5f07822e092e1f Eric Rangel <dreamereric28@gmail.com> 1782846244 -0600	checkout: moving from dev to dev
+4e0142e8829fd73c6d302fd6ac5f07822e092e1f 4e0142e8829fd73c6d302fd6ac5f07822e092e1f Eric Rangel <dreamereric28@gmail.com> 1782846264 -0600	checkout: moving from dev to fix/db-01-category-objectid-ref
+4e0142e8829fd73c6d302fd6ac5f07822e092e1f 4368f61cadb077038769782bb96b6fda241e6e8e Eric Rangel <dreamereric28@gmail.com> 1782846467 -0600	commit: fix(database): use ObjectId for Movement.Category to fix populate (DB-01)
+4368f61cadb077038769782bb96b6fda241e6e8e 4e0142e8829fd73c6d302fd6ac5f07822e092e1f Eric Rangel <dreamereric28@gmail.com> 1782846491 -0600	checkout: moving from fix/db-01-category-objectid-ref to dev
+4e0142e8829fd73c6d302fd6ac5f07822e092e1f 4e0142e8829fd73c6d302fd6ac5f07822e092e1f Eric Rangel <dreamereric28@gmail.com> 1782850116 -0600	checkout: moving from dev to dev
+4e0142e8829fd73c6d302fd6ac5f07822e092e1f 7ff7f180dee5cf723f16bb75e65aa5e3b64d58ba Eric Rangel <dreamereric28@gmail.com> 1782850118 -0600	pull origin dev: Fast-forward
+7ff7f180dee5cf723f16bb75e65aa5e3b64d58ba 7ff7f180dee5cf723f16bb75e65aa5e3b64d58ba Eric Rangel <dreamereric28@gmail.com> 1782851206 -0600	checkout: moving from dev to dev
+7ff7f180dee5cf723f16bb75e65aa5e3b64d58ba 7ff7f180dee5cf723f16bb75e65aa5e3b64d58ba Eric Rangel <dreamereric28@gmail.com> 1782851212 -0600	checkout: moving from dev to fix/db-02-update-runvalidators
+7ff7f180dee5cf723f16bb75e65aa5e3b64d58ba 4e16430063055a597e18d8b5ffb7a527170d755b Eric Rangel <dreamereric28@gmail.com> 1782851253 -0600	commit: fix(database): return updated doc and run validators on update (DB-02)
+4e16430063055a597e18d8b5ffb7a527170d755b 7ff7f180dee5cf723f16bb75e65aa5e3b64d58ba Eric Rangel <dreamereric28@gmail.com> 1782851269 -0600	checkout: moving from fix/db-02-update-runvalidators to dev
+7ff7f180dee5cf723f16bb75e65aa5e3b64d58ba 7ff7f180dee5cf723f16bb75e65aa5e3b64d58ba Eric Rangel <dreamereric28@gmail.com> 1782851900 -0600	checkout: moving from dev to dev
+7ff7f180dee5cf723f16bb75e65aa5e3b64d58ba f0a58290e649da1d59bd66a1164e38336b341994 Eric Rangel <dreamereric28@gmail.com> 1782851901 -0600	pull origin dev: Fast-forward
+f0a58290e649da1d59bd66a1164e38336b341994 f0a58290e649da1d59bd66a1164e38336b341994 Eric Rangel <dreamereric28@gmail.com> 1782851915 -0600	checkout: moving from dev to fix/db-03-graceful-shutdown
+f0a58290e649da1d59bd66a1164e38336b341994 1b3e1f32d4e1c40b5642b766b776e1820ac12cfb Eric Rangel <dreamereric28@gmail.com> 1782851952 -0600	commit: fix(database): add connection listeners and graceful shutdown (DB-03)
+1b3e1f32d4e1c40b5642b766b776e1820ac12cfb f0a58290e649da1d59bd66a1164e38336b341994 Eric Rangel <dreamereric28@gmail.com> 1782851977 -0600	checkout: moving from fix/db-03-graceful-shutdown to dev
+f0a58290e649da1d59bd66a1164e38336b341994 f0a58290e649da1d59bd66a1164e38336b341994 Eric Rangel <dreamereric28@gmail.com> 1782854538 -0600	checkout: moving from dev to dev
+f0a58290e649da1d59bd66a1164e38336b341994 7e6451c584e89d87cbf10ed67b2be79a8fe1c258 Eric Rangel <dreamereric28@gmail.com> 1782854619 -0600	pull origin dev: Fast-forward
+7e6451c584e89d87cbf10ed67b2be79a8fe1c258 7e6451c584e89d87cbf10ed67b2be79a8fe1c258 Eric Rangel <dreamereric28@gmail.com> 1782854625 -0600	checkout: moving from dev to fix/db-04-pagination
+7e6451c584e89d87cbf10ed67b2be79a8fe1c258 05f8e49048d336be53030cd3b2b48f6f1a6e2a57 Eric Rangel <dreamereric28@gmail.com> 1782854768 -0600	commit: fix(database): add pagination to movement/category list queries (DB-04)
+05f8e49048d336be53030cd3b2b48f6f1a6e2a57 7e6451c584e89d87cbf10ed67b2be79a8fe1c258 Eric Rangel <dreamereric28@gmail.com> 1782854784 -0600	checkout: moving from fix/db-04-pagination to dev
+7e6451c584e89d87cbf10ed67b2be79a8fe1c258 569267260e92f1cd11c13e3de8b824827fca06f8 Eric Rangel <dreamereric28@gmail.com> 1782856421 -0600	commit: docs(auth): populate `.env.example` and harden `authConfig` startup validation
+569267260e92f1cd11c13e3de8b824827fca06f8 d8a7e5b618aa1c2249f5ffc523a4ff8d956cd863 Eric Rangel <dreamereric28@gmail.com> 1782858485 -0600	merge origin/dev: Fast-forward
+d8a7e5b618aa1c2249f5ffc523a4ff8d956cd863 82b9f18e2dec1c8e59143c1d5749b4c5299b72a7 Eric Rangel <dreamereric28@gmail.com> 1782859216 -0600	commit: fix(validation): improve array body validation and error handling in category validator
+82b9f18e2dec1c8e59143c1d5749b4c5299b72a7 82b9f18e2dec1c8e59143c1d5749b4c5299b72a7 Eric Rangel <dreamereric28@gmail.com> 1782859469 -0600	checkout: moving from dev to fix/val-02-movement-required-fields
+82b9f18e2dec1c8e59143c1d5749b4c5299b72a7 dbdb439a4082a1fd2a5038f6e4e96f0473eec33b Eric Rangel <dreamereric28@gmail.com> 1782859613 -0600	commit: fix(validation): require Type, Amount and Category on movement create (VAL-02)
+dbdb439a4082a1fd2a5038f6e4e96f0473eec33b 70bde07b11aec58d07112714369c87642cfdb295 Eric Rangel <dreamereric28@gmail.com> 1782859654 -0600	commit (amend): fix(validation): require Type, Amount and Category on movement create (VAL-02)
+70bde07b11aec58d07112714369c87642cfdb295 82b9f18e2dec1c8e59143c1d5749b4c5299b72a7 Eric Rangel <dreamereric28@gmail.com> 1782859673 -0600	checkout: moving from fix/val-02-movement-required-fields to dev
+82b9f18e2dec1c8e59143c1d5749b4c5299b72a7 82b9f18e2dec1c8e59143c1d5749b4c5299b72a7 Eric Rangel <dreamereric28@gmail.com> 1782861282 -0600	checkout: moving from dev to dev
+82b9f18e2dec1c8e59143c1d5749b4c5299b72a7 82b9f18e2dec1c8e59143c1d5749b4c5299b72a7 Eric Rangel <dreamereric28@gmail.com> 1782861283 -0600	checkout: moving from dev to fix/val-04-bulk-save-validators
+82b9f18e2dec1c8e59143c1d5749b4c5299b72a7 0b96c8ceacca250de650986e48ebb0dc51e60e12 Eric Rangel <dreamereric28@gmail.com> 1782861422 -0600	commit: fix(validation): add validator middleware to bulk-save routes (VAL-04)
+0b96c8ceacca250de650986e48ebb0dc51e60e12 82b9f18e2dec1c8e59143c1d5749b4c5299b72a7 Eric Rangel <dreamereric28@gmail.com> 1782861443 -0600	checkout: moving from fix/val-04-bulk-save-validators to dev
+82b9f18e2dec1c8e59143c1d5749b4c5299b72a7 b3053c4669918f8b4c58deb22c19b6df2f402a81 Eric Rangel <dreamereric28@gmail.com> 1782861444 -0600	pull origin dev: Fast-forward
+b3053c4669918f8b4c58deb22c19b6df2f402a81 0b96c8ceacca250de650986e48ebb0dc51e60e12 Eric Rangel <dreamereric28@gmail.com> 1782861477 -0600	checkout: moving from dev to fix/val-04-bulk-save-validators
+0b96c8ceacca250de650986e48ebb0dc51e60e12 b3053c4669918f8b4c58deb22c19b6df2f402a81 Eric Rangel <dreamereric28@gmail.com> 1782861477 -0600	rebase (start): checkout origin/dev
+b3053c4669918f8b4c58deb22c19b6df2f402a81 b63c4d7daab25e14b919498230a03a298ae626d6 Eric Rangel <dreamereric28@gmail.com> 1782861552 -0600	rebase (continue): fix(validation): add validator middleware to bulk-save routes (VAL-04)
+b63c4d7daab25e14b919498230a03a298ae626d6 b63c4d7daab25e14b919498230a03a298ae626d6 Eric Rangel <dreamereric28@gmail.com> 1782861552 -0600	rebase (continue) (finish): returning to refs/heads/fix/val-04-bulk-save-validators
+b63c4d7daab25e14b919498230a03a298ae626d6 b3053c4669918f8b4c58deb22c19b6df2f402a81 Eric Rangel <dreamereric28@gmail.com> 1782861571 -0600	checkout: moving from fix/val-04-bulk-save-validators to dev
+b3053c4669918f8b4c58deb22c19b6df2f402a81 ea962f351f4563b6fbb69f03c2bb17bc5e94512e Eric Rangel <dreamereric28@gmail.com> 1782861731 -0600	merge origin/dev: Fast-forward
+ea962f351f4563b6fbb69f03c2bb17bc5e94512e ea962f351f4563b6fbb69f03c2bb17bc5e94512e Eric Rangel <dreamereric28@gmail.com> 1782861786 -0600	checkout: moving from dev to dev
+ea962f351f4563b6fbb69f03c2bb17bc5e94512e ea962f351f4563b6fbb69f03c2bb17bc5e94512e Eric Rangel <dreamereric28@gmail.com> 1782861788 -0600	checkout: moving from dev to fix/val-05-category-icon-whitelist
+ea962f351f4563b6fbb69f03c2bb17bc5e94512e e5f35da9baa2ae79c740c47d10d6c59375b69680 Eric Rangel <dreamereric28@gmail.com> 1782861822 -0600	commit: fix(validation): include Icon in category checkKeys whitelist (VAL-05)
+e5f35da9baa2ae79c740c47d10d6c59375b69680 ea962f351f4563b6fbb69f03c2bb17bc5e94512e Eric Rangel <dreamereric28@gmail.com> 1782861837 -0600	checkout: moving from fix/val-05-category-icon-whitelist to dev
+ea962f351f4563b6fbb69f03c2bb17bc5e94512e 23161f3b16f5b0b52f00b6d4834f9aaf2bfa0e73 Eric Rangel <dreamereric28@gmail.com> 1782861939 -0600	pull origin dev: Fast-forward
+23161f3b16f5b0b52f00b6d4834f9aaf2bfa0e73 23161f3b16f5b0b52f00b6d4834f9aaf2bfa0e73 Eric Rangel <dreamereric28@gmail.com> 1782861947 -0600	checkout: moving from dev to dev
+23161f3b16f5b0b52f00b6d4834f9aaf2bfa0e73 23161f3b16f5b0b52f00b6d4834f9aaf2bfa0e73 Eric Rangel <dreamereric28@gmail.com> 1782861947 -0600	checkout: moving from dev to fix/val-06-duplicate-card-validator
+23161f3b16f5b0b52f00b6d4834f9aaf2bfa0e73 2c6099eadcf2ff3719f0b14bc528badcc8547dea Eric Rangel <dreamereric28@gmail.com> 1782861984 -0600	commit: fix(validation): remove duplicate Card chain in movement paramBodyValidate (VAL-06)
+2c6099eadcf2ff3719f0b14bc528badcc8547dea 23161f3b16f5b0b52f00b6d4834f9aaf2bfa0e73 Eric Rangel <dreamereric28@gmail.com> 1782862000 -0600	checkout: moving from fix/val-06-duplicate-card-validator to dev
+23161f3b16f5b0b52f00b6d4834f9aaf2bfa0e73 41684a3e328721be9a24210acf4a4805a709e31f Eric Rangel <dreamereric28@gmail.com> 1782862245 -0600	merge origin/dev: Fast-forward
+41684a3e328721be9a24210acf4a4805a709e31f 41684a3e328721be9a24210acf4a4805a709e31f Eric Rangel <dreamereric28@gmail.com> 1782862274 -0600	checkout: moving from dev to dev
+41684a3e328721be9a24210acf4a4805a709e31f 41684a3e328721be9a24210acf4a4805a709e31f Eric Rangel <dreamereric28@gmail.com> 1782862274 -0600	checkout: moving from dev to fix/val-07-movement-id-mongoid-validation
+41684a3e328721be9a24210acf4a4805a709e31f d181e868e58e1c93a98a246716bb698dc3168c81 Eric Rangel <dreamereric28@gmail.com> 1782862317 -0600	commit: fix(validation): validate movement id as MongoId in idValidator (VAL-07)
+d181e868e58e1c93a98a246716bb698dc3168c81 41684a3e328721be9a24210acf4a4805a709e31f Eric Rangel <dreamereric28@gmail.com> 1782862338 -0600	checkout: moving from fix/val-07-movement-id-mongoid-validation to dev
+41684a3e328721be9a24210acf4a4805a709e31f c590fedfcbeeb11bbbd51904bfccf5b911940c35 Eric Rangel <dreamereric28@gmail.com> 1782862444 -0600	merge origin/dev: Fast-forward
+c590fedfcbeeb11bbbd51904bfccf5b911940c35 c590fedfcbeeb11bbbd51904bfccf5b911940c35 Eric Rangel <dreamereric28@gmail.com> 1782862510 -0600	checkout: moving from dev to dev
+c590fedfcbeeb11bbbd51904bfccf5b911940c35 c590fedfcbeeb11bbbd51904bfccf5b911940c35 Eric Rangel <dreamereric28@gmail.com> 1782862510 -0600	checkout: moving from dev to fix/route-01-month-year-summary-path
+c590fedfcbeeb11bbbd51904bfccf5b911940c35 66792d883164cb03dcfe7f73d0e0c1dae3024234 Eric Rangel <dreamereric28@gmail.com> 1782862553 -0600	commit: fix(routing): give month-summary route its own path segment (ROUTE-01)
+66792d883164cb03dcfe7f73d0e0c1dae3024234 c590fedfcbeeb11bbbd51904bfccf5b911940c35 Eric Rangel <dreamereric28@gmail.com> 1782862569 -0600	checkout: moving from fix/route-01-month-year-summary-path to dev
+c590fedfcbeeb11bbbd51904bfccf5b911940c35 b076b8fffb47c34cc6fcb8abdd40c02cf63ee830 Eric Rangel <dreamereric28@gmail.com> 1782863034 -0600	merge origin/dev: Fast-forward
+b076b8fffb47c34cc6fcb8abdd40c02cf63ee830 b076b8fffb47c34cc6fcb8abdd40c02cf63ee830 Eric Rangel <dreamereric28@gmail.com> 1782863115 -0600	checkout: moving from dev to dev
+b076b8fffb47c34cc6fcb8abdd40c02cf63ee830 b076b8fffb47c34cc6fcb8abdd40c02cf63ee830 Eric Rangel <dreamereric28@gmail.com> 1782863116 -0600	checkout: moving from dev to feat/tool-02-eslint-prettier
+b076b8fffb47c34cc6fcb8abdd40c02cf63ee830 31cd0f0691fcfc2629c76c157cd660a60765a915 Eric Rangel <dreamereric28@gmail.com> 1782863265 -0600	commit: feat(tooling): add ESLint and Prettier configuration (TOOL-02)
+31cd0f0691fcfc2629c76c157cd660a60765a915 b076b8fffb47c34cc6fcb8abdd40c02cf63ee830 Eric Rangel <dreamereric28@gmail.com> 1782863286 -0600	checkout: moving from feat/tool-02-eslint-prettier to dev
+b076b8fffb47c34cc6fcb8abdd40c02cf63ee830 13bae9fd730da02b311151cbee1fe910ad41483c Eric Rangel <dreamereric28@gmail.com> 1782863863 -0600	merge origin/dev: Fast-forward
+13bae9fd730da02b311151cbee1fe910ad41483c 13bae9fd730da02b311151cbee1fe910ad41483c Eric Rangel <dreamereric28@gmail.com> 1782863945 -0600	checkout: moving from dev to dev
+13bae9fd730da02b311151cbee1fe910ad41483c 13bae9fd730da02b311151cbee1fe910ad41483c Eric Rangel <dreamereric28@gmail.com> 1782863945 -0600	checkout: moving from dev to fix/type-01-remove-any-bypasses
+13bae9fd730da02b311151cbee1fe910ad41483c 649002c624cc6193150afff9f6f57c6cdb7956c0 Eric Rangel <dreamereric28@gmail.com> 1782864221 -0600	commit: fix(typescript): remove explicit any/Function bypasses of strict mode (TYPE-01)
+649002c624cc6193150afff9f6f57c6cdb7956c0 13bae9fd730da02b311151cbee1fe910ad41483c Eric Rangel <dreamereric28@gmail.com> 1782864246 -0600	checkout: moving from fix/type-01-remove-any-bypasses to dev
+13bae9fd730da02b311151cbee1fe910ad41483c b6f45a655e0787ca653d995c7036a4976c1aec5e Eric Rangel <dreamereric28@gmail.com> 1782864870 -0600	merge origin/dev: Fast-forward
+b6f45a655e0787ca653d995c7036a4976c1aec5e b6f45a655e0787ca653d995c7036a4976c1aec5e Eric Rangel <dreamereric28@gmail.com> 1782864896 -0600	checkout: moving from dev to dev
+b6f45a655e0787ca653d995c7036a4976c1aec5e b6f45a655e0787ca653d995c7036a4976c1aec5e Eric Rangel <dreamereric28@gmail.com> 1782864896 -0600	checkout: moving from dev to fix/type-02-outdated-type-dependencies
+b6f45a655e0787ca653d995c7036a4976c1aec5e 53b76ab7cf7bc8d1c225020001ce215d431b047c Eric Rangel <dreamereric28@gmail.com> 1782864974 -0600	commit: fix(deps): correct outdated and mismatched type dependencies (TYPE-02)
+53b76ab7cf7bc8d1c225020001ce215d431b047c b6f45a655e0787ca653d995c7036a4976c1aec5e Eric Rangel <dreamereric28@gmail.com> 1782864992 -0600	checkout: moving from fix/type-02-outdated-type-dependencies to dev
+b6f45a655e0787ca653d995c7036a4976c1aec5e c73ad85c922b3f4b858adaa7877f5689e27e0cc8 Eric Rangel <dreamereric28@gmail.com> 1782865110 -0600	merge origin/dev: Fast-forward
+c73ad85c922b3f4b858adaa7877f5689e27e0cc8 c73ad85c922b3f4b858adaa7877f5689e27e0cc8 Eric Rangel <dreamereric28@gmail.com> 1782865173 -0600	checkout: moving from dev to dev
+c73ad85c922b3f4b858adaa7877f5689e27e0cc8 c73ad85c922b3f4b858adaa7877f5689e27e0cc8 Eric Rangel <dreamereric28@gmail.com> 1782865173 -0600	checkout: moving from dev to feat/tool-01-vitest-test-runner
+c73ad85c922b3f4b858adaa7877f5689e27e0cc8 1c570d679f575c8690bba72dd6bb6ebed3642a67 Eric Rangel <dreamereric28@gmail.com> 1782865369 -0600	commit: feat(tooling): add Vitest and initial test coverage (TOOL-01)
+1c570d679f575c8690bba72dd6bb6ebed3642a67 c73ad85c922b3f4b858adaa7877f5689e27e0cc8 Eric Rangel <dreamereric28@gmail.com> 1782865387 -0600	checkout: moving from feat/tool-01-vitest-test-runner to dev
+c73ad85c922b3f4b858adaa7877f5689e27e0cc8 c73ad85c922b3f4b858adaa7877f5689e27e0cc8 Eric Rangel <dreamereric28@gmail.com> 1782866912 -0600	checkout: moving from dev to dev
+c73ad85c922b3f4b858adaa7877f5689e27e0cc8 fc5b99d63b643b939e531b0630af6fe0bc51ede8 Eric Rangel <dreamereric28@gmail.com> 1782866913 -0600	pull origin dev: Fast-forward
+fc5b99d63b643b939e531b0630af6fe0bc51ede8 fc5b99d63b643b939e531b0630af6fe0bc51ede8 Eric Rangel <dreamereric28@gmail.com> 1782866931 -0600	checkout: moving from dev to fix/tool-03-remove-npm-i-from-scripts
+fc5b99d63b643b939e531b0630af6fe0bc51ede8 15e2a82066caa468c3ac9ba080dbdcc43863d7e3 Eric Rangel <dreamereric28@gmail.com> 1782866962 -0600	commit: fix(tooling): remove implicit npm i from dev and build scripts (TOOL-03)
+15e2a82066caa468c3ac9ba080dbdcc43863d7e3 fc5b99d63b643b939e531b0630af6fe0bc51ede8 Eric Rangel <dreamereric28@gmail.com> 1782866979 -0600	checkout: moving from fix/tool-03-remove-npm-i-from-scripts to dev
+fc5b99d63b643b939e531b0630af6fe0bc51ede8 72b9333149a6226b31b3302e5ae42bb0510f93c4 Eric Rangel <dreamereric28@gmail.com> 1782867174 -0600	merge origin/dev: Fast-forward
+72b9333149a6226b31b3302e5ae42bb0510f93c4 72b9333149a6226b31b3302e5ae42bb0510f93c4 Eric Rangel <dreamereric28@gmail.com> 1782867272 -0600	checkout: moving from dev to dev
+72b9333149a6226b31b3302e5ae42bb0510f93c4 72b9333149a6226b31b3302e5ae42bb0510f93c4 Eric Rangel <dreamereric28@gmail.com> 1782867272 -0600	checkout: moving from dev to fix/tool-04-http-status-codes
+72b9333149a6226b31b3302e5ae42bb0510f93c4 8a9f98642a972ef80ef718607b288cedbe9c4b1e Eric Rangel <dreamereric28@gmail.com> 1782867388 -0600	commit: fix(http): return 201 on resource-creation endpoints (TOOL-04)
+8a9f98642a972ef80ef718607b288cedbe9c4b1e 72b9333149a6226b31b3302e5ae42bb0510f93c4 Eric Rangel <dreamereric28@gmail.com> 1782867410 -0600	checkout: moving from fix/tool-04-http-status-codes to dev
+72b9333149a6226b31b3302e5ae42bb0510f93c4 f171e7754e2391f6858776ad38b49cc0be9c2cbd Eric Rangel <dreamereric28@gmail.com> 1782867873 -0600	pull origin dev: Fast-forward
+f171e7754e2391f6858776ad38b49cc0be9c2cbd f171e7754e2391f6858776ad38b49cc0be9c2cbd Eric Rangel <dreamereric28@gmail.com> 1782867885 -0600	checkout: moving from dev to dev
+f171e7754e2391f6858776ad38b49cc0be9c2cbd f171e7754e2391f6858776ad38b49cc0be9c2cbd Eric Rangel <dreamereric28@gmail.com> 1782867885 -0600	checkout: moving from dev to fix/tool-05-remove-dead-validator-code
+f171e7754e2391f6858776ad38b49cc0be9c2cbd e8ed0aa4713ad94ef07795bfd9dc0ac18157e8e7 Eric Rangel <dreamereric28@gmail.com> 1782867949 -0600	commit: refactor(cleanup): remove dead code from validator.interceptor (TOOL-05)
+e8ed0aa4713ad94ef07795bfd9dc0ac18157e8e7 f171e7754e2391f6858776ad38b49cc0be9c2cbd Eric Rangel <dreamereric28@gmail.com> 1782867973 -0600	checkout: moving from fix/tool-05-remove-dead-validator-code to dev
+f171e7754e2391f6858776ad38b49cc0be9c2cbd 414e9dc909442e1bc26798c0caf3cb0ae9a49878 Eric Rangel <dreamereric28@gmail.com> 1782868125 -0600	merge origin/dev: Fast-forward
+414e9dc909442e1bc26798c0caf3cb0ae9a49878 414e9dc909442e1bc26798c0caf3cb0ae9a49878 Eric Rangel <dreamereric28@gmail.com> 1782868170 -0600	checkout: moving from dev to dev
+414e9dc909442e1bc26798c0caf3cb0ae9a49878 414e9dc909442e1bc26798c0caf3cb0ae9a49878 Eric Rangel <dreamereric28@gmail.com> 1782868170 -0600	checkout: moving from dev to fix/tool-06-rename-response-middleware
+414e9dc909442e1bc26798c0caf3cb0ae9a49878 de011c14159206143aa7520d9dd99ec749ff27cd Eric Rangel <dreamereric28@gmail.com> 1782868268 -0600	commit: refactor(cleanup): rename responose.middleware.ts to response.middleware.ts (TOOL-06)
+de011c14159206143aa7520d9dd99ec749ff27cd 414e9dc909442e1bc26798c0caf3cb0ae9a49878 Eric Rangel <dreamereric28@gmail.com> 1782868287 -0600	checkout: moving from fix/tool-06-rename-response-middleware to dev
+414e9dc909442e1bc26798c0caf3cb0ae9a49878 581e577814991fb25bb4b85a265d5ed3c45abeec Eric Rangel <dreamereric28@gmail.com> 1782868370 -0600	pull origin dev: Fast-forward
+581e577814991fb25bb4b85a265d5ed3c45abeec 581e577814991fb25bb4b85a265d5ed3c45abeec Eric Rangel <dreamereric28@gmail.com> 1782868395 -0600	checkout: moving from dev to dev
+581e577814991fb25bb4b85a265d5ed3c45abeec 581e577814991fb25bb4b85a265d5ed3c45abeec Eric Rangel <dreamereric28@gmail.com> 1782868395 -0600	checkout: moving from dev to chore/tool-07-verify-ds-store-not-tracked
+581e577814991fb25bb4b85a265d5ed3c45abeec e14f6225152144b65c25ec4795c1194f56398d82 Eric Rangel <dreamereric28@gmail.com> 1782868434 -0600	commit: chore(tasks): verify .DS_Store is not tracked (TOOL-07)
+e14f6225152144b65c25ec4795c1194f56398d82 581e577814991fb25bb4b85a265d5ed3c45abeec Eric Rangel <dreamereric28@gmail.com> 1782868455 -0600	checkout: moving from chore/tool-07-verify-ds-store-not-tracked to dev
+581e577814991fb25bb4b85a265d5ed3c45abeec a08d0d97d37a2c803e46c9f966ff810c88d1a06d Eric Rangel <dreamereric28@gmail.com> 1782868567 -0600	merge origin/dev: Fast-forward
+a08d0d97d37a2c803e46c9f966ff810c88d1a06d a08d0d97d37a2c803e46c9f966ff810c88d1a06d Eric Rangel <dreamereric28@gmail.com> 1782868633 -0600	checkout: moving from dev to dev
+a08d0d97d37a2c803e46c9f966ff810c88d1a06d a08d0d97d37a2c803e46c9f966ff810c88d1a06d Eric Rangel <dreamereric28@gmail.com> 1782868633 -0600	checkout: moving from dev to fix/db-05-movement-interface-not-document
+a08d0d97d37a2c803e46c9f966ff810c88d1a06d 4012ffba5750c11bbd79677110294d5ecf87a8da Eric Rangel <dreamereric28@gmail.com> 1782868736 -0600	commit: fix(types): stop MovementI from extending Document (DB-05)
+4012ffba5750c11bbd79677110294d5ecf87a8da a08d0d97d37a2c803e46c9f966ff810c88d1a06d Eric Rangel <dreamereric28@gmail.com> 1782868789 -0600	checkout: moving from fix/db-05-movement-interface-not-document to dev
+a08d0d97d37a2c803e46c9f966ff810c88d1a06d 0ec47608251bfda8fe1be757ad7b6742df12725f Eric Rangel <dreamereric28@gmail.com> 1782869028 -0600	merge origin/dev: Fast-forward
+0ec47608251bfda8fe1be757ad7b6742df12725f 0ec47608251bfda8fe1be757ad7b6742df12725f Eric Rangel <dreamereric28@gmail.com> 1782869362 -0600	checkout: moving from dev to chore/tasks-json-sync-meta-counters
+0ec47608251bfda8fe1be757ad7b6742df12725f 16c619536e44e6c3aeb2864134090d5a2bb48db1 Eric Rangel <dreamereric28@gmail.com> 1782869374 -0600	commit: chore(tasks): sync meta.stats counters with actual task statuses
+16c619536e44e6c3aeb2864134090d5a2bb48db1 0ec47608251bfda8fe1be757ad7b6742df12725f Eric Rangel <dreamereric28@gmail.com> 1782869394 -0600	checkout: moving from chore/tasks-json-sync-meta-counters to dev
+0ec47608251bfda8fe1be757ad7b6742df12725f b666e9dbd058b57ea74327a9c253fd04b0e3b5af Eric Rangel <dreamereric28@gmail.com> 1782881612 -0600	commit: feat(docs): add OpenAPI 3.x spec and Swagger UI integration
+b666e9dbd058b57ea74327a9c253fd04b0e3b5af 03ee8b16364d897add67007dc6004c71507ed2b7 Eric Rangel <dreamereric28@gmail.com> 1782881620 -0600	merge origin/dev: Merge made by the 'ort' strategy.
+03ee8b16364d897add67007dc6004c71507ed2b7 0d069d143c3e0dd18a84bd9aaa1f74f9b68aa1f9 Eric Rangel <dreamereric28@gmail.com> 1782884705 -0600	commit: feat(docs): add OpenAPI spec and integrate Swagger UI
+0d069d143c3e0dd18a84bd9aaa1f74f9b68aa1f9 0d069d143c3e0dd18a84bd9aaa1f74f9b68aa1f9 Eric Rangel <dreamereric28@gmail.com> 1782884721 -0600	reset: moving to HEAD
+0d069d143c3e0dd18a84bd9aaa1f74f9b68aa1f9 0d069d143c3e0dd18a84bd9aaa1f74f9b68aa1f9 Eric Rangel <dreamereric28@gmail.com> 1782922676 -0600	checkout: moving from dev to chore/doc-01-sync-tasks-status
+0d069d143c3e0dd18a84bd9aaa1f74f9b68aa1f9 800bdbdadaa290c0aa57a4bf9ccfd09d5c5b3bf9 Eric Rangel <dreamereric28@gmail.com> 1782922699 -0600	commit: chore(tasks): mark DOC-01..DOC-08 done and archive openapi-docs change
+800bdbdadaa290c0aa57a4bf9ccfd09d5c5b3bf9 0d069d143c3e0dd18a84bd9aaa1f74f9b68aa1f9 Eric Rangel <dreamereric28@gmail.com> 1782922736 -0600	checkout: moving from chore/doc-01-sync-tasks-status to dev
+0d069d143c3e0dd18a84bd9aaa1f74f9b68aa1f9 05aebf3f72bde3bc559c709a3a140f0ebbebfc5f Eric Rangel <dreamereric28@gmail.com> 1782925129 -0600	merge origin/dev: Fast-forward
+05aebf3f72bde3bc559c709a3a140f0ebbebfc5f 05aebf3f72bde3bc559c709a3a140f0ebbebfc5f Eric Rangel <dreamereric28@gmail.com> 1782929729 -0600	checkout: moving from dev to fix/phase1-saneamiento-quirks
+05aebf3f72bde3bc559c709a3a140f0ebbebfc5f 2f424442ca326b1584a867399ff6e13ab43ff7b7 Eric Rangel <dreamereric28@gmail.com> 1782929740 -0600	commit: fix(api): correct summary/delete/bulk-save quirks and review findings
+2f424442ca326b1584a867399ff6e13ab43ff7b7 05aebf3f72bde3bc559c709a3a140f0ebbebfc5f Eric Rangel <dreamereric28@gmail.com> 1782930105 -0600	checkout: moving from fix/phase1-saneamiento-quirks to dev
+05aebf3f72bde3bc559c709a3a140f0ebbebfc5f 86815317871dbd712f3aeba8807150e3fb031c57 Eric Rangel <dreamereric28@gmail.com> 1782930106 -0600	pull origin dev --ff-only: Fast-forward
+86815317871dbd712f3aeba8807150e3fb031c57 86815317871dbd712f3aeba8807150e3fb031c57 Eric Rangel <dreamereric28@gmail.com> 1782930106 -0600	checkout: moving from dev to feat/phase2-account-module
+86815317871dbd712f3aeba8807150e3fb031c57 d8773bde5faf707a8134e8e41bbc4feae08041fe Eric Rangel <dreamereric28@gmail.com> 1782931349 -0600	commit: feat(account): add account module CRUD with archive/restore support
+d8773bde5faf707a8134e8e41bbc4feae08041fe 86815317871dbd712f3aeba8807150e3fb031c57 Eric Rangel <dreamereric28@gmail.com> 1782932583 -0600	checkout: moving from feat/phase2-account-module to dev
+86815317871dbd712f3aeba8807150e3fb031c57 d26ed8a7a29a22198000abe61e6373b6bca2d9b0 Eric Rangel <dreamereric28@gmail.com> 1782932585 -0600	pull origin dev --ff-only: Fast-forward
+d26ed8a7a29a22198000abe61e6373b6bca2d9b0 d26ed8a7a29a22198000abe61e6373b6bca2d9b0 Eric Rangel <dreamereric28@gmail.com> 1782932585 -0600	checkout: moving from dev to feat/phase3-budget-module
+d26ed8a7a29a22198000abe61e6373b6bca2d9b0 d06d334c36fb708aeb79169c05377a3cd3f1f33a Eric Rangel <dreamereric28@gmail.com> 1782940397 -0600	merge origin/dev: Fast-forward
+d06d334c36fb708aeb79169c05377a3cd3f1f33a d06d334c36fb708aeb79169c05377a3cd3f1f33a Eric Rangel <dreamereric28@gmail.com> 1782940484 -0600	checkout: moving from dev to feat/phase3-budget-service-crud
+d06d334c36fb708aeb79169c05377a3cd3f1f33a 173ac42944c9f0727743a4fc580559d98c05e07a Eric Rangel <dreamereric28@gmail.com> 1782941264 -0600	commit: feat(budget): add budget CRUD, consumption status, and OpenAPI docs
+173ac42944c9f0727743a4fc580559d98c05e07a d06d334c36fb708aeb79169c05377a3cd3f1f33a Eric Rangel <dreamereric28@gmail.com> 1782941302 -0600	checkout: moving from feat/phase3-budget-service-crud to dev
+d06d334c36fb708aeb79169c05377a3cd3f1f33a d06d334c36fb708aeb79169c05377a3cd3f1f33a Eric Rangel <dreamereric28@gmail.com> 1782947064 -0600	checkout: moving from dev to feat/phase4-recurring-module
+d06d334c36fb708aeb79169c05377a3cd3f1f33a e63cb882d90e0a2d4dc0bb0f0d7bc190cd165535 Eric Rangel <dreamereric28@gmail.com> 1782948392 -0600	commit: feat(recurring): add recurring transactions module with idempotent run
+e63cb882d90e0a2d4dc0bb0f0d7bc190cd165535 a28a0598d3ca43ed91a471b4b17654fdcf659740 Eric Rangel <dreamereric28@gmail.com> 1782948427 -0600	commit: fix(recurring): include openapi docs, route mount, and run() atomicity fix
+a28a0598d3ca43ed91a471b4b17654fdcf659740 d06d334c36fb708aeb79169c05377a3cd3f1f33a Eric Rangel <dreamereric28@gmail.com> 1782948468 -0600	checkout: moving from feat/phase4-recurring-module to dev
+d06d334c36fb708aeb79169c05377a3cd3f1f33a d5331c9852244788d13b3f4ac8307086e1dcec70 Eric Rangel <dreamereric28@gmail.com> 1782951871 -0600	pull origin dev --ff-only: Fast-forward
+d5331c9852244788d13b3f4ac8307086e1dcec70 d5331c9852244788d13b3f4ac8307086e1dcec70 Eric Rangel <dreamereric28@gmail.com> 1782951926 -0600	checkout: moving from dev to feat/phase5-reports-module
+d5331c9852244788d13b3f4ac8307086e1dcec70 96d1fd59328b1e4fa33a10b4f049ed3853ca0a52 Eric Rangel <dreamereric28@gmail.com> 1782952681 -0600	commit: feat(report): add analytics module and fix a pre-existing openapi.yaml crash
+96d1fd59328b1e4fa33a10b4f049ed3853ca0a52 d5331c9852244788d13b3f4ac8307086e1dcec70 Eric Rangel <dreamereric28@gmail.com> 1782952708 -0600	checkout: moving from feat/phase5-reports-module to dev
+d5331c9852244788d13b3f4ac8307086e1dcec70 d5331c9852244788d13b3f4ac8307086e1dcec70 Eric Rangel <dreamereric28@gmail.com> 1782953576 -0600	checkout: moving from dev to dev
+d5331c9852244788d13b3f4ac8307086e1dcec70 d5331c9852244788d13b3f4ac8307086e1dcec70 Eric Rangel <dreamereric28@gmail.com> 1782953588 -0600	checkout: moving from dev to docs/onboarding-guide
+d5331c9852244788d13b3f4ac8307086e1dcec70 107ba5804e951fbba94bf7bcec51681bf2e48068 Eric Rangel <dreamereric28@gmail.com> 1782953644 -0600	commit: docs: add ONBOARD.md project onboarding guide
+107ba5804e951fbba94bf7bcec51681bf2e48068 d5331c9852244788d13b3f4ac8307086e1dcec70 Eric Rangel <dreamereric28@gmail.com> 1782953697 -0600	checkout: moving from docs/onboarding-guide to dev
+d5331c9852244788d13b3f4ac8307086e1dcec70 d5331c9852244788d13b3f4ac8307086e1dcec70 Eric Rangel <dreamereric28@gmail.com> 1782953697 -0600	checkout: moving from dev to feat/movement-account-integration
+d5331c9852244788d13b3f4ac8307086e1dcec70 be29d2db6d01baa1c28b524f1581657e894025ca Eric Rangel <dreamereric28@gmail.com> 1782960832 -0600	commit: feat(account): integrate Movement with Account, add balance and transfer
+be29d2db6d01baa1c28b524f1581657e894025ca d5331c9852244788d13b3f4ac8307086e1dcec70 Eric Rangel <dreamereric28@gmail.com> 1782960868 -0600	checkout: moving from feat/movement-account-integration to dev
+d5331c9852244788d13b3f4ac8307086e1dcec70 d5331c9852244788d13b3f4ac8307086e1dcec70 Eric Rangel <dreamereric28@gmail.com> 1782961122 -0600	checkout: moving from dev to chore/env-example-and-onboarding-notes
+d5331c9852244788d13b3f4ac8307086e1dcec70 9aac2b03dce535fae6fd084663ba45bca037495a Eric Rangel <dreamereric28@gmail.com> 1782961131 -0600	commit: chore(env): populate .env.example, add .aiignore, add onboarding notes
+9aac2b03dce535fae6fd084663ba45bca037495a d5331c9852244788d13b3f4ac8307086e1dcec70 Eric Rangel <dreamereric28@gmail.com> 1782961135 -0600	checkout: moving from chore/env-example-and-onboarding-notes to dev
+d5331c9852244788d13b3f4ac8307086e1dcec70 9aac2b03dce535fae6fd084663ba45bca037495a Eric Rangel <dreamereric28@gmail.com> 1782961239 -0600	checkout: moving from dev to chore/env-example-and-onboarding-notes
+9aac2b03dce535fae6fd084663ba45bca037495a d5331c9852244788d13b3f4ac8307086e1dcec70 Eric Rangel <dreamereric28@gmail.com> 1782961251 -0600	checkout: moving from chore/env-example-and-onboarding-notes to dev
+d5331c9852244788d13b3f4ac8307086e1dcec70 d5331c9852244788d13b3f4ac8307086e1dcec70 Eric Rangel <dreamereric28@gmail.com> 1782963488 -0600	checkout: moving from dev to dev
+d5331c9852244788d13b3f4ac8307086e1dcec70 d5331c9852244788d13b3f4ac8307086e1dcec70 Eric Rangel <dreamereric28@gmail.com> 1782963697 -0600	checkout: moving from dev to wip/auth-env-hardening
+d5331c9852244788d13b3f4ac8307086e1dcec70 d5331c9852244788d13b3f4ac8307086e1dcec70 Eric Rangel <dreamereric28@gmail.com> 1782963715 -0600	reset: moving to HEAD
+d5331c9852244788d13b3f4ac8307086e1dcec70 09d6dd734e6b8c94826b92ac8d497eafc01dbac8 Eric Rangel <dreamereric28@gmail.com> 1782965983 -0600	merge refs/heads/dev: Fast-forward
+09d6dd734e6b8c94826b92ac8d497eafc01dbac8 09d6dd734e6b8c94826b92ac8d497eafc01dbac8 Eric Rangel <dreamereric28@gmail.com> 1782968061 -0600	checkout: moving from wip/auth-env-hardening to fix/movement-validation-and-dev-setup
+09d6dd734e6b8c94826b92ac8d497eafc01dbac8 6ad8e342c052c9895d4f476553857a019bdc6718 Eric Rangel <dreamereric28@gmail.com> 1782968090 -0600	commit: fix(movement): allow partial PUT updates without Date, fix filter GET validation
+6ad8e342c052c9895d4f476553857a019bdc6718 9c84e0c5699b5fd5f181313c422a98b8171f59b4 Eric Rangel <dreamereric28@gmail.com> 1783020771 -0600	commit: feat(onboarding): add quickstart script, CI workflow, and MongoDB setup
+9c84e0c5699b5fd5f181313c422a98b8171f59b4 e9244200d9173f99ad092cf51b6ea25d1bfd9560 Eric Rangel <dreamereric28@gmail.com> 1783023394 -0600	commit: refactor(dev-tooling): make start-dev.sh delegate to scripts/onboarding.mjs
+e9244200d9173f99ad092cf51b6ea25d1bfd9560 11c08fb3156beef35c55d13af8d3efc92115a8ed Eric Rangel <dreamereric28@gmail.com> 1783095851 -0600	commit: fix(config): lower JWT_SECRET minimum length from 32 to 6 characters
+11c08fb3156beef35c55d13af8d3efc92115a8ed e82000e2605aedf35cdc390b809f8dacffe9c457 Eric Rangel <dreamereric28@gmail.com> 1783095860 -0600	commit: feat(docker): add Dockerfile and wire an api service into compose.yaml

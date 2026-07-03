@@ -1,0 +1,11 @@
+@use "./styles/tokens";
+@use "./styles/fonts";
+@use "bootstrap/scss/bootstrap-grid.scss";
+@use "bootstrap/scss/bootstrap-reboot.scss";
+@use "bootstrap/scss/bootstrap-utilities.scss";
+
+/* You can add global styles to this file, and also import other style files */
+
+
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-body); }

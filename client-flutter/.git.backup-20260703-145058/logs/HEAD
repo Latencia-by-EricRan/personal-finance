@@ -1,0 +1,2 @@
+0000000000000000000000000000000000000000 c88d84e3db608d2a1e15ab21c5496ea67c95597c Eric Rangel <erangel.carmona@gmail.com> 1783102602 -0600	commit (initial): chore: scaffold Flutter client with Docker dev environment
+c88d84e3db608d2a1e15ab21c5496ea67c95597c 856f02c794bbb724e763f953d722464f847b83f5 Eric Rangel <erangel.carmona@gmail.com> 1783111838 -0600	commit: feat: add Norte design system theme (Fase 0)

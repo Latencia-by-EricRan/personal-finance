@@ -1,0 +1,3 @@
+0000000000000000000000000000000000000000 086280796896f1085571a9a2bc6dbe7d331a85e7 Eric Rangel <erangel.carmona@gmail.com> 1782233044 -0600	branch: Created from origin/qa
+086280796896f1085571a9a2bc6dbe7d331a85e7 e926439279afc324b61a4f89d50689e7ee123d11 Eric Rangel <erangel.carmona@gmail.com> 1782233903 -0600	commit: feat(security): add single-user JWT authentication
+e926439279afc324b61a4f89d50689e7ee123d11 901eed5c106a212c73d64b1691052c19c6ce7a8d Eric Rangel <erangel.carmona@gmail.com> 1782712496 -0600	commit: fix(auth): use matchedData to consume validated request fields in login

@@ -1,0 +1,2 @@
+0000000000000000000000000000000000000000 43e87e585656009cea180e1a473f485a389ff6a6 Eric Rangel <dreamereric28@gmail.com> 1782808895 -0600	branch: Created from HEAD
+43e87e585656009cea180e1a473f485a389ff6a6 b08e927c42b132a0ef9c5494bc2739932b8bd1c9 Eric Rangel <dreamereric28@gmail.com> 1782808957 -0600	commit: fix(error-handling): unify error response contract to { message, errors? } (ERR-04)

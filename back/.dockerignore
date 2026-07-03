@@ -1,0 +1,12 @@
+node_modules
+dist
+.git
+.gitignore
+*.log
+coverage
+.aiignore
+.atl
+openspec
+personal-finance.postman.json
+.DS_Store
+.env

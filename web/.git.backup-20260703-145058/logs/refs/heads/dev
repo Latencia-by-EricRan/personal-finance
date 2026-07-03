@@ -1,0 +1,12 @@
+0000000000000000000000000000000000000000 7e0ce970497d5691c6efb923234c84e84ed31881 Eric Rangel <erangel.carmona@gmail.com> 1732393047 -0600	branch: Created from HEAD
+7e0ce970497d5691c6efb923234c84e84ed31881 e9796beb78aef164cabc86c6c8ffae809c39b343 Eric Rangel <erangel.carmona@gmail.com> 1732395359 -0600	merge main: Fast-forward
+e9796beb78aef164cabc86c6c8ffae809c39b343 531d17921e08fc53e0da4cc41c6f29f2e3cc4ec3 Eric Rangel <erangel.carmona@gmail.com> 1733790141 -0600	commit: Add new components for summary and navbar
+531d17921e08fc53e0da4cc41c6f29f2e3cc4ec3 5d0100e7fb5dcd06a8abbba2e71feba786708c1c Eric Rangel <erangel.carmona@gmail.com> 1735504096 -0600	commit: Update HTML structure and refactor type enums in models
+5d0100e7fb5dcd06a8abbba2e71feba786708c1c 1536d2bd61f711fe11112a1c427a2ee891d04055 Eric Rangel <erangel.carmona@gmail.com> 1735504271 -0600	commit: Update Angular to v19 and fix indentation inconsistencies
+1536d2bd61f711fe11112a1c427a2ee891d04055 28fb918e98f9e685627c23c0a2b873a72a4ea609 Eric Rangel <erangel.carmona@gmail.com> 1735505612 -0600	commit: Update dependencies and cleanup app configuration
+28fb918e98f9e685627c23c0a2b873a72a4ea609 576fcbb33554956b0d52e5b5fae78096ffa793b5 Eric Rangel <erangel.carmona@gmail.com> 1783027646 -0600	merge origin/dev: Fast-forward
+576fcbb33554956b0d52e5b5fae78096ffa793b5 d0a2f7bd4662fffa3bb15d6376d79dd56053d462 Eric Rangel <erangel.carmona@gmail.com> 1783091705 -0600	pull origin dev: Fast-forward
+d0a2f7bd4662fffa3bb15d6376d79dd56053d462 6b9bb743b74499fdbf2840e10f5c1d7937e147f8 Eric Rangel <erangel.carmona@gmail.com> 1783092030 -0600	commit: archive(sdd): close norte-mobile-rebrand — 6 phases complete, DoD verified
+6b9bb743b74499fdbf2840e10f5c1d7937e147f8 ea563e05aabef0907bf618d57f7821bcea413f63 Eric Rangel <erangel.carmona@gmail.com> 1783092101 -0600	commit: docs(sdd): log the archive-agent correction and final post-archive verification
+ea563e05aabef0907bf618d57f7821bcea413f63 064d151d2f26f6d683e59df4b9149b3c3728f488 Eric Rangel <erangel.carmona@gmail.com> 1783094228 -0600	commit: fix(sdd): stage the missing deletion of the pre-archive change folder
+064d151d2f26f6d683e59df4b9149b3c3728f488 4bf70d83eec34ee61dfe1157ed9f5696d00cacdb Eric Rangel <erangel.carmona@gmail.com> 1783094270 -0600	commit: chore: add start-dev.sh to bootstrap and run the dev server

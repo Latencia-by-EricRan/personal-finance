@@ -1,0 +1,2097 @@
+openapi: 3.0.3
+info:
+  title: Personal Finance API
+  description: >
+    REST API for personal finance tracking (movements and categories).
+    This spec is hand-written and documents the API's real, current behavior
+    verbatim — including known quirks (see per-operation notes below). It is
+    the source of truth for `/docs`.
+  version: 1.0.0
+servers:
+  - url: /
+    description: Current server (path is relative to wherever the API is deployed)
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: auth
+    description: Authentication
+  - name: movement
+    description: Income/expense movement records
+  - name: category
+    description: Movement categories
+  - name: account
+    description: Accounts/wallets (cuentas y billeteras) that movements will reference
+  - name: budget
+    description: Monthly spending limits (presupuestos) per category, with status tracking
+  - name: recurring
+    description: >
+      Recurring movement templates (salary, rent, subscriptions) that are
+      materialized into real Movement documents on demand via POST /recurring/run
+  - name: report
+    description: >
+      Read-only reporting/analytics endpoints derived from Movement data:
+      spending by category, monthly income/expense trends, and cashflow.
+      Movement has no Account field yet (a separate integration slice is
+      deferred), so cashflow reports the whole-ledger net for a month —
+      there is no per-account breakdown.
+
+paths:
+  /auth/login:
+    post:
+      tags: [auth]
+      summary: Log in and obtain a JWT
+      description: Public endpoint. Does not require a Bearer token.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [Email, Password]
+              properties:
+                Email:
+                  type: string
+                  format: email
+                Password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  expiresIn:
+                    type: string
+                    description: JWT expiration, e.g. "1d"
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: Validation error (missing/invalid Email or Password)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /movement/month:
+    get:
+      tags: [movement]
+      summary: Get movements for the current month
+      description: Returns all movements whose Date falls within the current calendar month, with Category populated.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Movements for the current month
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movement'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /movement/summary/{month}/{year}:
+    get:
+      tags: [movement]
+      summary: Get a monthly income/expense summary
+      description: >
+        Returns aggregate income/expense totals for the given month/year,
+        plus the list of movements in that period.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: month
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Calendar month (1-12)
+        - name: year
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Monthly summary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonthlySummary'
+        '400':
+          description: Validation error (missing month/year)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /movement/{startDate}/{endDate}:
+    get:
+      tags: [movement]
+      summary: List movements within a date range, with optional filters
+      description: >
+        Returns a paginated, bare-array list of movements between startDate
+        and endDate (inclusive), optionally filtered by fields in the
+        request body. NOTE: the response is a bare array with NO
+        total/count/pagination-metadata field, even though pagination
+        params are accepted.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: startDate
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+          description: 1-based page number.
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 50
+            maximum: 200
+          description: Page size. Default 50, maximum 200.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Type:
+                  type: string
+                  enum: [ingreso, egreso]
+                Amount:
+                  type: number
+                Card:
+                  type: string
+                Category:
+                  type: string
+                Description:
+                  type: string
+      responses:
+        '200':
+          description: Bare array of matching movements (no total/count metadata)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movement'
+        '400':
+          description: Validation error (invalid dates or filter fields)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags: [movement]
+      summary: List movements within a date range, with optional filters (POST variant)
+      description: >
+        Same path and same filtering semantics as `GET /movement/{startDate}/{endDate}`
+        (this is intentionally a distinct operation on the same path, kept for
+        clients that need to send filters as a POST body). This does NOT create
+        a movement.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: startDate
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Type:
+                  type: string
+                  enum: [ingreso, egreso]
+                Amount:
+                  type: number
+                Card:
+                  type: string
+                Category:
+                  type: string
+                Description:
+                  type: string
+      responses:
+        '200':
+          description: Bare array of matching movements (no total/count metadata)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movement'
+        '400':
+          description: Validation error (invalid dates or filter fields)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /movement/:
+    post:
+      tags: [movement]
+      summary: Create a movement
+      description: >
+        Type, Amount, Date, Category, and Account are all required on
+        create, even though the shared Movement schema only lists Amount,
+        Date, Type, and Account as required (Category is optional at the
+        schema level solely so transfer-generated movements, which have no
+        spending category, remain valid).
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Movement'
+                - required: ['Category']
+      responses:
+        '201':
+          description: Movement created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movement'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /movement/save:
+    post:
+      tags: [movement]
+      summary: Bulk-create movements
+      description: Accepts a non-empty array of movements and persists all of them.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Movement'
+      responses:
+        '201':
+          description: Movements created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movement'
+        '400':
+          description: Validation error (empty array or invalid item)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /movement/{id}:
+    put:
+      tags: [movement]
+      summary: Update a movement
+      description: >
+        All fields are optional on update — only the fields present in the
+        body are changed (partial update).
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: MongoDB ObjectId of the movement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Movement'
+      responses:
+        '200':
+          description: Movement updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movement'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags: [movement]
+      summary: Delete a movement
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: MongoDB ObjectId of the movement
+      responses:
+        '200':
+          description: Deletion confirmation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deleted:
+                    type: boolean
+                  id:
+                    type: string
+                required: [deleted, id]
+        '400':
+          description: Validation error (invalid id)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Movement not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /category/:
+    get:
+      tags: [category]
+      summary: List categories
+      description: >
+        Returns a paginated, bare-array list of categories. NOTE: the
+        response is a bare array with NO total/count/pagination-metadata
+        field, even though pagination params are accepted.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+          description: 1-based page number.
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 50
+            maximum: 200
+          description: Page size. Default 50, maximum 200.
+      responses:
+        '200':
+          description: Bare array of categories (no total/count metadata)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags: [category]
+      summary: Create one or more categories
+      description: >
+        Request body may be a single Category object OR an array of
+        Category objects (both are accepted by validation and persisted
+        correctly). When an array is sent, it is bulk-persisted the same
+        way as `POST /category/save`.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/Category'
+                - type: array
+                  items:
+                    $ref: '#/components/schemas/Category'
+      responses:
+        '201':
+          description: >
+            Category created (single-object body), or the bulk-write
+            result (array body, same shape as `POST /category/save`).
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Category'
+                  - $ref: '#/components/schemas/CategoryBulkWriteResult'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /category/{id}:
+    get:
+      tags: [category]
+      summary: Get a category by id
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: MongoDB ObjectId of the category
+      responses:
+        '200':
+          description: Category found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '400':
+          description: Validation error (invalid id)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags: [category]
+      summary: Delete a category by id
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: MongoDB ObjectId of the category
+      responses:
+        '200':
+          description: Deletion confirmation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deleted:
+                    type: boolean
+                  id:
+                    type: string
+                required: [deleted, id]
+        '400':
+          description: Validation error (invalid id)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Category not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /category/save:
+    post:
+      tags: [category]
+      summary: Bulk-create categories
+      description: Accepts a non-empty array of categories and persists all of them. Use this endpoint (not `POST /category/`) for bulk creation.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Category'
+      responses:
+        '201':
+          description: Categories created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryBulkWriteResult'
+        '400':
+          description: Validation error (empty array or invalid item)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /account/:
+    get:
+      tags: [account]
+      summary: List accounts
+      description: >
+        Returns a paginated, bare-array list of accounts. NOTE: the
+        response is a bare array with NO total/count/pagination-metadata
+        field, even though pagination params are accepted (same behavior
+        as GET /category/).
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+          description: 1-based page number.
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 50
+            maximum: 200
+          description: Page size. Default 50, maximum 200.
+      responses:
+        '200':
+          description: Bare array of accounts (no total/count metadata)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags: [account]
+      summary: Create an account
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+      responses:
+        '201':
+          description: Account created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /account/{id}:
+    get:
+      tags: [account]
+      summary: Get an account by id
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: MongoDB ObjectId of the account
+      responses:
+        '200':
+          description: Account found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '400':
+          description: Validation error (invalid id)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags: [account]
+      summary: Update an account by id
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: MongoDB ObjectId of the account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+      responses:
+        '200':
+          description: Account updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags: [account]
+      summary: Archive an account by id
+      description: >
+        Accounts are archived, not hard-deleted, since movements reference
+        accounts (see Movement.Account). The 200 response is the updated
+        Account object with Archived set to true — not an empty or
+        deletion-shaped body.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: MongoDB ObjectId of the account
+      responses:
+        '200':
+          description: Account archived (returns the updated Account with Archived true)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '400':
+          description: Validation error (invalid id)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /account/{id}/balance:
+    get:
+      tags: [account]
+      summary: Get an account's balance
+      description: >
+        Balance is computed as the sum of ingreso movement Amounts minus the
+        sum of egreso movement Amounts for this account (find + reduce, not
+        a Mongo aggregate pipeline, for consistency with report/budget
+        services).
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: MongoDB ObjectId of the account
+      responses:
+        '200':
+          description: Account balance
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Account:
+                    type: string
+                  Balance:
+                    type: number
+                required: [Account, Balance]
+        '400':
+          description: Validation error (invalid id)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /account/transfer:
+    post:
+      tags: [account]
+      summary: Transfer an amount between two accounts
+      description: >
+        Creates two linked Movement documents sharing a system-generated
+        TransferId: an egreso on From and an ingreso on To. This project has
+        no MongoDB replica set, so no multi-document transaction is used —
+        it attempts to create the two movements atomically per account, and
+        if creating the ingreso movement fails after the egreso movement was
+        already created, the service attempts to delete the egreso movement
+        as a best-effort compensating rollback. If that compensating
+        rollback also fails, the original error is logged and re-thrown, but
+        a lone unbalanced movement may remain and require manual
+        reconciliation.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                From:
+                  type: string
+                  description: MongoDB ObjectId of the source account
+                To:
+                  type: string
+                  description: MongoDB ObjectId of the destination account
+                Amount:
+                  type: number
+                  minimum: 0
+                  exclusiveMinimum: true
+                Date:
+                  type: string
+                  format: date-time
+                Description:
+                  type: string
+              required: [From, To, Amount, Date]
+      responses:
+        '201':
+          description: The two created Movement documents (egreso, then ingreso)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movement'
+        '400':
+          description: >
+            Validation error (invalid From/To id, non-positive Amount,
+            missing Date, or From equal to To).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >
+            Internal server error, including From/To resolving to a
+            non-existent account.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /budget/:
+    get:
+      tags: [budget]
+      summary: List budgets
+      description: >
+        Returns a paginated, bare-array list of budgets (no total/count
+        metadata field), same behavior as GET /account/.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+          description: 1-based page number.
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 50
+            maximum: 200
+          description: Page size. Default 50, maximum 200.
+      responses:
+        '200':
+          description: Bare array of budgets (no total/count metadata)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Budget'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags: [budget]
+      summary: Create a budget
+      description: >
+        A compound unique index on (Category, Month, Year) prevents two
+        budgets for the same category in the same month/year — see the
+        400 response below.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Budget'
+      responses:
+        '201':
+          description: Budget created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Budget'
+        '400':
+          description: >
+            Validation error, or a duplicate budget already exists for this
+            category in this month/year.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /budget/status/{month}/{year}:
+    get:
+      tags: [budget]
+      summary: Get budget status for a given month/year
+      description: >
+        Returns, for every budget matching the given month/year, the
+        spending status computed from actual egreso movements in that
+        category for that month.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: month
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 12
+          description: 1-based month number.
+        - name: year
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 2000
+            maximum: 2100
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+          description: 1-based page number.
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 50
+            maximum: 200
+          description: Page size. Default 50, maximum 200.
+      responses:
+        '200':
+          description: Bare array of budget statuses for the given month/year
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BudgetStatus'
+        '400':
+          description: Validation error (invalid month/year)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /budget/{id}:
+    get:
+      tags: [budget]
+      summary: Get a budget by id
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: MongoDB ObjectId of the budget
+      responses:
+        '200':
+          description: Budget found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Budget'
+        '400':
+          description: Validation error (invalid id)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Budget not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags: [budget]
+      summary: Update a budget by id
+      description: >
+        Category/Month/Year/Limit are all optional on PUT — only the fields
+        present in the body are updated (partial update).
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: MongoDB ObjectId of the budget
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Budget'
+      responses:
+        '200':
+          description: Budget updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Budget'
+        '400':
+          description: >
+            Validation error, or a duplicate budget already exists for this
+            category in this month/year.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Budget not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags: [budget]
+      summary: Delete a budget by id
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            description: MongoDB ObjectId of the budget
+      responses:
+        '200':
+          description: Budget deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deleted:
+                    type: boolean
+                  id:
+                    type: string
+        '400':
+          description: Validation error (invalid id)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Budget not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /recurring/:
+    get:
+      tags: [recurring]
+      summary: List recurring templates
+      description: >
+        Returns a paginated, bare-array list of recurring templates. NOTE: the
+        response is a bare array with NO total/count/pagination-metadata
+        field, even though pagination params are accepted (same behavior
+        as GET /account/).
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+          description: 1-based page number.
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 50
+            maximum: 200
+          description: Page size. Default 50, maximum 200.
+      responses:
+        '200':
+          description: Bare array of recurring templates (no total/count metadata)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recurring'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags: [recurring]
+      summary: Create a recurring template
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Recurring'
+      responses:
+        '201':
+          description: Recurring template created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recurring'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /recurring/{id}:
+    get:
+      tags: [recurring]
+      summary: Get a recurring template by id
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: MongoDB ObjectId of the recurring template
+      responses:
+        '200':
+          description: Recurring template found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recurring'
+        '400':
+          description: Validation error (invalid id)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Recurring template not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags: [recurring]
+      summary: Update a recurring template by id
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: MongoDB ObjectId of the recurring template
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Recurring'
+      responses:
+        '200':
+          description: Recurring template updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recurring'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Recurring template not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags: [recurring]
+      summary: Delete a recurring template by id
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: MongoDB ObjectId of the recurring template
+      responses:
+        '200':
+          description: Deletion confirmation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deleted:
+                    type: boolean
+                  id:
+                    type: string
+                required: [deleted, id]
+        '400':
+          description: Validation error (invalid id)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Recurring template not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /recurring/run:
+    post:
+      tags: [recurring]
+      summary: Materialize due recurring templates into Movements
+      description: >
+        Idempotently materializes every active recurring template that hasn't
+        already run for the current calendar month into a real Movement
+        document, then stamps LastRunYearMonth so a second call within the
+        same month is a no-op. DayOfMonth is clamped to the last valid day of
+        the current month (e.g. DayOfMonth 31 in February resolves to the
+        28th/29th, it never rolls into the next month). Returns the array of
+        created Movements — an empty array (nothing was due) is a valid 200,
+        not an error.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Array of created Movements (possibly empty)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movement'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /report/by-category/{month}/{year}:
+    get:
+      tags: [report]
+      summary: Get spending by category for a given month/year
+      description: >
+        Returns, for every distinct category with at least one egreso
+        movement in the given month/year, the total Amount spent in that
+        category.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: month
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 12
+          description: 1-based month number.
+        - name: year
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 2000
+            maximum: 2100
+      responses:
+        '200':
+          description: Bare array of category reports for the given month/year
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoryReport'
+        '400':
+          description: Validation error (invalid month/year)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /report/monthly/{year}:
+    get:
+      tags: [report]
+      summary: Get monthly income/expense trends for a given year
+      description: >
+        Returns exactly 12 entries, one per calendar month (January through
+        December), even when a month has zero movements — so a chart
+        consumer never has to backfill gaps.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: year
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 2000
+            maximum: 2100
+      responses:
+        '200':
+          description: Array of exactly 12 monthly reports, one per calendar month
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MonthlyReport'
+        '400':
+          description: Validation error (invalid year)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /report/cashflow/{month}/{year}:
+    get:
+      tags: [report]
+      summary: Get whole-ledger cashflow for a given month/year
+      description: >
+        Returns a single cashflow report (not an array) for the given
+        month/year. Movement has no Account field yet (that integration is
+        a separate, deferred slice), so this is a whole-ledger net — there
+        is no per-account breakdown.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: month
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 12
+          description: 1-based month number.
+        - name: year
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 2000
+            maximum: 2100
+      responses:
+        '200':
+          description: Single cashflow report for the given month/year
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CashflowReport'
+        '400':
+          description: Validation error (invalid month/year)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Movement:
+      type: object
+      properties:
+        _id:
+          type: string
+          readOnly: true
+        Amount:
+          type: number
+        Category:
+          type: string
+          description: >
+            ObjectId ref to Category; populated on GET /movement/month. Not
+            required — transfer-generated movements (POST /account/transfer)
+            have no Category, since they aren't tied to a spending category.
+        Date:
+          type: string
+          format: date-time
+        Type:
+          type: string
+          enum: [ingreso, egreso]
+        Account:
+          type: string
+          description: ObjectId ref to Account. Required on every movement.
+        TransferId:
+          type: string
+          readOnly: true
+          description: >
+            System-managed. Set only by POST /account/transfer to link the
+            egreso/ingreso pair it creates. Never client-settable.
+        Card:
+          type: string
+        Description:
+          type: string
+      required: [Amount, Date, Type, Account]
+
+    Category:
+      type: object
+      properties:
+        _id:
+          type: string
+          readOnly: true
+        Name:
+          type: string
+        Description:
+          type: string
+        Tag:
+          type: string
+        Type:
+          type: string
+          enum: [variable, fijo]
+        Icon:
+          type: string
+      required: [Name, Description, Tag, Type]
+
+    Account:
+      type: object
+      properties:
+        _id:
+          type: string
+          readOnly: true
+        Name:
+          type: string
+        Type:
+          type: string
+          enum: [efectivo, banco, tarjeta]
+        Currency:
+          type: string
+          default: ARS
+        Icon:
+          type: string
+        Archived:
+          type: boolean
+          default: false
+      required: [Name, Type]
+
+    Budget:
+      type: object
+      properties:
+        _id:
+          type: string
+          readOnly: true
+        Category:
+          type: string
+          description: ObjectId ref to Category; populated on GET /budget/ and GET /budget/{id}
+        Month:
+          type: integer
+          minimum: 1
+          maximum: 12
+        Year:
+          type: integer
+          minimum: 2000
+          maximum: 2100
+        Limit:
+          type: number
+          minimum: 0
+      required: [Category, Month, Year, Limit]
+
+    BudgetStatus:
+      type: object
+      description: >
+        Computed spending status for a budget in a given month/year, derived
+        from actual egreso movements in that category.
+      properties:
+        Category:
+          type: string
+          description: ObjectId ref to Category (populated)
+        Limit:
+          type: number
+        Spent:
+          type: number
+          description: Sum of egreso movement Amounts for this category in the month.
+        Remaining:
+          type: number
+          description: Limit minus Spent.
+        Percent:
+          type: number
+          description: Spent as a percentage of Limit. 0 when Limit is 0 (no division by zero).
+
+    Recurring:
+      type: object
+      description: >
+        A template for a movement that repeats monthly. Materialized into
+        real Movement documents via POST /recurring/run, carrying its
+        Account field into each created Movement.
+      properties:
+        _id:
+          type: string
+          readOnly: true
+        Type:
+          type: string
+          enum: [ingreso, egreso]
+        Amount:
+          type: number
+        Category:
+          type: string
+          description: ObjectId ref to Category
+        Account:
+          type: string
+          description: >
+            ObjectId ref to Account. Required — propagated into every
+            Movement materialized from this template by POST /recurring/run.
+        Description:
+          type: string
+          default: ''
+        Card:
+          type: string
+          default: ''
+        Frequency:
+          type: string
+          enum: [mensual]
+          default: mensual
+        DayOfMonth:
+          type: integer
+          minimum: 1
+          maximum: 31
+        Active:
+          type: boolean
+          default: true
+        LastRunYearMonth:
+          type: string
+          nullable: true
+          readOnly: true
+          description: >
+            System-managed, format 'YYYY-MM'. Tracks the last month this
+            template was materialized into a Movement. Not client-settable.
+      required: [Type, Amount, Category, Account, DayOfMonth]
+
+    CategoryBulkWriteResult:
+      type: object
+      description: MongoDB bulkWrite result returned by bulk category upserts.
+      properties:
+        matchedCount:
+          type: integer
+        modifiedCount:
+          type: integer
+        upsertedCount:
+          type: integer
+        insertedCount:
+          type: integer
+        deletedCount:
+          type: integer
+
+    MonthlySummary:
+      type: object
+      properties:
+        month:
+          type: integer
+        year:
+          type: integer
+        summary:
+          type: object
+          properties:
+            items:
+              type: integer
+              description: Count of movements in the period.
+            amount:
+              type: object
+              description: Aggregate totals.
+              properties:
+                income:
+                  type: number
+                expense:
+                  type: number
+        movements:
+          type: array
+          items:
+            $ref: '#/components/schemas/Movement'
+
+    CategoryReport:
+      type: object
+      description: >
+        Total egreso spending for one category in a given month/year. One
+        entry per distinct category present in that month's expenses.
+      properties:
+        Category:
+          type: string
+          description: ObjectId ref to Category (populated)
+        Total:
+          type: number
+          description: Sum of egreso movement Amounts for this category in the month.
+
+    MonthlyReport:
+      type: object
+      description: >
+        Income/expense/net totals for a single calendar month. GET
+        /report/monthly/{year} always returns exactly 12 of these, one per
+        month, even for months with zero movements.
+      properties:
+        Month:
+          type: integer
+          minimum: 1
+          maximum: 12
+        Income:
+          type: number
+          description: Sum of ingreso movement Amounts for the month.
+        Expense:
+          type: number
+          description: Sum of egreso movement Amounts for the month.
+        Net:
+          type: number
+          description: Income minus Expense.
+
+    CashflowReport:
+      type: object
+      description: >
+        Whole-ledger income/expense/net totals for a given month/year.
+        Movement has no Account field yet, so there is no per-account
+        breakdown.
+      properties:
+        Month:
+          type: integer
+          minimum: 1
+          maximum: 12
+        Year:
+          type: integer
+          minimum: 2000
+          maximum: 2100
+        Income:
+          type: number
+          description: Sum of ingreso movement Amounts in the month.
+        Expense:
+          type: number
+          description: Sum of egreso movement Amounts in the month.
+        Net:
+          type: number
+          description: Income minus Expense.
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        errors:
+          type: array
+          items:
+            type: string
+      required: [message]

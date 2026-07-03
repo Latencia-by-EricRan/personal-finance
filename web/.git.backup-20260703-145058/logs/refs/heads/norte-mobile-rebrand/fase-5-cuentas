@@ -1,0 +1,8 @@
+0000000000000000000000000000000000000000 28daf7ce9e60dcad218f0b53e6585afc04c29bcc Eric Rangel <erangel.carmona@gmail.com> 1783067165 -0600	branch: Created from HEAD
+28daf7ce9e60dcad218f0b53e6585afc04c29bcc dc1a63ff196b8631b23f1462499c5d5e06e105d8 Eric Rangel <erangel.carmona@gmail.com> 1783067830 -0600	commit: feat(account): add refresh() to bypass fetch-once cache guard
+dc1a63ff196b8631b23f1462499c5d5e06e105d8 a745006152b9995f8dc9f18b350a302d17bd2c48 Eric Rangel <erangel.carmona@gmail.com> 1783067853 -0600	commit: feat(cuentas): add TransferSheetComponent
+a745006152b9995f8dc9f18b350a302d17bd2c48 07a453ef03477e7c0c99e0b689b1c16b2aa6cbbf Eric Rangel <erangel.carmona@gmail.com> 1783067860 -0600	commit: feat(cuentas): add AccountListComponent with balance fetching and transfer wiring
+07a453ef03477e7c0c99e0b689b1c16b2aa6cbbf 7b0f43a250aa16df028beb7a7550411ddd3d88f6 Eric Rangel <erangel.carmona@gmail.com> 1783067868 -0600	commit: feat(cuentas): wire Cuentas as a top-level section
+7b0f43a250aa16df028beb7a7550411ddd3d88f6 43f65afbe3047065a66206980df31ff4aa127e27 Eric Rangel <erangel.carmona@gmail.com> 1783068027 -0600	commit: docs(sdd): mark Fase 5 tasks complete
+43f65afbe3047065a66206980df31ff4aa127e27 33c6c6d121ae33b279c046e2c64d7dd0cfaf19ed Eric Rangel <erangel.carmona@gmail.com> 1783068569 -0600	commit: docs(sdd): close out norte-mobile-rebrand — Fase 5 verify + final DoD
+33c6c6d121ae33b279c046e2c64d7dd0cfaf19ed 40c1ed46c2e4e8b2535a5c6e44eba8701dc6d6e2 Eric Rangel <erangel.carmona@gmail.com> 1783090829 -0600	commit: docs(sdd): log delivery strategy change (chain -> direct-to-dev)

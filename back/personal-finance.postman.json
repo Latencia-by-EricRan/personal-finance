@@ -1,0 +1,703 @@
+{
+  "info": {
+    "_postman_id": "b6f1a2f0-6e3a-4a8f-9d3e-3a1c8e2c6f10",
+    "name": "Personal Finance API",
+    "description": "Express + TypeScript + Mongoose REST API for personal finance management.\n\nAll endpoints except `/auth/login` and `/docs` require a Bearer token. Run **Auth > Login** first — it automatically stores the returned token into `{{token}}` for every other request in this collection.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{token}}", "type": "string" }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": { "type": "text/javascript", "exec": [""] }
+    },
+    {
+      "listen": "test",
+      "script": { "type": "text/javascript", "exec": [""] }
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000", "type": "string" },
+    { "key": "token", "value": "", "type": "string" },
+    { "key": "accountId", "value": "", "type": "string" },
+    { "key": "categoryId", "value": "", "type": "string" },
+    { "key": "movementId", "value": "", "type": "string" },
+    { "key": "budgetId", "value": "", "type": "string" },
+    { "key": "recurringId", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.token) {",
+                  "    pm.collectionVariables.set('token', res.token);",
+                  "    pm.test('token captured', () => pm.expect(res.token).to.be.a('string'));",
+                  "} else {",
+                  "    pm.test('login failed', () => pm.expect.fail(res.message || 'no token in response'));",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"Email\": \"user@example.com\",\n    \"Password\": \"changeme\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Authenticates and returns a JWT `token` + `expiresIn`. The test script auto-saves the token to `{{token}}` used by every other request."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Docs",
+      "item": [
+        {
+          "name": "OpenAPI Spec (JSON)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/docs/openapi.json",
+              "host": ["{{baseUrl}}"],
+              "path": ["docs", "openapi.json"]
+            }
+          }
+        },
+        {
+          "name": "Swagger UI",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/docs/",
+              "host": ["{{baseUrl}}"],
+              "path": ["docs", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Account",
+      "item": [
+        {
+          "name": "Get Accounts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/account",
+              "host": ["{{baseUrl}}"],
+              "path": ["account"]
+            }
+          }
+        },
+        {
+          "name": "Get Account By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/account/{{accountId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["account", "{{accountId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Account Balance",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/account/{{accountId}}/balance",
+              "host": ["{{baseUrl}}"],
+              "path": ["account", "{{accountId}}", "balance"]
+            }
+          }
+        },
+        {
+          "name": "Create Account",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res._id) pm.collectionVariables.set('accountId', res._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"Name\": \"Cash\",\n    \"Type\": \"efectivo\",\n    \"Currency\": \"ARS\",\n    \"Icon\": \"💵\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/account",
+              "host": ["{{baseUrl}}"],
+              "path": ["account"]
+            },
+            "description": "Type must be one of: efectivo, banco, tarjeta."
+          }
+        },
+        {
+          "name": "Update Account",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"Name\": \"Cash Updated\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/account/{{accountId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["account", "{{accountId}}"]
+            }
+          }
+        },
+        {
+          "name": "Archive Account (Delete)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/account/{{accountId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["account", "{{accountId}}"]
+            }
+          }
+        },
+        {
+          "name": "Create Transfer",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"From\": \"{{accountId}}\",\n    \"To\": \"REPLACE_WITH_OTHER_ACCOUNT_ID\",\n    \"Amount\": 1000,\n    \"Date\": \"2026-07-01\",\n    \"Description\": \"Transfer between accounts\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/account/transfer",
+              "host": ["{{baseUrl}}"],
+              "path": ["account", "transfer"]
+            },
+            "description": "From and To must be different valid account ids."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Category",
+      "item": [
+        {
+          "name": "Get Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/category",
+              "host": ["{{baseUrl}}"],
+              "path": ["category"]
+            }
+          }
+        },
+        {
+          "name": "Get Category By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/category/{{categoryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["category", "{{categoryId}}"]
+            }
+          }
+        },
+        {
+          "name": "Save Category",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res._id) pm.collectionVariables.set('categoryId', res._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"Name\": \"Groceries\",\n    \"Description\": \"Supermarket and food shopping\",\n    \"Type\": \"variable\",\n    \"Tag\": \"groceries\",\n    \"Icon\": \"🛒\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/category",
+              "host": ["{{baseUrl}}"],
+              "path": ["category"]
+            },
+            "description": "Type must be one of: variable, fijo."
+          }
+        },
+        {
+          "name": "Save Many Categories",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n    {\n        \"Name\": \"Rent\",\n        \"Description\": \"Monthly rent payment\",\n        \"Type\": \"fijo\",\n        \"Tag\": \"rent\",\n        \"Icon\": \"🏠\"\n    },\n    {\n        \"Name\": \"Entertainment\",\n        \"Description\": \"Movies, streaming, outings\",\n        \"Type\": \"variable\",\n        \"Tag\": \"entertainment\",\n        \"Icon\": \"🎬\"\n    }\n]"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/category/save",
+              "host": ["{{baseUrl}}"],
+              "path": ["category", "save"]
+            },
+            "description": "Bulk create. Rejects duplicate Tag/Name within the same array."
+          }
+        },
+        {
+          "name": "Delete Category",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/category/{{categoryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["category", "{{categoryId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Movement",
+      "item": [
+        {
+          "name": "Get Movements Current Month",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movement/month",
+              "host": ["{{baseUrl}}"],
+              "path": ["movement", "month"]
+            }
+          }
+        },
+        {
+          "name": "Get Summary By Month",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movement/summary/7/2026",
+              "host": ["{{baseUrl}}"],
+              "path": ["movement", "summary", "7", "2026"]
+            }
+          }
+        },
+        {
+          "name": "Get Movements By Filters (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movement/2026-07-01/2026-07-31",
+              "host": ["{{baseUrl}}"],
+              "path": ["movement", "2026-07-01", "2026-07-31"]
+            }
+          }
+        },
+        {
+          "name": "Get Movements By Filters (POST with body filters)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"Type\": \"egreso\",\n    \"Category\": \"{{categoryId}}\",\n    \"Account\": \"{{accountId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/movement/2026-07-01/2026-07-31",
+              "host": ["{{baseUrl}}"],
+              "path": ["movement", "2026-07-01", "2026-07-31"]
+            },
+            "description": "startDate/endDate are path params (ISO8601 / date string). All body fields are optional filters."
+          }
+        },
+        {
+          "name": "Create Movement",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res._id) pm.collectionVariables.set('movementId', res._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"Type\": \"egreso\",\n    \"Amount\": 1500,\n    \"Category\": \"{{categoryId}}\",\n    \"Account\": \"{{accountId}}\",\n    \"Date\": \"2026-07-01\",\n    \"Description\": \"Supermarket run\",\n    \"Card\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/movement",
+              "host": ["{{baseUrl}}"],
+              "path": ["movement"]
+            },
+            "description": "Type must be one of: ingreso, egreso."
+          }
+        },
+        {
+          "name": "Save Many Movements",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n    {\n        \"Type\": \"ingreso\",\n        \"Amount\": 50000,\n        \"Category\": \"{{categoryId}}\",\n        \"Account\": \"{{accountId}}\",\n        \"Date\": \"2026-07-01\",\n        \"Description\": \"Monthly salary\"\n    },\n    {\n        \"Type\": \"egreso\",\n        \"Amount\": 2000,\n        \"Category\": \"{{categoryId}}\",\n        \"Account\": \"{{accountId}}\",\n        \"Date\": \"2026-07-02\",\n        \"Description\": \"Utilities\"\n    }\n]"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/movement/save",
+              "host": ["{{baseUrl}}"],
+              "path": ["movement", "save"]
+            }
+          }
+        },
+        {
+          "name": "Update Movement",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"Amount\": 1750,\n    \"Description\": \"Supermarket run (updated)\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/movement/{{movementId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["movement", "{{movementId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Movement",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/movement/{{movementId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["movement", "{{movementId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Budget",
+      "item": [
+        {
+          "name": "Get Budgets",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/budget",
+              "host": ["{{baseUrl}}"],
+              "path": ["budget"]
+            }
+          }
+        },
+        {
+          "name": "Get Budget By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/budget/{{budgetId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["budget", "{{budgetId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Budget Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/budget/status/7/2026",
+              "host": ["{{baseUrl}}"],
+              "path": ["budget", "status", "7", "2026"]
+            }
+          }
+        },
+        {
+          "name": "Create Budget",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res._id) pm.collectionVariables.set('budgetId', res._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"Category\": \"{{categoryId}}\",\n    \"Month\": 7,\n    \"Year\": 2026,\n    \"Limit\": 20000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/budget",
+              "host": ["{{baseUrl}}"],
+              "path": ["budget"]
+            }
+          }
+        },
+        {
+          "name": "Update Budget",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"Limit\": 25000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/budget/{{budgetId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["budget", "{{budgetId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Budget",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/budget/{{budgetId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["budget", "{{budgetId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Recurring",
+      "item": [
+        {
+          "name": "Get Recurrings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/recurring",
+              "host": ["{{baseUrl}}"],
+              "path": ["recurring"]
+            }
+          }
+        },
+        {
+          "name": "Get Recurring By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/recurring/{{recurringId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["recurring", "{{recurringId}}"]
+            }
+          }
+        },
+        {
+          "name": "Create Recurring",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res._id) pm.collectionVariables.set('recurringId', res._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"Type\": \"egreso\",\n    \"Amount\": 8000,\n    \"Category\": \"{{categoryId}}\",\n    \"Account\": \"{{accountId}}\",\n    \"DayOfMonth\": 10,\n    \"Frequency\": \"mensual\",\n    \"Active\": true,\n    \"Description\": \"Streaming subscription\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/recurring",
+              "host": ["{{baseUrl}}"],
+              "path": ["recurring"]
+            }
+          }
+        },
+        {
+          "name": "Update Recurring",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"Amount\": 8500,\n    \"Active\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/recurring/{{recurringId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["recurring", "{{recurringId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Recurring",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/recurring/{{recurringId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["recurring", "{{recurringId}}"]
+            }
+          }
+        },
+        {
+          "name": "Run Recurrings",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/recurring/run",
+              "host": ["{{baseUrl}}"],
+              "path": ["recurring", "run"]
+            },
+            "description": "Materializes active recurring entries into movements for the current cycle."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Report",
+      "item": [
+        {
+          "name": "Report By Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/report/by-category/7/2026",
+              "host": ["{{baseUrl}}"],
+              "path": ["report", "by-category", "7", "2026"]
+            }
+          }
+        },
+        {
+          "name": "Report Monthly",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/report/monthly/2026",
+              "host": ["{{baseUrl}}"],
+              "path": ["report", "monthly", "2026"]
+            }
+          }
+        },
+        {
+          "name": "Report Cashflow",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/report/cashflow/7/2026",
+              "host": ["{{baseUrl}}"],
+              "path": ["report", "cashflow", "7", "2026"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+0000000000000000000000000000000000000000 17a561b0ddde9d884c44993998c0061d259c1222 Eric Rangel <erangel.carmona@gmail.com> 1783051958 -0600	branch: Created from HEAD
+17a561b0ddde9d884c44993998c0061d259c1222 c70810de3b4d05356efe36ee2359cd02e12436b9 Eric Rangel <erangel.carmona@gmail.com> 1783052480 -0600	commit: refactor(records): relocate MovementService and models to records/core
+c70810de3b4d05356efe36ee2359cd02e12436b9 9c87ce5ffc2e2cc5832867f3383043493dbbe232 Eric Rangel <erangel.carmona@gmail.com> 1783052677 -0600	commit: feat(core): add CategoryService with signal-backed cache
+9c87ce5ffc2e2cc5832867f3383043493dbbe232 c2c61cca04a78e3bcc951bd5353101bb801ca1dc Eric Rangel <erangel.carmona@gmail.com> 1783052687 -0600	commit: feat(core): add AccountService and reference barrel
+c2c61cca04a78e3bcc951bd5353101bb801ca1dc c4a7ea487f95fc44fba2f07e42bde02b0a530891 Eric Rangel <erangel.carmona@gmail.com> 1783053159 -0600	commit: docs(sdd): mark Fase 1 tasks complete, log verify results

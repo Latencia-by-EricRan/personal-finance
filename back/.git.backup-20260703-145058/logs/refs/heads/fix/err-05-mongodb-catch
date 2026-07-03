@@ -1,0 +1,2 @@
+0000000000000000000000000000000000000000 43e87e585656009cea180e1a473f485a389ff6a6 Eric Rangel <dreamereric28@gmail.com> 1782809448 -0600	branch: Created from HEAD
+43e87e585656009cea180e1a473f485a389ff6a6 5a617e8ede1d36ebaeb3a41139aaeff08cc9de04 Eric Rangel <dreamereric28@gmail.com> 1782809499 -0600	commit: fix(error-handling): add .catch to MongoDB startup to prevent unhandled rejection (ERR-05)

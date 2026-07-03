@@ -1,0 +1,3 @@
+0000000000000000000000000000000000000000 7e0ce970497d5691c6efb923234c84e84ed31881 Eric Rangel <erangel.carmona@gmail.com> 1731561241 -0600	commit (initial): initial commit
+7e0ce970497d5691c6efb923234c84e84ed31881 e9796beb78aef164cabc86c6c8ffae809c39b343 Eric Rangel <erangel.carmona@gmail.com> 1732395300 -0600	commit: Add MainContainer with MovementCard and SummaryByMonth
+e9796beb78aef164cabc86c6c8ffae809c39b343 e9796beb78aef164cabc86c6c8ffae809c39b343 Eric Rangel <erangel.carmona@gmail.com> 1732395335 -0600	Branch: renamed refs/heads/master to refs/heads/main

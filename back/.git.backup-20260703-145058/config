@@ -1,0 +1,152 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+[remote "origin"]
+	url = git@github.com:Latencia-by-EricRan/personal-finance-back.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "main"]
+	remote = origin
+	merge = refs/heads/main
+[branch "dev"]
+	remote = origin
+	merge = refs/heads/dev
+[branch "ai-project-management"]
+	remote = origin
+	vscode-merge-base = origin/main
+	merge = refs/heads/ai-project-management
+[branch "fix/sec-01-untrack-env"]
+	remote = origin
+	merge = refs/heads/fix/sec-01-untrack-env
+[branch "chore/tool-08-env-example"]
+	remote = origin
+	merge = refs/heads/chore/tool-08-env-example
+[branch "feat/sec-02-jwt-auth"]
+	remote = origin
+	merge = refs/heads/feat/sec-02-jwt-auth
+[branch "feat/sec-03-http-hardening"]
+	remote = origin
+	merge = refs/heads/dev
+[user]
+	email = dreamereric28@gmail.com
+	name = Eric Rangel
+[branch "fix/sec-04-mass-assignment"]
+	remote = origin
+	merge = refs/heads/fix/sec-04-mass-assignment
+[branch "fix/sec-05-error-disclosure"]
+	remote = origin
+	merge = refs/heads/fix/sec-05-error-disclosure
+[branch "fix/err-01-global-error-middleware"]
+	remote = origin
+	merge = refs/heads/fix/err-01-global-error-middleware
+[branch "fix/mongoose-v9-rootfilterquery"]
+	remote = origin
+	merge = refs/heads/fix/mongoose-v9-rootfilterquery
+[branch "fix/err-02-async-validators-next"]
+	remote = origin
+	merge = refs/heads/fix/err-02-async-validators-next
+[branch "fix/err-03-http-status-mapping"]
+	remote = origin
+	merge = refs/heads/fix/err-03-http-status-mapping
+[branch "fix/err-04-unified-error-contract"]
+	remote = origin
+	merge = refs/heads/fix/err-04-unified-error-contract
+[branch "fix/err-05-mongodb-catch"]
+	remote = origin
+	merge = refs/heads/fix/err-05-mongodb-catch
+[branch "fix/db-01-category-objectid-ref"]
+	remote = origin
+	merge = refs/heads/fix/db-01-category-objectid-ref
+[branch "fix/db-02-update-runvalidators"]
+	remote = origin
+	merge = refs/heads/fix/db-02-update-runvalidators
+[branch "fix/db-03-graceful-shutdown"]
+	remote = origin
+	merge = refs/heads/fix/db-03-graceful-shutdown
+[branch "fix/db-04-pagination"]
+	remote = origin
+	merge = refs/heads/fix/db-04-pagination
+[branch "fix/val-02-movement-required-fields"]
+	remote = origin
+	merge = refs/heads/fix/val-02-movement-required-fields
+[branch "fix/val-04-bulk-save-validators"]
+	remote = origin
+	merge = refs/heads/fix/val-04-bulk-save-validators
+[branch "fix/val-05-category-icon-whitelist"]
+	remote = origin
+	merge = refs/heads/fix/val-05-category-icon-whitelist
+[branch "fix/val-06-duplicate-card-validator"]
+	remote = origin
+	merge = refs/heads/fix/val-06-duplicate-card-validator
+[branch "fix/val-07-movement-id-mongoid-validation"]
+	remote = origin
+	merge = refs/heads/fix/val-07-movement-id-mongoid-validation
+[branch "fix/route-01-month-year-summary-path"]
+	remote = origin
+	merge = refs/heads/fix/route-01-month-year-summary-path
+[branch "feat/tool-02-eslint-prettier"]
+	remote = origin
+	merge = refs/heads/feat/tool-02-eslint-prettier
+[branch "fix/type-01-remove-any-bypasses"]
+	remote = origin
+	merge = refs/heads/fix/type-01-remove-any-bypasses
+[branch "fix/type-02-outdated-type-dependencies"]
+	remote = origin
+	merge = refs/heads/fix/type-02-outdated-type-dependencies
+[branch "feat/tool-01-vitest-test-runner"]
+	remote = origin
+	merge = refs/heads/feat/tool-01-vitest-test-runner
+[branch "fix/tool-03-remove-npm-i-from-scripts"]
+	remote = origin
+	merge = refs/heads/fix/tool-03-remove-npm-i-from-scripts
+[branch "fix/tool-04-http-status-codes"]
+	remote = origin
+	merge = refs/heads/fix/tool-04-http-status-codes
+[branch "fix/tool-05-remove-dead-validator-code"]
+	remote = origin
+	merge = refs/heads/fix/tool-05-remove-dead-validator-code
+[branch "fix/tool-06-rename-response-middleware"]
+	remote = origin
+	merge = refs/heads/fix/tool-06-rename-response-middleware
+[branch "chore/tool-07-verify-ds-store-not-tracked"]
+	remote = origin
+	merge = refs/heads/chore/tool-07-verify-ds-store-not-tracked
+[branch "fix/db-05-movement-interface-not-document"]
+	remote = origin
+	merge = refs/heads/fix/db-05-movement-interface-not-document
+[branch "chore/tasks-json-sync-meta-counters"]
+	remote = origin
+	merge = refs/heads/chore/tasks-json-sync-meta-counters
+[branch "chore/doc-01-sync-tasks-status"]
+	remote = origin
+	merge = refs/heads/chore/doc-01-sync-tasks-status
+[branch "fix/phase1-saneamiento-quirks"]
+	remote = origin
+	merge = refs/heads/fix/phase1-saneamiento-quirks
+[branch "feat/phase2-account-module"]
+	remote = origin
+	merge = refs/heads/feat/phase2-account-module
+[branch "feat/phase3-budget-module"]
+	remote = origin
+	merge = refs/heads/feat/phase3-budget-module
+[branch "feat/phase3-budget-service-crud"]
+	remote = origin
+	merge = refs/heads/feat/phase3-budget-service-crud
+[branch "feat/phase4-recurring-module"]
+	remote = origin
+	merge = refs/heads/feat/phase4-recurring-module
+[branch "feat/phase5-reports-module"]
+	remote = origin
+	merge = refs/heads/feat/phase5-reports-module
+[branch "docs/onboarding-guide"]
+	remote = origin
+	merge = refs/heads/docs/onboarding-guide
+[branch "chore/env-example-and-onboarding-notes"]
+	remote = origin
+	merge = refs/heads/chore/env-example-and-onboarding-notes
+[branch "fix/movement-validation-and-dev-setup"]
+	remote = origin
+	merge = refs/heads/fix/movement-validation-and-dev-setup

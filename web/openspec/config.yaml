@@ -1,0 +1,32 @@
+schema: spec-driven
+
+context: |
+  Tech stack: Angular 19 (standalone components, zoneless change detection), SSR + hydration, bun package manager.
+  Architecture: Feature-folder routing (*.routes.ts per level), barrel exports (index.ts), per-feature core/ (models/services).
+  Testing: Karma/Jasmine via `bun run test` (ng test), no custom karma.conf.js — default Angular CLI karma builder.
+  Style: 2-space indent, single quotes in .ts (.editorconfig); no lint script configured.
+
+rules:
+  proposal:
+    - Include rollback plan for risky changes
+    - Respect existing feature-folder routing and barrel export conventions
+  specs:
+    - Use Given/When/Then for scenarios
+    - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY)
+  design:
+    - Include sequence diagrams for complex flows
+    - Document architecture decisions with rationale
+    - Guard browser-only APIs for SSR/prerender compatibility
+  tasks:
+    - Group by phase, use hierarchical numbering
+    - Keep tasks completable in one session
+  apply:
+    - Follow existing code patterns (standalone components, barrel exports, per-feature core/)
+    tdd: true           # Strict TDD Mode enabled — RED-GREEN-REFACTOR
+    test_command: "bun run test"
+  verify:
+    test_command: "bun run test"
+    build_command: "bun run build"
+    coverage_threshold: 0
+  archive:
+    - Warn before merging destructive deltas

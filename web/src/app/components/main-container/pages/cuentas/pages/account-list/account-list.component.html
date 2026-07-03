@@ -1,0 +1,37 @@
+<div class="account-list">
+  <h1 class="account-list__title">Cuentas</h1>
+
+  @if (accounts().length === 0) {
+    <p class="account-list__empty">No hay cuentas registradas.</p>
+  } @else {
+    <ul class="account-list__list">
+      @for (acc of accounts(); track acc._id) {
+        <li class="account-list__item">
+          @if (acc.Icon) {
+            <span class="account-list__icon">{{ acc.Icon }}</span>
+          }
+          <span class="account-list__name">{{ acc.Name }}</span>
+          <span class="account-list__type">{{ acc.Type }}</span>
+          <span class="account-list__balance">
+            {{ acc._id && balances()[acc._id] !== undefined ? balances()[acc._id] : '—' }}
+          </span>
+        </li>
+      }
+    </ul>
+  }
+
+  <button
+    type="button"
+    class="account-list__transfer-btn"
+    (click)="openTransfer()"
+  >
+    Transferir
+  </button>
+
+  @if (showTransferSheet()) {
+    <app-transfer-sheet
+      (transferCompleted)="onTransferCompleted()"
+      (cancelled)="closeTransfer()"
+    />
+  }
+</div>

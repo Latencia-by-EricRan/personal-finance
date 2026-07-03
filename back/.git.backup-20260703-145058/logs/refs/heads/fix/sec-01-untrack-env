@@ -1,0 +1,2 @@
+0000000000000000000000000000000000000000 fc5f85f924bfd612db18811e4f1ae8c66795758c Eric Rangel <erangel.carmona@gmail.com> 1782229146 -0600	branch: Created from HEAD
+fc5f85f924bfd612db18811e4f1ae8c66795758c b68be47aba3efe56636a8d244ecf8699818002d9 Eric Rangel <erangel.carmona@gmail.com> 1782229231 -0600	commit: fix(security): stop tracking .env and fix gitignore rules

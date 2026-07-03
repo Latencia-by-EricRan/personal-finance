@@ -1,0 +1,2 @@
+0000000000000000000000000000000000000000 06ee9704c7c4620563ee435d4e6f9fb6d8b0ca4e Eric Rangel <dreamereric28@gmail.com> 1782808539 -0600	branch: Created from HEAD
+06ee9704c7c4620563ee435d4e6f9fb6d8b0ca4e d32b99f51e8c4691cd4643a72fc85f034de92259 Eric Rangel <dreamereric28@gmail.com> 1782808596 -0600	commit: fix(error-handling): map Mongoose CastError/ValidationError to HTTP 400 (ERR-03)
