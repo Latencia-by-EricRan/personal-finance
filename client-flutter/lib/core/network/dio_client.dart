@@ -10,7 +10,18 @@ class DioClient {
     required AuthTokenStore tokenStore,
     FutureOr<void> Function()? onUnauthorized,
     Dio? dio,
-  }) : dio = dio ?? Dio(BaseOptions(baseUrl: ApiConfig.baseUrl)) {
+  }) : dio =
+           dio ??
+           Dio(
+             BaseOptions(
+               baseUrl: ApiConfig.baseUrl,
+               // Bound every request so an unresponsive host fails loudly
+               // instead of hanging forever.
+               connectTimeout: const Duration(seconds: 10),
+               sendTimeout: const Duration(seconds: 10),
+               receiveTimeout: const Duration(seconds: 15),
+             ),
+           ) {
     this.dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {

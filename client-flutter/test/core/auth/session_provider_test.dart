@@ -3,24 +3,13 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:client_flutter/core/auth/index.dart';
 
-class _FakeTokenStore implements AuthTokenStore {
-  String? token;
-
-  @override
-  Future<String?> readToken() async => token;
-
-  @override
-  Future<void> writeToken(String value) async => token = value;
-
-  @override
-  Future<void> clearToken() async => token = null;
-}
+import '../../support/fake_token_store.dart';
 
 void main() {
   test('starts logged out when there is no stored token', () async {
     final container = ProviderContainer(
       overrides: [
-        authTokenStoreProvider.overrideWithValue(_FakeTokenStore()),
+        authTokenStoreProvider.overrideWithValue(FakeTokenStore()),
       ],
     );
     addTearDown(container.dispose);
@@ -29,20 +18,20 @@ void main() {
   });
 
   test('restores a logged-in session when a token already exists', () async {
-    final tokenStore = _FakeTokenStore()..token = 'existing-token';
+    final tokenStore = FakeTokenStore()..token = 'existing-token';
     final container = ProviderContainer(
       overrides: [authTokenStoreProvider.overrideWithValue(tokenStore)],
     );
     addTearDown(container.dispose);
 
     container.read(authSessionProvider);
-    await Future<void>.delayed(Duration.zero);
+    await container.read(authSessionProvider.notifier).restored;
 
     expect(container.read(authSessionProvider), isTrue);
   });
 
   test('login stores the token and flips state to true', () async {
-    final tokenStore = _FakeTokenStore();
+    final tokenStore = FakeTokenStore();
     final container = ProviderContainer(
       overrides: [authTokenStoreProvider.overrideWithValue(tokenStore)],
     );
@@ -55,7 +44,7 @@ void main() {
   });
 
   test('logout clears the token and flips state to false', () async {
-    final tokenStore = _FakeTokenStore()..token = 'existing-token';
+    final tokenStore = FakeTokenStore()..token = 'existing-token';
     final container = ProviderContainer(
       overrides: [authTokenStoreProvider.overrideWithValue(tokenStore)],
     );

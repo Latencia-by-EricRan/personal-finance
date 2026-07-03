@@ -52,7 +52,17 @@ void main() {
     final json = {
       '_id': 'mov-1',
       'Amount': 1500.5,
-      'Category': 'cat-1',
+      // The backend always populates Category as a nested object on read
+      // (MovementService's .populate('Category')) — a flat id string here
+      // would mask the exact bug this nested shape fixes.
+      'Category': {
+        '_id': 'cat-1',
+        'Description': 'Alquiler mensual',
+        'Name': 'Alquiler',
+        'Tag': 'housing',
+        'Type': 'fijo',
+        'Icon': 'home',
+      },
       'Date': '2026-07-03',
       'Type': 'egreso',
       'Account': 'acc-1',
@@ -65,7 +75,8 @@ void main() {
 
     expect(movement.type, MovementType.egreso);
     expect(movement.date, DateTime(2026, 7, 3));
-    expect(movement.toJson(), json);
+    expect(movement.category?.name, 'Alquiler');
+    expect(_encodedThenDecoded(movement.toJson()), json);
   });
 
   test('Movement tolerates a missing Category (transfer-generated)', () {
@@ -144,7 +155,14 @@ void main() {
         {
           '_id': 'mov-1',
           'Amount': 1500.5,
-          'Category': 'cat-1',
+          'Category': {
+            '_id': 'cat-1',
+            'Description': 'Alquiler mensual',
+            'Name': 'Alquiler',
+            'Tag': 'housing',
+            'Type': 'fijo',
+            'Icon': 'home',
+          },
           'Date': '2026-07-03',
           'Type': 'egreso',
           'Account': 'acc-1',
@@ -185,7 +203,12 @@ void main() {
   });
 
   test('MonthlyReportEntry round-trips', () {
-    final json = {'Month': 7, 'Income': 200000.0, 'Expense': 85000.0, 'Net': 115000.0};
+    final json = {
+      'Month': 7,
+      'Income': 200000.0,
+      'Expense': 85000.0,
+      'Net': 115000.0
+    };
 
     final entry = MonthlyReportEntry.fromJson(json);
 
@@ -226,6 +249,37 @@ void main() {
     expect(entry.category.name, 'Alquiler');
     expect(_encodedThenDecoded(entry.toJson()), json);
   });
+
+  test(
+    'MovementWriteRequest serializes Category/Account as plain id strings',
+    () {
+      final request = MovementWriteRequest(
+        type: MovementType.egreso,
+        amount: 1500.5,
+        category: 'cat-1',
+        account: 'acc-1',
+        date: DateTime(2026, 7, 3),
+        description: 'Supermercado',
+      );
+
+      final encoded = _encodedThenDecoded(request.toJson());
+
+      expect(encoded, {
+        'Type': 'egreso',
+        'Amount': 1500.5,
+        'Category': 'cat-1',
+        'Account': 'acc-1',
+        'Date': '2026-07-03',
+        'Description': 'Supermercado',
+        'Card': null,
+      });
+
+      final roundTripped = MovementWriteRequest.fromJson(
+        encoded as Map<String, dynamic>,
+      );
+      expect(roundTripped, request);
+    },
+  );
 
   test('AuthTokenResponse round-trips', () {
     final json = {'token': 'jwt-token', 'expiresIn': '1d'};

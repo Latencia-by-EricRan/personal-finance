@@ -13,11 +13,38 @@ String? authRedirect({required bool isLoggedIn, required String location}) {
   return null;
 }
 
-GoRouter buildAppRouter({required bool isLoggedIn}) {
+/// Bridges [authSessionProvider] changes into a [Listenable] that go_router
+/// accepts as `refreshListenable`, so the router re-runs `redirect` on
+/// login/logout without rebuilding the whole [GoRouter] instance (which
+/// would drop navigation stack state).
+class AuthRefreshNotifier extends ChangeNotifier {
+  AuthRefreshNotifier(Ref ref) {
+    _subscription = ref.listen<bool>(
+      authSessionProvider,
+      (_, _) => notifyListeners(),
+    );
+  }
+
+  late final ProviderSubscription<bool> _subscription;
+
+  @override
+  void dispose() {
+    _subscription.close();
+    super.dispose();
+  }
+}
+
+GoRouter buildAppRouter({
+  required bool Function() isLoggedIn,
+  Listenable? refreshListenable,
+}) {
   return GoRouter(
     initialLocation: '/',
+    refreshListenable: refreshListenable,
+    // Reads live auth state at redirect-time via the [isLoggedIn] callback
+    // rather than baking a snapshot boolean into this closure.
     redirect: (context, state) =>
-        authRedirect(isLoggedIn: isLoggedIn, location: state.matchedLocation),
+        authRedirect(isLoggedIn: isLoggedIn(), location: state.matchedLocation),
     routes: [
       GoRoute(
         path: loginRoute,
@@ -48,8 +75,12 @@ GoRouter buildAppRouter({required bool isLoggedIn}) {
 }
 
 final appRouterProvider = Provider<GoRouter>((ref) {
-  final isLoggedIn = ref.watch(authSessionProvider);
-  return buildAppRouter(isLoggedIn: isLoggedIn);
+  final refreshNotifier = AuthRefreshNotifier(ref);
+  ref.onDispose(refreshNotifier.dispose);
+  return buildAppRouter(
+    isLoggedIn: () => ref.read(authSessionProvider),
+    refreshListenable: refreshNotifier,
+  );
 });
 
 class _StubScreen extends StatelessWidget {

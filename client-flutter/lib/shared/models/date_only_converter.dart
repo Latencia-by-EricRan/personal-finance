@@ -1,5 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 
+/// Drops time-of-day on purpose: the backend's `Date` fields are date-only
+/// `YYYY-MM-DD` strings on the wire, so there is no time component to
+/// preserve.
 class DateOnlyConverter implements JsonConverter<DateTime, String> {
   const DateOnlyConverter();
 

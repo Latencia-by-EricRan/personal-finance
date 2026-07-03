@@ -5,25 +5,9 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:client_flutter/core/auth/index.dart';
 import 'package:client_flutter/core/network/index.dart';
 
-class _FakeTokenStore implements AuthTokenStore {
-  String? token;
-  var clearCallCount = 0;
-
-  @override
-  Future<String?> readToken() async => token;
-
-  @override
-  Future<void> writeToken(String value) async => token = value;
-
-  @override
-  Future<void> clearToken() async {
-    clearCallCount++;
-    token = null;
-  }
-}
+import '../../support/fake_token_store.dart';
 
 class _ScriptedAdapter implements HttpClientAdapter {
   _ScriptedAdapter(this.statusCode, this.responseData);
@@ -53,8 +37,9 @@ class _ScriptedAdapter implements HttpClientAdapter {
 }
 
 void main() {
-  test('injects the Bearer token from the token store on every request', () async {
-    final tokenStore = _FakeTokenStore()..token = 'abc123';
+  test('injects the Bearer token from the token store on every request',
+      () async {
+    final tokenStore = FakeTokenStore()..token = 'abc123';
     final adapter = _ScriptedAdapter(200, {'ok': true});
     final client = DioClient(tokenStore: tokenStore);
     client.dio.httpClientAdapter = adapter;
@@ -67,8 +52,9 @@ void main() {
     );
   });
 
-  test('omits the Authorization header when there is no stored token', () async {
-    final tokenStore = _FakeTokenStore();
+  test('omits the Authorization header when there is no stored token',
+      () async {
+    final tokenStore = FakeTokenStore();
     final adapter = _ScriptedAdapter(200, {'ok': true});
     final client = DioClient(tokenStore: tokenStore);
     client.dio.httpClientAdapter = adapter;
@@ -79,7 +65,7 @@ void main() {
   });
 
   test('clears the stored token and notifies on a 401 response', () async {
-    final tokenStore = _FakeTokenStore()..token = 'expired-token';
+    final tokenStore = FakeTokenStore()..token = 'expired-token';
     final adapter = _ScriptedAdapter(401, {'message': 'Invalid credentials'});
     var unauthorizedCalls = 0;
     final client = DioClient(
@@ -88,7 +74,8 @@ void main() {
     );
     client.dio.httpClientAdapter = adapter;
 
-    await expectLater(client.dio.get('/movement'), throwsA(isA<DioException>()));
+    await expectLater(
+        client.dio.get('/movement'), throwsA(isA<DioException>()));
 
     expect(tokenStore.clearCallCount, 1);
     expect(tokenStore.token, isNull);
@@ -96,12 +83,13 @@ void main() {
   });
 
   test('does not clear the token on a non-401 error', () async {
-    final tokenStore = _FakeTokenStore()..token = 'still-valid';
+    final tokenStore = FakeTokenStore()..token = 'still-valid';
     final adapter = _ScriptedAdapter(500, {'message': 'Server error'});
     final client = DioClient(tokenStore: tokenStore);
     client.dio.httpClientAdapter = adapter;
 
-    await expectLater(client.dio.get('/movement'), throwsA(isA<DioException>()));
+    await expectLater(
+        client.dio.get('/movement'), throwsA(isA<DioException>()));
 
     expect(tokenStore.clearCallCount, 0);
     expect(tokenStore.token, 'still-valid');

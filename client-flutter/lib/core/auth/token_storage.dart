@@ -6,8 +6,8 @@ abstract class AuthTokenStore {
   Future<void> clearToken();
 }
 
-class TokenStorage implements AuthTokenStore {
-  TokenStorage({FlutterSecureStorage? storage})
+class AuthTokenStorage implements AuthTokenStore {
+  AuthTokenStorage({FlutterSecureStorage? storage})
     : _storage = storage ?? const FlutterSecureStorage();
 
   static const _tokenKey = 'auth_token';
