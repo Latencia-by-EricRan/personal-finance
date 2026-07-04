@@ -83,7 +83,8 @@ GoRouter buildAppRouter({
       ),
       GoRoute(
         path: '/categories/add',
-        builder: (context, state) => const _StubScreen(name: 'category-add'),
+        builder: (context, state) =>
+            CategoryFormScreen(initial: state.extra as Category?),
       ),
       GoRoute(
         path: '/budgets',
