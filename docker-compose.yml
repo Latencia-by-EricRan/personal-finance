@@ -1,0 +1,75 @@
+# syntax=docker/compose:1
+# Root orchestrator for the full PersonalFinance stack (mongodb + back + web).
+#
+# This is an ADDITIONAL, fully-containerized run option (built/prod images for demos
+# and cross-service integration). It does NOT replace back/'s native `./start-dev.sh`
+# workflow, nor back/compose.yaml (dev inner-loop, target `dev`, bind mount) — both
+# coexist unchanged. Self-contained on purpose (no `include:`): isolates this stack
+# from back's dev-oriented `api` service and lets it use `target: prod` throughout.
+#
+# Prerequisite: ./back/.env must exist before `docker compose up`
+# (run `node back/scripts/onboarding.mjs --setup` first if it doesn't).
+services:
+  mongodb:
+    image: mongo:8
+    restart: unless-stopped
+    volumes:
+      - personal-finance-mongodb:/data/db
+    healthcheck:
+      test: ['CMD', 'mongosh', '--quiet', '--eval', 'db.adminCommand({ ping: 1 }).ok']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 5s
+
+  back:
+    build:
+      context: ./back
+      target: prod
+    restart: unless-stopped
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    env_file:
+      - ./back/.env
+    environment:
+      # Overrides the host-oriented values from .env: inside the compose network
+      # the mongo container is reachable by its service name, and the frontend
+      # origin is the containerized `web` service published on the host.
+      MONGO_CONN_STR: mongodb://mongodb:27017
+      CORS_ORIGINS: http://localhost:4200
+    ports:
+      - '3000:3000'
+    healthcheck:
+      # Lightweight TCP check: passes once Express is accepting connections on :3000.
+      # `node` is present in the back prod image; avoids depending on curl/wget or a
+      # specific HTTP route/status. If back later exposes a real health route, swap
+      # for an HTTP check (e.g. wget --spider http://localhost:3000/health).
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          'require("net").connect(3000,"127.0.0.1").on("connect",()=>process.exit(0)).on("error",()=>process.exit(1))',
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  web:
+    build:
+      context: ./web
+      target: prod
+    restart: unless-stopped
+    depends_on:
+      back:
+        condition: service_healthy
+    environment:
+      API_URL_SERVER: http://back:3000
+      PORT: 4000
+    ports:
+      - '4200:4000'
+
+volumes:
+  personal-finance-mongodb:
