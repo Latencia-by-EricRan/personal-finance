@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/accounts/index.dart';
 import '../../features/auth/index.dart';
 import '../../features/movements/index.dart';
 import '../../shared/models/index.dart';
@@ -64,7 +65,12 @@ GoRouter buildAppRouter({
       ),
       GoRoute(
         path: '/accounts',
-        builder: (context, state) => const _StubScreen(name: 'accounts'),
+        builder: (context, state) => const AccountsScreen(),
+      ),
+      GoRoute(
+        path: '/accounts/transfer',
+        builder: (context, state) =>
+            const _StubScreen(name: 'accounts-transfer'),
       ),
       GoRoute(
         path: '/budgets',

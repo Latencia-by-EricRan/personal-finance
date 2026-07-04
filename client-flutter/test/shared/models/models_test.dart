@@ -32,6 +32,16 @@ void main() {
     expect(account.toJson(), json);
   });
 
+  test('AccountBalance round-trips through PascalCase JSON keys', () {
+    final json = {'Account': 'acc-1', 'Balance': -450.75};
+
+    final balance = AccountBalance.fromJson(json);
+
+    expect(balance.account, 'acc-1');
+    expect(balance.balance, -450.75);
+    expect(balance.toJson(), json);
+  });
+
   test('Category round-trips through PascalCase JSON keys', () {
     final json = {
       '_id': 'cat-1',
