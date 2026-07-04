@@ -223,4 +223,49 @@ void main() {
       expect(repository.summaryCallCount, 2);
     },
   );
+
+  testWidgets('renders the personal greeting', (tester) async {
+    final repository = _FakeMovementRepository(
+      summaryResult: _summary(movements: [_movement('mv-1')]),
+    );
+
+    await tester.pumpWidget(
+      _wrap(
+        overrides: [
+          movementRepositoryProvider.overrideWithValue(repository),
+          categoriesProvider.overrideWith((ref) async => const []),
+          accountsProvider.overrideWith((ref) async => const []),
+        ],
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Hola, Eric'), findsOneWidget);
+  });
+
+  testWidgets('bottom nav starts on Resumen and navigates to the other destinations', (
+    tester,
+  ) async {
+    final repository = _FakeMovementRepository(
+      summaryResult: _summary(movements: [_movement('mv-1')]),
+    );
+
+    await tester.pumpWidget(
+      _wrap(
+        overrides: [
+          movementRepositoryProvider.overrideWithValue(repository),
+          categoriesProvider.overrideWith((ref) async => const []),
+          accountsProvider.overrideWith((ref) async => const []),
+        ],
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final navBar = tester.widget<NavigationBar>(find.byType(NavigationBar));
+    expect(navBar.selectedIndex, 0);
+
+    await tester.tap(find.text('Cuentas'));
+    await tester.pumpAndSettle();
+    expect(find.text('accounts-marker'), findsOneWidget);
+  });
 }
