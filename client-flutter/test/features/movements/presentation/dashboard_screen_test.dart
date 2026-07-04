@@ -74,8 +74,13 @@ Widget _wrap({required List<Override> overrides}) {
       GoRoute(path: '/', builder: (context, state) => const DashboardScreen()),
       GoRoute(
         path: '/movements/add',
-        builder: (context, state) =>
-            const Scaffold(body: Text('add-movement-marker')),
+        builder: (context, state) => Scaffold(
+          body: Text(
+            state.extra is Movement
+                ? 'edit-movement-marker:${(state.extra! as Movement).id}'
+                : 'add-movement-marker',
+          ),
+        ),
       ),
       GoRoute(
         path: '/accounts',
@@ -241,6 +246,30 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Hola, Eric'), findsOneWidget);
+  });
+
+  testWidgets('tapping a MovementTile navigates to /movements/add with the movement as extra', (
+    tester,
+  ) async {
+    final repository = _FakeMovementRepository(
+      summaryResult: _summary(movements: [_movement('mv-1')]),
+    );
+
+    await tester.pumpWidget(
+      _wrap(
+        overrides: [
+          movementRepositoryProvider.overrideWithValue(repository),
+          categoriesProvider.overrideWith((ref) async => const []),
+          accountsProvider.overrideWith((ref) async => const []),
+        ],
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('movement-tile-mv-1')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('edit-movement-marker:mv-1'), findsOneWidget);
   });
 
   testWidgets('bottom nav starts on Resumen and navigates to the other destinations', (

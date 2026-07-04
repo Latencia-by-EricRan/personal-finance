@@ -112,7 +112,7 @@ void main() {
       expect(find.byType(DashboardScreen), findsOneWidget);
     });
 
-    testWidgets('renders the movement-add placeholder route', (tester) async {
+    testWidgets('renders the movement form on /movements/add', (tester) async {
       final router = buildAppRouter(isLoggedIn: () => true);
       await tester.pumpWidget(
         ProviderScope(
@@ -124,8 +124,34 @@ void main() {
       router.go('/movements/add');
       await tester.pumpAndSettle();
 
-      expect(find.textContaining('TODO:'), findsOneWidget);
+      expect(find.byType(MovementFormScreen), findsOneWidget);
+      expect(find.text('Nuevo movimiento'), findsOneWidget);
     });
+
+    testWidgets(
+      'renders the movement form in edit mode when extra carries a Movement',
+      (tester) async {
+        final router = buildAppRouter(isLoggedIn: () => true);
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: _dashboardScreenOverrides,
+            child: MaterialApp.router(routerConfig: router),
+          ),
+        );
+
+        final movement = Movement(
+          id: 'mv-1',
+          amount: 1000,
+          date: DateTime(2026, 7, 1),
+          type: MovementType.egreso,
+          account: 'acc-1',
+        );
+        router.go('/movements/add', extra: movement);
+        await tester.pumpAndSettle();
+
+        expect(find.text('Editar movimiento'), findsOneWidget);
+      },
+    );
 
     testWidgets('exposes stub placeholders for every Fase 0 route', (
       tester,
