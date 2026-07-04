@@ -52,9 +52,21 @@ class DashboardScreen extends ConsumerWidget {
                             .read(selectedMonthProvider.notifier)
                             .nextMonth(),
                       ),
-                      IconButton(
+                      PopupMenuButton<String>(
+                        key: const Key('dashboard-settings-menu'),
                         icon: const Icon(Icons.settings_outlined),
-                        onPressed: () {},
+                        onSelected: (value) {
+                          if (value == 'categories') {
+                            context.push('/categories');
+                          }
+                        },
+                        itemBuilder: (context) => const [
+                          PopupMenuItem(
+                            key: Key('dashboard-settings-categories'),
+                            value: 'categories',
+                            child: Text('Categorías'),
+                          ),
+                        ],
                       ),
                     ],
                   ),

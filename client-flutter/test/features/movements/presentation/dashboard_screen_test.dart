@@ -90,6 +90,11 @@ Widget _wrap({required List<Override> overrides}) {
             const Scaffold(body: Text('accounts-marker')),
       ),
       GoRoute(
+        path: '/categories',
+        builder: (context, state) =>
+            const Scaffold(body: Text('categories-marker')),
+      ),
+      GoRoute(
         path: '/budgets',
         builder: (context, state) =>
             const Scaffold(body: Text('budgets-marker')),
@@ -303,4 +308,31 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('accounts-marker'), findsOneWidget);
   });
+
+  testWidgets(
+    'tapping the settings icon then "Categorías" navigates to /categories',
+    (tester) async {
+      final repository = _FakeMovementRepository(
+        summaryResult: _summary(movements: [_movement('mv-1')]),
+      );
+
+      await tester.pumpWidget(
+        _wrap(
+          overrides: [
+            movementRepositoryProvider.overrideWithValue(repository),
+            categoriesProvider.overrideWith((ref) async => const []),
+            accountsProvider.overrideWith((ref) async => const []),
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('dashboard-settings-menu')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Categorías'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('categories-marker'), findsOneWidget);
+    },
+  );
 }

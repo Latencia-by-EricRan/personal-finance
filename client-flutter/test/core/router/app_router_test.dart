@@ -9,7 +9,7 @@ import 'package:client_flutter/core/router/index.dart';
 import 'package:client_flutter/features/accounts/data/index.dart';
 import 'package:client_flutter/features/accounts/presentation/index.dart';
 import 'package:client_flutter/features/auth/index.dart';
-import 'package:client_flutter/features/categories/data/index.dart';
+import 'package:client_flutter/features/categories/index.dart';
 import 'package:client_flutter/features/movements/index.dart';
 import 'package:client_flutter/shared/models/index.dart';
 
@@ -232,6 +232,40 @@ void main() {
         expect(find.text('Editar cuenta'), findsOneWidget);
       },
     );
+
+    testWidgets('renders the real categories screen on /categories', (
+      tester,
+    ) async {
+      final router = buildAppRouter(isLoggedIn: () => true);
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: _dashboardScreenOverrides,
+          child: MaterialApp.router(routerConfig: router),
+        ),
+      );
+
+      router.go('/categories');
+      await tester.pumpAndSettle();
+
+      expect(find.byType(CategoriesScreen), findsOneWidget);
+    });
+
+    testWidgets('renders a stub placeholder on /categories/add', (
+      tester,
+    ) async {
+      final router = buildAppRouter(isLoggedIn: () => true);
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: _dashboardScreenOverrides,
+          child: MaterialApp.router(routerConfig: router),
+        ),
+      );
+
+      router.go('/categories/add');
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('TODO:'), findsOneWidget);
+    });
 
     testWidgets('renders the transfer screen on /accounts/transfer', (
       tester,
