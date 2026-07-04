@@ -1,0 +1,41 @@
+import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../core/network/index.dart';
+import '../../../shared/models/index.dart';
+
+class AccountRepository {
+  AccountRepository(this._dio);
+
+  final Dio _dio;
+
+  Future<List<Account>> getAll({
+    bool includeArchived = false,
+    int? page,
+    int? limit,
+  }) async {
+    try {
+      final response = await _dio.get<List<dynamic>>(
+        '/account',
+        queryParameters: {
+          if (includeArchived) 'includeArchived': 'true',
+          if (page != null) 'page': page,
+          if (limit != null) 'limit': limit,
+        },
+      );
+      return response.data!
+          .map((json) => Account.fromJson(json as Map<String, dynamic>))
+          .toList();
+    } on DioException catch (error) {
+      throw ApiException.fromDioException(error);
+    }
+  }
+}
+
+final accountRepositoryProvider = Provider<AccountRepository>((ref) {
+  return AccountRepository(ref.read(dioClientProvider).dio);
+});
+
+final accountsProvider = FutureProvider<List<Account>>((ref) {
+  return ref.read(accountRepositoryProvider).getAll();
+});
