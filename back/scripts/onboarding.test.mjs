@@ -76,6 +76,7 @@ describe('environment file safety', () => {
         expect(password).toBe('plain-generated-password');
         expect(contents).toContain('AUTH_PASSWORD_HASH=$2b$12$test-hash');
         expect(contents).not.toContain('plain-generated-password');
+        expect(contents).toContain('CORS_ORIGINS=http://localhost:4200');
         expect((await stat(envPath)).mode & 0o777).toBe(0o600);
     });
 

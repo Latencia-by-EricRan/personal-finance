@@ -18,7 +18,7 @@ one's branch once merged, so GitHub shows only the current slice — matching th
 
 ## Task Checklist
 
-- [ ] Task 1 — Fix CORS origin port in onboarding.mjs
+- [x] Task 1 — Fix CORS origin port in onboarding.mjs
 - [ ] Task 2 — DI token + environment-aware API base URL wiring (Angular-side only, no Docker)
 - [ ] Task 3 — web/Dockerfile + web/.dockerignore
 - [ ] Task 4 — Root docker-compose.yml (full-stack orchestration)
