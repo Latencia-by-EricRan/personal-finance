@@ -2,13 +2,13 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 
-import { environment } from '../../../../environments/environment';
+import { API_BASE_URL } from '../../tokens/api-base-url.token';
 import { IAccount, ITransfer } from './account.model';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
   private readonly http = inject(HttpClient);
-  private readonly accountUrl = `${environment.apiUrl}/account`;
+  private readonly accountUrl = `${inject(API_BASE_URL)}/account`;
 
   private readonly _accounts = signal<IAccount[]>([]);
   readonly accounts = this._accounts.asReadonly();

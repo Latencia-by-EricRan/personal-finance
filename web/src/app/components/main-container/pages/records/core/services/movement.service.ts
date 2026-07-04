@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
-import { environment } from '../../../../../../../environments/environment';
+import { API_BASE_URL } from '../../../../../../core/tokens/api-base-url.token';
 import { ICreateMovement, IMovement, IMovementFilter, IMovementResponse } from '../models';
 
 @Injectable({
@@ -10,7 +10,7 @@ import { ICreateMovement, IMovement, IMovementFilter, IMovementResponse } from '
 })
 export class MovementService {
 
-  private readonly mainUrl = environment.apiUrl;
+  private readonly mainUrl = inject(API_BASE_URL);
   private readonly movementUrl = this.mainUrl + '/movement';
 
   constructor(private readonly http: HttpClient) { }
