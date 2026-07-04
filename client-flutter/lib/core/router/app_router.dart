@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/accounts/index.dart';
 import '../../features/auth/index.dart';
+import '../../features/budgets/index.dart';
 import '../../features/categories/index.dart';
 import '../../features/movements/index.dart';
 import '../../shared/models/index.dart';
@@ -88,7 +89,11 @@ GoRouter buildAppRouter({
       ),
       GoRoute(
         path: '/budgets',
-        builder: (context, state) => const _StubScreen(name: 'budgets'),
+        builder: (context, state) => const BudgetsScreen(),
+      ),
+      GoRoute(
+        path: '/budgets/add',
+        builder: (context, state) => const _StubScreen(name: 'budget-add'),
       ),
       GoRoute(
         path: '/recurring',
