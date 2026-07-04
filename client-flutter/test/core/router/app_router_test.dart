@@ -195,9 +195,7 @@ void main() {
       expect(find.byType(BudgetsScreen), findsOneWidget);
     });
 
-    testWidgets('exposes a stub placeholder for /budgets/add', (
-      tester,
-    ) async {
+    testWidgets('renders the budget form on /budgets/add', (tester) async {
       final router = buildAppRouter(isLoggedIn: () => true);
       await tester.pumpWidget(
         ProviderScope(
@@ -209,7 +207,8 @@ void main() {
       router.go('/budgets/add');
       await tester.pumpAndSettle();
 
-      expect(find.textContaining('TODO:'), findsOneWidget);
+      expect(find.byType(BudgetFormScreen), findsOneWidget);
+      expect(find.text('Nuevo presupuesto'), findsOneWidget);
     });
 
     testWidgets('renders the real accounts screen on /accounts', (
