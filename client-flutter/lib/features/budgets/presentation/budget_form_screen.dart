@@ -66,6 +66,7 @@ class _BudgetFormScreenState extends ConsumerState<BudgetFormScreen> {
   // which is safe because `BudgetsScreen` and this form share the same
   // app-wide provider and `context.push` navigation does not reset it.
   Future<void> _resolveId() async {
+    if (_resolving) return;
     setState(() {
       _resolving = true;
       _resolveError = false;

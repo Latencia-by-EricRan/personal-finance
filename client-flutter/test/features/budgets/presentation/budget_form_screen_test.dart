@@ -380,6 +380,217 @@ void main() {
 
       expect(budgetRepository.createCallCount, 1);
     });
+
+    testWidgets(
+      'Month = 0 (out of range) does not submit and shows the month error',
+      (tester) async {
+        final budgetRepository = _FakeBudgetRepository();
+        final categoryRepository = _FakeCategoryRepository(
+          categories: [_category(id: 'cat-1', name: 'Supermarket')],
+        );
+        final router = _buildRouter();
+
+        await tester.pumpWidget(
+          _wrap(
+            overrides: _baseOverrides(
+              budgetRepository: budgetRepository,
+              categoryRepository: categoryRepository,
+            ),
+            router: router,
+          ),
+        );
+        router.push('/budgets/add');
+        await tester.pumpAndSettle();
+
+        await _fillValidCreateForm(tester);
+        await tester.enterText(
+          find.byKey(const Key('budget-form-month-field')),
+          '0',
+        );
+
+        await tester.tap(find.byKey(const Key('budget-form-save-button')));
+        await tester.pumpAndSettle();
+
+        expect(budgetRepository.createCallCount, 0);
+        expect(find.text('Ingresá un mes válido (1-12)'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'Month = 13 (out of range) does not submit and shows the month error',
+      (tester) async {
+        final budgetRepository = _FakeBudgetRepository();
+        final categoryRepository = _FakeCategoryRepository(
+          categories: [_category(id: 'cat-1', name: 'Supermarket')],
+        );
+        final router = _buildRouter();
+
+        await tester.pumpWidget(
+          _wrap(
+            overrides: _baseOverrides(
+              budgetRepository: budgetRepository,
+              categoryRepository: categoryRepository,
+            ),
+            router: router,
+          ),
+        );
+        router.push('/budgets/add');
+        await tester.pumpAndSettle();
+
+        await _fillValidCreateForm(tester);
+        await tester.enterText(
+          find.byKey(const Key('budget-form-month-field')),
+          '13',
+        );
+
+        await tester.tap(find.byKey(const Key('budget-form-save-button')));
+        await tester.pumpAndSettle();
+
+        expect(budgetRepository.createCallCount, 0);
+        expect(find.text('Ingresá un mes válido (1-12)'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'Year = 1999 (out of range) does not submit and shows the year error',
+      (tester) async {
+        final budgetRepository = _FakeBudgetRepository();
+        final categoryRepository = _FakeCategoryRepository(
+          categories: [_category(id: 'cat-1', name: 'Supermarket')],
+        );
+        final router = _buildRouter();
+
+        await tester.pumpWidget(
+          _wrap(
+            overrides: _baseOverrides(
+              budgetRepository: budgetRepository,
+              categoryRepository: categoryRepository,
+            ),
+            router: router,
+          ),
+        );
+        router.push('/budgets/add');
+        await tester.pumpAndSettle();
+
+        await _fillValidCreateForm(tester);
+        await tester.enterText(
+          find.byKey(const Key('budget-form-year-field')),
+          '1999',
+        );
+
+        await tester.tap(find.byKey(const Key('budget-form-save-button')));
+        await tester.pumpAndSettle();
+
+        expect(budgetRepository.createCallCount, 0);
+        expect(find.text('Ingresá un año válido'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'Year = 2101 (out of range) does not submit and shows the year error',
+      (tester) async {
+        final budgetRepository = _FakeBudgetRepository();
+        final categoryRepository = _FakeCategoryRepository(
+          categories: [_category(id: 'cat-1', name: 'Supermarket')],
+        );
+        final router = _buildRouter();
+
+        await tester.pumpWidget(
+          _wrap(
+            overrides: _baseOverrides(
+              budgetRepository: budgetRepository,
+              categoryRepository: categoryRepository,
+            ),
+            router: router,
+          ),
+        );
+        router.push('/budgets/add');
+        await tester.pumpAndSettle();
+
+        await _fillValidCreateForm(tester);
+        await tester.enterText(
+          find.byKey(const Key('budget-form-year-field')),
+          '2101',
+        );
+
+        await tester.tap(find.byKey(const Key('budget-form-save-button')));
+        await tester.pumpAndSettle();
+
+        expect(budgetRepository.createCallCount, 0);
+        expect(find.text('Ingresá un año válido'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'Limit = -5 (negative) does not submit and shows the limit error',
+      (tester) async {
+        final budgetRepository = _FakeBudgetRepository();
+        final categoryRepository = _FakeCategoryRepository(
+          categories: [_category(id: 'cat-1', name: 'Supermarket')],
+        );
+        final router = _buildRouter();
+
+        await tester.pumpWidget(
+          _wrap(
+            overrides: _baseOverrides(
+              budgetRepository: budgetRepository,
+              categoryRepository: categoryRepository,
+            ),
+            router: router,
+          ),
+        );
+        router.push('/budgets/add');
+        await tester.pumpAndSettle();
+
+        await _fillValidCreateForm(tester);
+        await tester.enterText(
+          find.byKey(const Key('budget-form-limit-field')),
+          '-5',
+        );
+
+        await tester.tap(find.byKey(const Key('budget-form-save-button')));
+        await tester.pumpAndSettle();
+
+        expect(budgetRepository.createCallCount, 0);
+        expect(find.text('Ingresá un límite válido'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'Limit = "abc" (non-numeric) does not submit and shows the limit '
+      'error',
+      (tester) async {
+        final budgetRepository = _FakeBudgetRepository();
+        final categoryRepository = _FakeCategoryRepository(
+          categories: [_category(id: 'cat-1', name: 'Supermarket')],
+        );
+        final router = _buildRouter();
+
+        await tester.pumpWidget(
+          _wrap(
+            overrides: _baseOverrides(
+              budgetRepository: budgetRepository,
+              categoryRepository: categoryRepository,
+            ),
+            router: router,
+          ),
+        );
+        router.push('/budgets/add');
+        await tester.pumpAndSettle();
+
+        await _fillValidCreateForm(tester);
+        await tester.enterText(
+          find.byKey(const Key('budget-form-limit-field')),
+          'abc',
+        );
+
+        await tester.tap(find.byKey(const Key('budget-form-save-button')));
+        await tester.pumpAndSettle();
+
+        expect(budgetRepository.createCallCount, 0);
+        expect(find.text('Ingresá un límite válido'), findsOneWidget);
+      },
+    );
   });
 
   group('edit mode', () {
@@ -506,6 +717,74 @@ void main() {
         expect(budgetRepository.lastUpdate?.month, isNull);
         expect(budgetRepository.lastUpdate?.year, isNull);
         expect(find.text('back-marker'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'a valid submit calls update with the correct match id, not a decoy '
+      'that only partially matches category/month/year',
+      (tester) async {
+        final category = _category(id: 'cat-1', name: 'Supermarket');
+        final budgetRepository = _FakeBudgetRepository(
+          budgets: [
+            // Right category, wrong year.
+            const Budget(
+              id: 'budget-decoy-year',
+              category: 'cat-1',
+              month: 7,
+              year: 2025,
+              limit: 100,
+            ),
+            // Wrong category, right month/year.
+            const Budget(
+              id: 'budget-decoy-category',
+              category: 'cat-2',
+              month: 7,
+              year: 2026,
+              limit: 200,
+            ),
+            // The actual correct match: right category AND month AND year.
+            const Budget(
+              id: 'budget-correct-match',
+              category: 'cat-1',
+              month: 7,
+              year: 2026,
+              limit: 500,
+            ),
+          ],
+        );
+        final categoryRepository = _FakeCategoryRepository(
+          categories: [category],
+        );
+        final router = _buildRouter();
+        final initial = _status(category: category, limit: 500);
+
+        await tester.pumpWidget(
+          _wrap(
+            overrides: _baseOverrides(
+              budgetRepository: budgetRepository,
+              categoryRepository: categoryRepository,
+            ),
+            router: router,
+          ),
+        );
+        router.push('/budgets/add', extra: initial);
+        await tester.pumpAndSettle();
+
+        await tester.enterText(
+          find.byKey(const Key('budget-form-limit-field')),
+          '750',
+        );
+        await tester.tap(find.byKey(const Key('budget-form-save-button')));
+        await tester.pumpAndSettle();
+
+        expect(budgetRepository.updateCallCount, 1);
+        expect(budgetRepository.lastUpdate?.id, 'budget-correct-match');
+        expect(budgetRepository.lastUpdate?.id, isNot('budget-decoy-year'));
+        expect(
+          budgetRepository.lastUpdate?.id,
+          isNot('budget-decoy-category'),
+        );
       },
     );
 
@@ -642,10 +921,22 @@ void main() {
 
     testWidgets(
       'a no-match resolution shows an error/retry state and does not show '
-      'an editable form',
+      'an editable form, even when a similar-but-not-exact decoy exists',
       (tester) async {
         final category = _category(id: 'cat-1', name: 'Supermarket');
-        final budgetRepository = _FakeBudgetRepository(budgets: const []);
+        final budgetRepository = _FakeBudgetRepository(
+          budgets: [
+            // Right category and month, but wrong year: almost matches but
+            // must NOT be accepted as a substitute for the real match.
+            const Budget(
+              id: 'budget-almost-match',
+              category: 'cat-1',
+              month: 7,
+              year: 2025,
+              limit: 100,
+            ),
+          ],
+        );
         final categoryRepository = _FakeCategoryRepository(
           categories: [category],
         );
@@ -769,6 +1060,72 @@ void main() {
       expect(budgetRepository.lastDeleteId, 'budget-1');
       expect(find.text('back-marker'), findsOneWidget);
     });
+
+    testWidgets(
+      'delete confirm calls delete with the correct match id, not a decoy '
+      'that only partially matches category/month/year',
+      (tester) async {
+        final category = _category(id: 'cat-1', name: 'Supermarket');
+        final budgetRepository = _FakeBudgetRepository(
+          budgets: [
+            // Right category, wrong year.
+            const Budget(
+              id: 'budget-decoy-year',
+              category: 'cat-1',
+              month: 7,
+              year: 2025,
+              limit: 100,
+            ),
+            // Wrong category, right month/year.
+            const Budget(
+              id: 'budget-decoy-category',
+              category: 'cat-2',
+              month: 7,
+              year: 2026,
+              limit: 200,
+            ),
+            // The actual correct match: right category AND month AND year.
+            const Budget(
+              id: 'budget-correct-match',
+              category: 'cat-1',
+              month: 7,
+              year: 2026,
+              limit: 500,
+            ),
+          ],
+        );
+        final categoryRepository = _FakeCategoryRepository(
+          categories: [category],
+        );
+        final router = _buildRouter();
+        final initial = _status(category: category, limit: 500);
+
+        await tester.pumpWidget(
+          _wrap(
+            overrides: _baseOverrides(
+              budgetRepository: budgetRepository,
+              categoryRepository: categoryRepository,
+            ),
+            router: router,
+          ),
+        );
+        router.push('/budgets/add', extra: initial);
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byKey(const Key('budget-form-delete-button')));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Eliminar'));
+        await tester.pumpAndSettle();
+
+        expect(budgetRepository.deleteCallCount, 1);
+        expect(budgetRepository.lastDeleteId, 'budget-correct-match');
+        expect(budgetRepository.lastDeleteId, isNot('budget-decoy-year'));
+        expect(
+          budgetRepository.lastDeleteId,
+          isNot('budget-decoy-category'),
+        );
+      },
+    );
 
     testWidgets('delete cancel does not call delete', (tester) async {
       final category = _category(id: 'cat-1', name: 'Supermarket');
@@ -959,6 +1316,63 @@ void main() {
 
       expect(budgetRepository.deleteCallCount, 1);
     });
+
+    testWidgets(
+      'a rapid double tap on the retry button only triggers a single '
+      'additional getAll call',
+      (tester) async {
+        final gate = Completer<void>();
+        final category = _category(id: 'cat-1', name: 'Supermarket');
+        final budgetRepository = _FirstCallFailsThenGatesRepository(
+          budgets: [
+            const Budget(
+              id: 'budget-1',
+              category: 'cat-1',
+              month: 7,
+              year: 2026,
+              limit: 500,
+            ),
+          ],
+          gate: gate,
+        );
+        final categoryRepository = _FakeCategoryRepository(
+          categories: [category],
+        );
+        final router = _buildRouter();
+        final initial = _status(category: category, limit: 500);
+
+        await tester.pumpWidget(
+          _wrap(
+            overrides: _baseOverrides(
+              budgetRepository: budgetRepository,
+              categoryRepository: categoryRepository,
+            ),
+            router: router,
+          ),
+        );
+        router.push('/budgets/add', extra: initial);
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('error-retry-button')), findsOneWidget);
+        expect(budgetRepository.getAllCallCount, 1);
+
+        // Both taps land before any frame is pumped, so both still hit the
+        // same on-screen retry button — this is what actually exercises
+        // the `_resolving` reentrancy guard (the screen only swaps away
+        // from the retry button on the next rebuild, which hasn't happened
+        // yet), unlike the disabled-button check used for submit/delete.
+        await tester.tap(find.byKey(const Key('error-retry-button')));
+        await tester.tap(find.byKey(const Key('error-retry-button')));
+        await tester.pump();
+
+        gate.complete();
+        await tester.pumpAndSettle();
+
+        // 1 automatic call from initState's failed resolution + 1 from the
+        // retry — the second rapid tap must not add a third call.
+        expect(budgetRepository.getAllCallCount, 2);
+      },
+    );
   });
 }
 
@@ -1001,4 +1415,30 @@ class _FailingThenSucceedingRepository extends BudgetRepository {
     required double limit,
   }) =>
       delegate.create(category: category, month: month, year: year, limit: limit);
+}
+
+/// Fails the very first `getAll` call synchronously (so the screen reaches
+/// its error/retry state deterministically during `initState`), then gates
+/// every subsequent call on [gate] so a rapid double-tap on the retry
+/// button can be observed mid-flight.
+class _FirstCallFailsThenGatesRepository extends BudgetRepository {
+  _FirstCallFailsThenGatesRepository({
+    required this.budgets,
+    required this.gate,
+  }) : super(Dio());
+
+  final List<Budget> budgets;
+  final Completer<void> gate;
+
+  var getAllCallCount = 0;
+
+  @override
+  Future<List<Budget>> getAll({int? page, int? limit}) async {
+    getAllCallCount++;
+    if (getAllCallCount == 1) {
+      throw Exception('network down');
+    }
+    await gate.future;
+    return budgets;
+  }
 }
