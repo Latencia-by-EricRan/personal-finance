@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,13 +20,23 @@ class _FakeAccountRepository extends AccountRepository {
     this.accountsError,
     this.balances = const {},
     this.balanceErrors = const {},
-  }) : super(Dio());
+    List<Account> archivedResult = const [],
+    this.updateError,
+    this.gate,
+  }) : _archived = List.of(archivedResult),
+       super(Dio());
 
   final List<Account> accountsResult;
   final Object? accountsError;
   final Map<String, num> balances;
   final Map<String, Object> balanceErrors;
+  final Object? updateError;
+  final Completer<void>? gate;
+  final List<Account> _archived;
   var getAllCallCount = 0;
+  var updateCallCount = 0;
+  String? lastUpdateId;
+  bool? lastUpdateArchived;
 
   @override
   Future<List<Account>> getAll({
@@ -35,6 +47,7 @@ class _FakeAccountRepository extends AccountRepository {
     getAllCallCount++;
     final error = accountsError;
     if (error != null) throw error;
+    if (includeArchived) return [...accountsResult, ..._archived];
     return accountsResult;
   }
 
@@ -43,6 +56,35 @@ class _FakeAccountRepository extends AccountRepository {
     final error = balanceErrors[accountId];
     if (error != null) throw error;
     return AccountBalance(account: accountId, balance: balances[accountId] ?? 0);
+  }
+
+  @override
+  Future<Account> update(
+    String id, {
+    String? name,
+    AccountType? type,
+    String? currency,
+    String? icon,
+    bool? archived,
+  }) async {
+    updateCallCount++;
+    lastUpdateId = id;
+    lastUpdateArchived = archived;
+    final gate = this.gate;
+    if (gate != null) await gate.future;
+    final error = updateError;
+    if (error != null) throw error;
+    if (archived == false) {
+      _archived.removeWhere((account) => account.id == id);
+    }
+    return Account(
+      id: id,
+      name: name ?? 'irrelevant',
+      type: type ?? AccountType.banco,
+      currency: currency ?? 'ARS',
+      icon: icon,
+      archived: archived ?? false,
+    );
   }
 }
 
@@ -60,6 +102,19 @@ Widget _wrap({required List<Override> overrides}) {
       GoRoute(
         path: '/accounts',
         builder: (context, state) => const AccountsScreen(),
+      ),
+      GoRoute(
+        path: '/accounts/add',
+        builder: (context, state) {
+          final extra = state.extra;
+          return Scaffold(
+            body: Text(
+              extra == null
+                  ? 'account-form-create-marker'
+                  : 'account-form-edit-marker:${(extra as Account).id}',
+            ),
+          );
+        },
       ),
       GoRoute(
         path: '/accounts/transfer',
@@ -320,6 +375,213 @@ void main() {
       await tester.tap(find.text('Reportes'));
       await tester.pumpAndSettle();
       expect(find.text('reports-marker'), findsOneWidget);
+    },
+  );
+
+  testWidgets('tapping the "+" button navigates to /accounts/add with no extra', (
+    tester,
+  ) async {
+    final repository = _FakeAccountRepository(accountsResult: const []);
+
+    await tester.pumpWidget(
+      _wrap(
+        overrides: [accountRepositoryProvider.overrideWithValue(repository)],
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('accounts-add-button')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('account-form-create-marker'), findsOneWidget);
+  });
+
+  testWidgets(
+    'tapping an account card navigates to /accounts/add with that account as extra',
+    (tester) async {
+      final repository = _FakeAccountRepository(
+        accountsResult: [_account(id: 'a1', name: 'Cuenta Sueldo')],
+        balances: {'a1': 1000},
+      );
+
+      await tester.pumpWidget(
+        _wrap(
+          overrides: [
+            accountRepositoryProvider.overrideWithValue(repository),
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('account-card-a1')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('account-form-edit-marker:a1'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'tapping "Ver archivadas" loads and shows archived accounts in a de-emphasized list',
+    (tester) async {
+      final repository = _FakeAccountRepository(
+        accountsResult: [_account(id: 'a1', name: 'Cuenta Sueldo')],
+        balances: {'a1': 1000},
+        archivedResult: [
+          const Account(
+            id: 'a2',
+            name: 'Cuenta vieja',
+            type: AccountType.banco,
+            currency: 'ARS',
+            archived: true,
+          ),
+        ],
+      );
+
+      await tester.pumpWidget(
+        _wrap(
+          overrides: [
+            accountRepositoryProvider.overrideWithValue(repository),
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Cuenta vieja'), findsNothing);
+
+      await tester.tap(find.byKey(const Key('accounts-show-archived-toggle')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Cuenta vieja'), findsOneWidget);
+      expect(find.byKey(const Key('archived-restore-a2')), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'tapping "Restaurar" on an archived account calls update with archived:false and refreshes the list',
+    (tester) async {
+      final repository = _FakeAccountRepository(
+        accountsResult: [_account(id: 'a1', name: 'Cuenta Sueldo')],
+        balances: {'a1': 1000},
+        archivedResult: [
+          const Account(
+            id: 'a2',
+            name: 'Cuenta vieja',
+            type: AccountType.banco,
+            currency: 'ARS',
+            archived: true,
+          ),
+        ],
+      );
+
+      await tester.pumpWidget(
+        _wrap(
+          overrides: [
+            accountRepositoryProvider.overrideWithValue(repository),
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('accounts-show-archived-toggle')));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('archived-restore-a2')));
+      await tester.pumpAndSettle();
+
+      expect(repository.updateCallCount, 1);
+      expect(repository.lastUpdateId, 'a2');
+      expect(repository.lastUpdateArchived, isFalse);
+      expect(find.text('Cuenta vieja'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'a rapid double restore-tap only triggers a single restore call',
+    (tester) async {
+      final gate = Completer<void>();
+      final repository = _FakeAccountRepository(
+        accountsResult: [_account(id: 'a1', name: 'Cuenta Sueldo')],
+        balances: {'a1': 1000},
+        archivedResult: [
+          const Account(
+            id: 'a2',
+            name: 'Cuenta vieja',
+            type: AccountType.banco,
+            currency: 'ARS',
+            archived: true,
+          ),
+        ],
+        gate: gate,
+      );
+
+      await tester.pumpWidget(
+        _wrap(
+          overrides: [
+            accountRepositoryProvider.overrideWithValue(repository),
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('accounts-show-archived-toggle')));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('archived-restore-a2')));
+      await tester.pump();
+
+      final button = tester.widget<TextButton>(
+        find.byKey(const Key('archived-restore-a2')),
+      );
+      expect(button.onPressed, isNull);
+
+      await tester.tap(
+        find.byKey(const Key('archived-restore-a2')),
+        warnIfMissed: false,
+      );
+      await tester.pump();
+
+      gate.complete();
+      await tester.pumpAndSettle();
+
+      expect(repository.updateCallCount, 1);
+    },
+  );
+
+  testWidgets(
+    'restore failure shows the error message and keeps the account listed as archived',
+    (tester) async {
+      final repository = _FakeAccountRepository(
+        accountsResult: [_account(id: 'a1', name: 'Cuenta Sueldo')],
+        balances: {'a1': 1000},
+        archivedResult: [
+          const Account(
+            id: 'a2',
+            name: 'Cuenta vieja',
+            type: AccountType.banco,
+            currency: 'ARS',
+            archived: true,
+          ),
+        ],
+        updateError: const ApiException(message: 'No se pudo restaurar'),
+      );
+
+      await tester.pumpWidget(
+        _wrap(
+          overrides: [
+            accountRepositoryProvider.overrideWithValue(repository),
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('accounts-show-archived-toggle')));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('archived-restore-a2')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('No se pudo restaurar'), findsOneWidget);
+      expect(find.text('Cuenta vieja'), findsOneWidget);
     },
   );
 }
