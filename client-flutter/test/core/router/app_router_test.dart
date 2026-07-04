@@ -250,7 +250,7 @@ void main() {
       expect(find.byType(CategoriesScreen), findsOneWidget);
     });
 
-    testWidgets('renders a stub placeholder on /categories/add', (
+    testWidgets('renders the category form on /categories/add', (
       tester,
     ) async {
       final router = buildAppRouter(isLoggedIn: () => true);
@@ -264,8 +264,34 @@ void main() {
       router.go('/categories/add');
       await tester.pumpAndSettle();
 
-      expect(find.textContaining('TODO:'), findsOneWidget);
+      expect(find.byType(CategoryFormScreen), findsOneWidget);
+      expect(find.text('Nueva categoría'), findsOneWidget);
     });
+
+    testWidgets(
+      'renders the category form in edit mode when extra carries a Category',
+      (tester) async {
+        final router = buildAppRouter(isLoggedIn: () => true);
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: _dashboardScreenOverrides,
+            child: MaterialApp.router(routerConfig: router),
+          ),
+        );
+
+        const category = Category(
+          id: 'cat-1',
+          description: 'Groceries',
+          name: 'Supermercado',
+          tag: 'food',
+          type: CategoryType.variable,
+        );
+        router.go('/categories/add', extra: category);
+        await tester.pumpAndSettle();
+
+        expect(find.text('Editar categoría'), findsOneWidget);
+      },
+    );
 
     testWidgets('renders the transfer screen on /accounts/transfer', (
       tester,
