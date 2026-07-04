@@ -100,4 +100,33 @@ void main() {
       ),
     );
   });
+
+  test('getBalance parses the account balance response', () async {
+    final adapter = _ScriptedAdapter(200, {
+      'Account': 'acc-1',
+      'Balance': -1250.5,
+    });
+    final repository = AccountRepository(_buildDio(adapter));
+
+    final balance = await repository.getBalance('acc-1');
+
+    expect(balance.account, 'acc-1');
+    expect(balance.balance, -1250.5);
+    expect(adapter.lastRequestOptions?.path, '/account/acc-1/balance');
+    expect(adapter.lastRequestOptions?.method, 'GET');
+  });
+
+  test('getBalance throws an ApiException on a server error', () async {
+    final adapter = _ScriptedAdapter(404, {'message': 'Account not found'});
+    final repository = AccountRepository(_buildDio(adapter));
+
+    await expectLater(
+      repository.getBalance('missing'),
+      throwsA(
+        isA<ApiException>()
+            .having((error) => error.message, 'message', 'Account not found')
+            .having((error) => error.statusCode, 'statusCode', 404),
+      ),
+    );
+  });
 }

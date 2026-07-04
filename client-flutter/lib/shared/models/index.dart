@@ -11,6 +11,7 @@
 // `test/shared/models/models_test.dart`'s `_encodedThenDecoded` helper).
 
 export 'account.dart';
+export 'account_balance.dart';
 export 'api_error_body.dart';
 export 'auth_token_response.dart';
 export 'budget.dart';

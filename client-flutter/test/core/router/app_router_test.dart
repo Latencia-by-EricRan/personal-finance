@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:client_flutter/core/auth/index.dart';
 import 'package:client_flutter/core/router/index.dart';
 import 'package:client_flutter/features/accounts/data/index.dart';
+import 'package:client_flutter/features/accounts/presentation/index.dart';
 import 'package:client_flutter/features/auth/index.dart';
 import 'package:client_flutter/features/categories/data/index.dart';
 import 'package:client_flutter/features/movements/index.dart';
@@ -58,6 +59,7 @@ final _dashboardScreenOverrides = <Override>[
   movementRepositoryProvider.overrideWithValue(_FakeMovementRepository()),
   categoriesProvider.overrideWith((ref) async => const []),
   accountsProvider.overrideWith((ref) async => const []),
+  accountsWithBalanceProvider.overrideWith((ref) async => const []),
 ];
 
 void main() {
@@ -153,7 +155,7 @@ void main() {
       },
     );
 
-    testWidgets('exposes stub placeholders for every Fase 0 route', (
+    testWidgets('exposes stub placeholders for every remaining Fase 0 route', (
       tester,
     ) async {
       final router = buildAppRouter(isLoggedIn: () => true);
@@ -164,11 +166,45 @@ void main() {
         ),
       );
 
-      for (final route in ['/accounts', '/budgets', '/recurring', '/reports']) {
+      for (final route in ['/budgets', '/recurring', '/reports']) {
         router.go(route);
         await tester.pumpAndSettle();
         expect(find.textContaining('TODO:'), findsOneWidget);
       }
+    });
+
+    testWidgets('renders the real accounts screen on /accounts', (
+      tester,
+    ) async {
+      final router = buildAppRouter(isLoggedIn: () => true);
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: _dashboardScreenOverrides,
+          child: MaterialApp.router(routerConfig: router),
+        ),
+      );
+
+      router.go('/accounts');
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AccountsScreen), findsOneWidget);
+    });
+
+    testWidgets('exposes a stub placeholder for /accounts/transfer', (
+      tester,
+    ) async {
+      final router = buildAppRouter(isLoggedIn: () => true);
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: _dashboardScreenOverrides,
+          child: MaterialApp.router(routerConfig: router),
+        ),
+      );
+
+      router.go('/accounts/transfer');
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('TODO:'), findsOneWidget);
     });
   });
 

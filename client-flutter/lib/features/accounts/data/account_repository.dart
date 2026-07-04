@@ -30,12 +30,30 @@ class AccountRepository {
       throw ApiException.fromDioException(error);
     }
   }
+
+  Future<AccountBalance> getBalance(String accountId) async {
+    try {
+      final response = await _dio.get<Map<String, dynamic>>(
+        '/account/$accountId/balance',
+      );
+      return AccountBalance.fromJson(response.data!);
+    } on DioException catch (error) {
+      throw ApiException.fromDioException(error);
+    }
+  }
 }
 
 final accountRepositoryProvider = Provider<AccountRepository>((ref) {
   return AccountRepository(ref.read(dioClientProvider).dio);
 });
 
+// `retry: null` — matches `monthSummaryProvider`'s reasoning (see
+// `dashboard_data_provider.dart`): the screens that consume this expose an
+// explicit "Reintentar" button, so Riverpod's default automatic retries
+// would make that button's effect (and the call count it drives) impossible
+// to assert, and would keep silently hammering the backend on failure.
+Duration? _noRetry(int retryCount, Object error) => null;
+
 final accountsProvider = FutureProvider<List<Account>>((ref) {
   return ref.read(accountRepositoryProvider).getAll();
-});
+}, retry: _noRetry);
