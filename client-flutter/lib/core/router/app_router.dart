@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/auth/index.dart';
+import '../../features/movements/index.dart';
 import '../auth/session_provider.dart';
 
 const loginRoute = '/login';
@@ -53,7 +54,11 @@ GoRouter buildAppRouter({
       ),
       GoRoute(
         path: '/',
-        builder: (context, state) => const _StubScreen(name: 'dashboard'),
+        builder: (context, state) => const DashboardScreen(),
+      ),
+      GoRoute(
+        path: '/movements/add',
+        builder: (context, state) => const _StubScreen(name: 'movement-add'),
       ),
       GoRoute(
         path: '/accounts',

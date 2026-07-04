@@ -7,6 +7,13 @@ abstract final class AppFormatters {
 
   static String currency(num amount) => '\$ ${_amount.format(amount)}';
 
+  /// Same digits as [currency] — kept as a distinct name so call sites (e.g.
+  /// `BalanceCard`'s net figure) declare intent explicitly. The actual
+  /// hero/data-column distinction (no tabular-nums vs tabular-nums) is a
+  /// [TextStyle.fontFeatures] concern applied where the text is rendered,
+  /// not something a plain formatted [String] can carry.
+  static String currencyHero(num amount) => currency(amount);
+
   // Hardcoded instead of intl's DateFormat month symbols: those require an
   // async initializeDateFormatting() call this infra layer has no hook to run.
   static const _monthAbbreviations = <String>[
@@ -24,6 +31,24 @@ abstract final class AppFormatters {
     'dic',
   ];
 
+  static const _monthNames = <String>[
+    'Enero',
+    'Febrero',
+    'Marzo',
+    'Abril',
+    'Mayo',
+    'Junio',
+    'Julio',
+    'Agosto',
+    'Septiembre',
+    'Octubre',
+    'Noviembre',
+    'Diciembre',
+  ];
+
   static String shortDate(DateTime date) =>
       '${date.day} ${_monthAbbreviations[date.month - 1]} ${date.year}';
+
+  static String monthYear(int month, int year) =>
+      '${_monthNames[month - 1]} $year';
 }
