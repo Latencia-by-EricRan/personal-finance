@@ -33,15 +33,16 @@ class _FakeMovementRepository extends MovementRepository {
   Future<MovementSummaryResponse> getSummaryByMonth({
     required int month,
     required int year,
-  }) async => MovementSummaryResponse(
-    month: month,
-    year: year,
-    summary: const MovementSummary(
-      items: 0,
-      amount: MovementAmountSummary(income: 0, expense: 0),
-    ),
-    movements: const [],
-  );
+  }) async =>
+      MovementSummaryResponse(
+        month: month,
+        year: year,
+        summary: const MovementSummary(
+          items: 0,
+          amount: MovementAmountSummary(income: 0, expense: 0),
+        ),
+        movements: const [],
+      );
 
   @override
   Future<List<Movement>> getByRange({
@@ -52,7 +53,8 @@ class _FakeMovementRepository extends MovementRepository {
     String? account,
     int? page,
     int? limit,
-  }) async => const [];
+  }) async =>
+      const [];
 }
 
 final _dashboardScreenOverrides = <Override>[
@@ -231,7 +233,7 @@ void main() {
       },
     );
 
-    testWidgets('exposes a stub placeholder for /accounts/transfer', (
+    testWidgets('renders the transfer screen on /accounts/transfer', (
       tester,
     ) async {
       final router = buildAppRouter(isLoggedIn: () => true);
@@ -245,7 +247,8 @@ void main() {
       router.go('/accounts/transfer');
       await tester.pumpAndSettle();
 
-      expect(find.textContaining('TODO:'), findsOneWidget);
+      expect(find.byType(TransferScreen), findsOneWidget);
+      expect(find.text('Transferir entre cuentas'), findsOneWidget);
     });
   });
 

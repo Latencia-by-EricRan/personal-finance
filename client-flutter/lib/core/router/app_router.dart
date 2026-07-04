@@ -74,8 +74,7 @@ GoRouter buildAppRouter({
       ),
       GoRoute(
         path: '/accounts/transfer',
-        builder: (context, state) =>
-            const _StubScreen(name: 'accounts-transfer'),
+        builder: (context, state) => const TransferScreen(),
       ),
       GoRoute(
         path: '/budgets',
