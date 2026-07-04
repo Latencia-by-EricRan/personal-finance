@@ -123,12 +123,7 @@ class _BudgetCard extends StatelessWidget {
 
   final BudgetStatus status;
 
-  Color get _percentColor {
-    final percent = status.percent;
-    if (percent >= 100) return AppColors.expense;
-    if (percent >= 70) return AppColors.warning;
-    return AppColors.income;
-  }
+  Color get _percentColor => BudgetProgressMeter.colorForPercent(status.percent);
 
   @override
   Widget build(BuildContext context) {

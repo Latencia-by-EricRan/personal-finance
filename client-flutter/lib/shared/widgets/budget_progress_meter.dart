@@ -12,11 +12,16 @@ class BudgetProgressMeter extends StatelessWidget {
 
   final double percent;
 
-  Color get _fillColor {
+  /// Single source of truth for the three-tier severity color, shared with
+  /// any other widget (e.g. a percent label) that must always agree with
+  /// this meter's fill — do not re-implement this threshold elsewhere.
+  static Color colorForPercent(double percent) {
     if (percent >= 100) return AppColors.expense;
     if (percent >= 70) return AppColors.warning;
     return AppColors.income;
   }
+
+  Color get _fillColor => colorForPercent(percent);
 
   @override
   Widget build(BuildContext context) {
