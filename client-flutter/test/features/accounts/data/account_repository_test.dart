@@ -196,8 +196,7 @@ void main() {
     expect(adapter.lastRequestOptions?.data, {'Name': 'New name'});
   });
 
-  test('update sends archived:false to restore an archived account',
-      () async {
+  test('update sends archived:false to restore an archived account', () async {
     final adapter = _ScriptedAdapter(200, _accountJson());
     final repository = AccountRepository(_buildDio(adapter));
 
@@ -242,7 +241,8 @@ void main() {
     );
   });
 
-  test('archive sends a DELETE and parses the archived account object,'
+  test(
+      'archive sends a DELETE and parses the archived account object,'
       ' not a generic delete-confirmation shape', () async {
     final archivedJson = {..._accountJson(), 'Archived': true};
     final adapter = _ScriptedAdapter(200, archivedJson);
@@ -269,4 +269,118 @@ void main() {
       ),
     );
   });
+
+  test(
+    'transfer sends the PascalCase body and parses the 2-movement array'
+    ' response',
+    () async {
+      final movementsJson = [
+        {
+          '_id': 'mv-egreso',
+          'Amount': 500.0,
+          'Date': '2026-07-03',
+          'Type': 'egreso',
+          'Account': 'acc-1',
+          'TransferId': 'transfer-1',
+        },
+        {
+          '_id': 'mv-ingreso',
+          'Amount': 500.0,
+          'Date': '2026-07-03',
+          'Type': 'ingreso',
+          'Account': 'acc-2',
+          'TransferId': 'transfer-1',
+        },
+      ];
+      final adapter = _ScriptedAdapter(201, movementsJson);
+      final repository = AccountRepository(_buildDio(adapter));
+
+      final movements = await repository.transfer(
+        from: 'acc-1',
+        to: 'acc-2',
+        amount: 500,
+        date: DateTime(2026, 7, 3),
+        description: 'Ahorro mensual',
+      );
+
+      expect(movements, hasLength(2));
+      expect(movements.first.type, MovementType.egreso);
+      expect(movements.last.type, MovementType.ingreso);
+      expect(movements.first.transferId, 'transfer-1');
+      expect(adapter.lastRequestOptions?.path, '/account/transfer');
+      expect(adapter.lastRequestOptions?.method, 'POST');
+      expect(adapter.lastRequestOptions?.data, {
+        'From': 'acc-1',
+        'To': 'acc-2',
+        'Amount': 500,
+        'Date': '2026-07-03',
+        'Description': 'Ahorro mensual',
+      });
+    },
+  );
+
+  test('transfer omits Description when not provided', () async {
+    final movementsJson = [
+      {
+        '_id': 'mv-egreso',
+        'Amount': 500.0,
+        'Date': '2026-07-03',
+        'Type': 'egreso',
+        'Account': 'acc-1',
+        'TransferId': 'transfer-1',
+      },
+      {
+        '_id': 'mv-ingreso',
+        'Amount': 500.0,
+        'Date': '2026-07-03',
+        'Type': 'ingreso',
+        'Account': 'acc-2',
+        'TransferId': 'transfer-1',
+      },
+    ];
+    final adapter = _ScriptedAdapter(201, movementsJson);
+    final repository = AccountRepository(_buildDio(adapter));
+
+    await repository.transfer(
+      from: 'acc-1',
+      to: 'acc-2',
+      amount: 500,
+      date: DateTime(2026, 7, 3),
+    );
+
+    expect(adapter.lastRequestOptions?.data, {
+      'From': 'acc-1',
+      'To': 'acc-2',
+      'Amount': 500,
+      'Date': '2026-07-03',
+    });
+  });
+
+  test(
+    'transfer throws an ApiException on a same-account 400 response',
+    () async {
+      final adapter = _ScriptedAdapter(400, {
+        'message': 'From and To accounts must differ',
+      });
+      final repository = AccountRepository(_buildDio(adapter));
+
+      await expectLater(
+        repository.transfer(
+          from: 'acc-1',
+          to: 'acc-1',
+          amount: 500,
+          date: DateTime(2026, 7, 3),
+        ),
+        throwsA(
+          isA<ApiException>()
+              .having(
+                (error) => error.message,
+                'message',
+                'From and To accounts must differ',
+              )
+              .having((error) => error.statusCode, 'statusCode', 400),
+        ),
+      );
+    },
+  );
 }

@@ -102,6 +102,34 @@ class AccountRepository {
       throw ApiException.fromDioException(error);
     }
   }
+
+  /// Returns the pair `[egresoMovement, ingresoMovement]` the backend creates
+  /// for the transfer (see `AccountService.transfer`), in that order.
+  Future<List<Movement>> transfer({
+    required String from,
+    required String to,
+    required num amount,
+    required DateTime date,
+    String? description,
+  }) async {
+    try {
+      final response = await _dio.post<List<dynamic>>(
+        '/account/transfer',
+        data: {
+          'From': from,
+          'To': to,
+          'Amount': amount,
+          'Date': const DateOnlyConverter().toJson(date),
+          if (description != null) 'Description': description,
+        },
+      );
+      return response.data!
+          .map((json) => Movement.fromJson(json as Map<String, dynamic>))
+          .toList();
+    } on DioException catch (error) {
+      throw ApiException.fromDioException(error);
+    }
+  }
 }
 
 final accountRepositoryProvider = Provider<AccountRepository>((ref) {
