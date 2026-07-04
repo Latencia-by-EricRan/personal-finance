@@ -45,9 +45,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     setState(() => _isSubmitting = true);
     try {
-      final response = await ref
-          .read(authRepositoryProvider)
-          .login(
+      final response = await ref.read(authRepositoryProvider).login(
             email: _emailController.text.trim(),
             password: _passwordController.text,
           );

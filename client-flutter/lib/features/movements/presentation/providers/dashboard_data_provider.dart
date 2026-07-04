@@ -35,9 +35,7 @@ final dashboardMovementsProvider = FutureProvider<List<Movement>>((ref) async {
 
   final start = DateTime(selected.year, selected.month);
   final end = DateTime(selected.year, selected.month + 1, 0);
-  return ref
-      .watch(movementRepositoryProvider)
-      .getByRange(
+  return ref.watch(movementRepositoryProvider).getByRange(
         start: start,
         end: end,
         type: filter.type,

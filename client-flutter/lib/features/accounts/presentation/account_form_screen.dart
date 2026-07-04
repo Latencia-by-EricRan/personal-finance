@@ -126,9 +126,7 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
     if (_isSubmitting) return;
     setState(() => _isSubmitting = true);
     try {
-      await ref
-          .read(accountRepositoryProvider)
-          .archive(widget.initial!.id!);
+      await ref.read(accountRepositoryProvider).archive(widget.initial!.id!);
 
       ref.invalidate(accountsProvider);
       ref.invalidate(accountsWithBalanceProvider);

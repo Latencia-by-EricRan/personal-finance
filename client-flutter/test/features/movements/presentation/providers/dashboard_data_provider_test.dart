@@ -7,16 +7,15 @@ import 'package:client_flutter/features/movements/presentation/providers/index.d
 import 'package:client_flutter/shared/models/index.dart';
 
 Movement _movement(String id) => Movement(
-  id: id,
-  amount: 100,
-  date: DateTime(2026, 7, 1),
-  type: MovementType.ingreso,
-  account: 'acc-1',
-);
+      id: id,
+      amount: 100,
+      date: DateTime(2026, 7, 1),
+      type: MovementType.ingreso,
+      account: 'acc-1',
+    );
 
 class _FakeMovementRepository extends MovementRepository {
-  _FakeMovementRepository({this.summary, this.rangeMovements})
-    : super(Dio());
+  _FakeMovementRepository({this.summary, this.rangeMovements}) : super(Dio());
 
   final MovementSummaryResponse? summary;
   final List<Movement>? rangeMovements;
@@ -78,7 +77,8 @@ void main() {
       expect(repository.rangeCallCount, 0);
     });
 
-    test('switches to getByRange for the whole month when a filter is set', () async {
+    test('switches to getByRange for the whole month when a filter is set',
+        () async {
       final repository = _FakeMovementRepository(
         summary: MovementSummaryResponse(
           month: 7,
@@ -100,8 +100,8 @@ void main() {
         year: 2026,
       );
       container.read(movementFilterProvider.notifier).setType(
-        MovementType.ingreso,
-      );
+            MovementType.ingreso,
+          );
 
       final movements = await container.read(dashboardMovementsProvider.future);
 

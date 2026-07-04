@@ -13,6 +13,5 @@ abstract class Budget with _$Budget {
     @JsonKey(name: 'Limit') required double limit,
   }) = _Budget;
 
-  factory Budget.fromJson(Map<String, dynamic> json) =>
-      _$BudgetFromJson(json);
+  factory Budget.fromJson(Map<String, dynamic> json) => _$BudgetFromJson(json);
 }

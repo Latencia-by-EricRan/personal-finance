@@ -45,10 +45,12 @@ class DashboardScreen extends ConsumerWidget {
                           selectedMonth.month,
                           selectedMonth.year,
                         ),
-                        onPrevious: () =>
-                            ref.read(selectedMonthProvider.notifier).previousMonth(),
-                        onNext: () =>
-                            ref.read(selectedMonthProvider.notifier).nextMonth(),
+                        onPrevious: () => ref
+                            .read(selectedMonthProvider.notifier)
+                            .previousMonth(),
+                        onNext: () => ref
+                            .read(selectedMonthProvider.notifier)
+                            .nextMonth(),
                       ),
                       IconButton(
                         icon: const Icon(Icons.settings_outlined),
@@ -62,8 +64,7 @@ class DashboardScreen extends ConsumerWidget {
             Expanded(
               child: summaryAsync.when(
                 data: (summary) => _DashboardBody(summary: summary),
-                loading: () =>
-                    const Center(child: CircularProgressIndicator()),
+                loading: () => const Center(child: CircularProgressIndicator()),
                 error: (error, stackTrace) => ErrorRetry(
                   message: 'No pudimos cargar el resumen. Probá de nuevo.',
                   onRetry: () {

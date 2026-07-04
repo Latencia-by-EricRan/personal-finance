@@ -14,4 +14,5 @@ _CategoryReportEntry _$CategoryReportEntryFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$CategoryReportEntryToJson(
   _CategoryReportEntry instance,
-) => <String, dynamic>{'Category': instance.category, 'Total': instance.total};
+) =>
+    <String, dynamic>{'Category': instance.category, 'Total': instance.total};

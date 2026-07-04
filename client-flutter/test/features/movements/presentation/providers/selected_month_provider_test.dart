@@ -27,7 +27,8 @@ void main() {
       expect(container.read(selectedMonthProvider), (month: 6, year: 2026));
     });
 
-    test('previousMonth rolls over December of the prior year from January', () {
+    test('previousMonth rolls over December of the prior year from January',
+        () {
       final container = ProviderContainer();
       addTearDown(container.dispose);
       final notifier = container.read(selectedMonthProvider.notifier);

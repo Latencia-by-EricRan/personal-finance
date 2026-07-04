@@ -8,14 +8,16 @@ part of 'movement_summary.dart';
 
 _MovementAmountSummary _$MovementAmountSummaryFromJson(
   Map<String, dynamic> json,
-) => _MovementAmountSummary(
-  income: (json['income'] as num).toDouble(),
-  expense: (json['expense'] as num).toDouble(),
-);
+) =>
+    _MovementAmountSummary(
+      income: (json['income'] as num).toDouble(),
+      expense: (json['expense'] as num).toDouble(),
+    );
 
 Map<String, dynamic> _$MovementAmountSummaryToJson(
   _MovementAmountSummary instance,
-) => <String, dynamic>{'income': instance.income, 'expense': instance.expense};
+) =>
+    <String, dynamic>{'income': instance.income, 'expense': instance.expense};
 
 _MovementSummary _$MovementSummaryFromJson(Map<String, dynamic> json) =>
     _MovementSummary(

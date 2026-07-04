@@ -24,9 +24,10 @@ class MovementTile extends ConsumerWidget {
     final matchingAccounts = accounts?.where(
       (account) => account.id == movement.account,
     );
-    final accountName = (matchingAccounts != null && matchingAccounts.isNotEmpty)
-        ? matchingAccounts.first.name
-        : null;
+    final accountName =
+        (matchingAccounts != null && matchingAccounts.isNotEmpty)
+            ? matchingAccounts.first.name
+            : null;
 
     final hasDescription = (movement.description ?? '').isNotEmpty;
     final title = hasDescription
@@ -78,14 +79,11 @@ class _CategoryAvatar extends StatelessWidget {
     }
 
     final key = category.id ?? category.tag;
-    final color =
-        AppColors.categoryPalette[key.hashCode.abs() %
-            AppColors.categoryPalette.length];
+    final color = AppColors
+        .categoryPalette[key.hashCode.abs() % AppColors.categoryPalette.length];
     final letters = category.name.trim();
-    final monogram = (letters.length >= 2
-            ? letters.substring(0, 2)
-            : letters)
-        .toUpperCase();
+    final monogram =
+        (letters.length >= 2 ? letters.substring(0, 2) : letters).toUpperCase();
 
     return Container(
       width: 44,
@@ -97,7 +95,8 @@ class _CategoryAvatar extends StatelessWidget {
       ),
       child: Text(
         monogram,
-        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        style:
+            const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
       ),
     );
   }

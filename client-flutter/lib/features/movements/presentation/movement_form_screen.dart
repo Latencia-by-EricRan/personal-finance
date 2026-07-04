@@ -16,8 +16,7 @@ class MovementFormScreen extends ConsumerStatefulWidget {
   final Movement? initial;
 
   @override
-  ConsumerState<MovementFormScreen> createState() =>
-      _MovementFormScreenState();
+  ConsumerState<MovementFormScreen> createState() => _MovementFormScreenState();
 }
 
 class _MovementFormScreenState extends ConsumerState<MovementFormScreen> {

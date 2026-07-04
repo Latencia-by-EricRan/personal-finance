@@ -33,7 +33,8 @@ const _account = Account(
 );
 
 void main() {
-  testWidgets('shows an income movement with a plus sign and category monogram', (
+  testWidgets('shows an income movement with a plus sign and category monogram',
+      (
     tester,
   ) async {
     final movement = Movement(

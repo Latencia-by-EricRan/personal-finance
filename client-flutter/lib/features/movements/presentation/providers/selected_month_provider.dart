@@ -26,5 +26,5 @@ class SelectedMonthNotifier extends Notifier<MonthYear> {
 
 final selectedMonthProvider =
     NotifierProvider<SelectedMonthNotifier, MonthYear>(
-      SelectedMonthNotifier.new,
-    );
+  SelectedMonthNotifier.new,
+);
