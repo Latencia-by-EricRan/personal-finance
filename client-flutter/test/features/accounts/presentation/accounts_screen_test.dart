@@ -23,8 +23,8 @@ class _FakeAccountRepository extends AccountRepository {
     List<Account> archivedResult = const [],
     this.updateError,
     this.gate,
-  }) : _archived = List.of(archivedResult),
-       super(Dio());
+  })  : _archived = List.of(archivedResult),
+        super(Dio());
 
   final List<Account> accountsResult;
   final Object? accountsError;
@@ -55,7 +55,8 @@ class _FakeAccountRepository extends AccountRepository {
   Future<AccountBalance> getBalance(String accountId) async {
     final error = balanceErrors[accountId];
     if (error != null) throw error;
-    return AccountBalance(account: accountId, balance: balances[accountId] ?? 0);
+    return AccountBalance(
+        account: accountId, balance: balances[accountId] ?? 0);
   }
 
   @override
@@ -88,7 +89,10 @@ class _FakeAccountRepository extends AccountRepository {
   }
 }
 
-Account _account({required String id, required String name, AccountType type = AccountType.banco}) =>
+Account _account(
+        {required String id,
+        required String name,
+        AccountType type = AccountType.banco}) =>
     Account(id: id, name: name, type: type, currency: 'ARS', archived: false);
 
 Widget _wrap({required List<Override> overrides}) {
@@ -97,7 +101,8 @@ Widget _wrap({required List<Override> overrides}) {
     routes: [
       GoRoute(
         path: '/',
-        builder: (context, state) => const Scaffold(body: Text('resumen-marker')),
+        builder: (context, state) =>
+            const Scaffold(body: Text('resumen-marker')),
       ),
       GoRoute(
         path: '/accounts',
@@ -123,7 +128,8 @@ Widget _wrap({required List<Override> overrides}) {
       ),
       GoRoute(
         path: '/budgets',
-        builder: (context, state) => const Scaffold(body: Text('budgets-marker')),
+        builder: (context, state) =>
+            const Scaffold(body: Text('budgets-marker')),
       ),
       GoRoute(
         path: '/recurring',
@@ -132,7 +138,8 @@ Widget _wrap({required List<Override> overrides}) {
       ),
       GoRoute(
         path: '/reports',
-        builder: (context, state) => const Scaffold(body: Text('reports-marker')),
+        builder: (context, state) =>
+            const Scaffold(body: Text('reports-marker')),
       ),
     ],
   );
@@ -214,7 +221,9 @@ void main() {
     tester,
   ) async {
     final repository = _FakeAccountRepository(
-      accountsResult: [_account(id: 'a1', name: 'Tarjeta Visa', type: AccountType.tarjeta)],
+      accountsResult: [
+        _account(id: 'a1', name: 'Tarjeta Visa', type: AccountType.tarjeta)
+      ],
       balances: {'a1': -200},
     );
 
@@ -378,7 +387,8 @@ void main() {
     },
   );
 
-  testWidgets('tapping the "+" button navigates to /accounts/add with no extra', (
+  testWidgets('tapping the "+" button navigates to /accounts/add with no extra',
+      (
     tester,
   ) async {
     final repository = _FakeAccountRepository(accountsResult: const []);

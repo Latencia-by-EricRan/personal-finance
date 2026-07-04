@@ -29,11 +29,20 @@ class _FakeAccountRepository extends AccountRepository {
   var createCallCount = 0;
   var updateCallCount = 0;
   var archiveCallCount = 0;
-  ({String name, AccountType type, String? currency, String? icon})?
-  lastCreateArgs;
+  ({
+    String name,
+    AccountType type,
+    String? currency,
+    String? icon
+  })? lastCreateArgs;
   String? lastUpdateId;
-  ({String? name, AccountType? type, String? currency, String? icon, bool? archived})?
-  lastUpdateArgs;
+  ({
+    String? name,
+    AccountType? type,
+    String? currency,
+    String? icon,
+    bool? archived
+  })? lastUpdateArgs;
   String? lastArchiveId;
 
   @override

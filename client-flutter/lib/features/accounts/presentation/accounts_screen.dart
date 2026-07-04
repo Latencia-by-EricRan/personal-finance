@@ -34,9 +34,7 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
     if (_restoringIds.contains(id)) return;
     setState(() => _restoringIds.add(id));
     try {
-      await ref
-          .read(accountRepositoryProvider)
-          .update(id, archived: false);
+      await ref.read(accountRepositoryProvider).update(id, archived: false);
       ref.invalidate(accountsProvider);
       ref.invalidate(accountsWithBalanceProvider);
       ref.invalidate(archivedAccountsProvider);
@@ -90,8 +88,7 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
                   onRestore: _restore,
                   restoringIds: _restoringIds,
                 ),
-                loading: () =>
-                    const Center(child: CircularProgressIndicator()),
+                loading: () => const Center(child: CircularProgressIndicator()),
                 error: (error, stackTrace) => ErrorRetry(
                   message: 'No pudimos cargar las cuentas. Probá de nuevo.',
                   onRetry: () {
@@ -332,12 +329,11 @@ class _AccountAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final key = account.id ?? account.name;
-    final color =
-        AppColors.categoryPalette[key.hashCode.abs() %
-            AppColors.categoryPalette.length];
+    final color = AppColors
+        .categoryPalette[key.hashCode.abs() % AppColors.categoryPalette.length];
     final letters = account.name.trim();
-    final monogram = (letters.length >= 2 ? letters.substring(0, 2) : letters)
-        .toUpperCase();
+    final monogram =
+        (letters.length >= 2 ? letters.substring(0, 2) : letters).toUpperCase();
 
     return Container(
       width: 44,

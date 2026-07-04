@@ -100,7 +100,8 @@ class _ThemePreviewScreen extends StatelessWidget {
       bottomNavigationBar: NavigationBar(
         selectedIndex: 0,
         destinations: const [
-          NavigationDestination(icon: Icon(Icons.home_rounded), label: 'Resumen'),
+          NavigationDestination(
+              icon: Icon(Icons.home_rounded), label: 'Resumen'),
           NavigationDestination(
             icon: Icon(Icons.account_balance_wallet_rounded),
             label: 'Cuentas',

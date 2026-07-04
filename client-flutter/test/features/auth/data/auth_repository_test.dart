@@ -67,7 +67,8 @@ void main() {
     },
   );
 
-  test('login throws an ApiException with the backend message on 401', () async {
+  test('login throws an ApiException with the backend message on 401',
+      () async {
     final adapter = _ScriptedAdapter(401, {'message': 'Invalid credentials'});
     final repository = AuthRepository(_buildDio(adapter));
 

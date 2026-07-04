@@ -71,13 +71,13 @@ class _FakeMovementRepository extends MovementRepository {
   }
 
   Movement _resultFrom(MovementWriteRequest request) => Movement(
-    id: 'mv-created',
-    amount: request.amount.toDouble(),
-    date: request.date,
-    type: request.type,
-    account: request.account,
-    description: request.description,
-  );
+        id: 'mv-created',
+        amount: request.amount.toDouble(),
+        date: request.date,
+        type: request.type,
+        account: request.account,
+        description: request.description,
+      );
 }
 
 const _category1 = Category(
@@ -137,10 +137,10 @@ GoRouter _buildRouter() {
 }
 
 List<Override> _baseOverrides(_FakeMovementRepository repository) => [
-  movementRepositoryProvider.overrideWithValue(repository),
-  categoriesProvider.overrideWith((ref) async => [_category1, _category2]),
-  accountsProvider.overrideWith((ref) async => [_account1, _account2]),
-];
+      movementRepositoryProvider.overrideWithValue(repository),
+      categoriesProvider.overrideWith((ref) async => [_category1, _category2]),
+      accountsProvider.overrideWith((ref) async => [_account1, _account2]),
+    ];
 
 Future<void> _fillValidForm(WidgetTester tester) async {
   await tester.enterText(
@@ -674,7 +674,8 @@ void main() {
     expect(find.text('Ingresá un monto válido'), findsOneWidget);
   });
 
-  testWidgets('a rapid double delete-confirm only triggers a single delete call', (
+  testWidgets(
+      'a rapid double delete-confirm only triggers a single delete call', (
     tester,
   ) async {
     final gate = Completer<void>();

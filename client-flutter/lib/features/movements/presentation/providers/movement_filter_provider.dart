@@ -38,5 +38,5 @@ class MovementFilterNotifier extends Notifier<MovementFilterState> {
 
 final movementFilterProvider =
     NotifierProvider<MovementFilterNotifier, MovementFilterState>(
-      MovementFilterNotifier.new,
-    );
+  MovementFilterNotifier.new,
+);

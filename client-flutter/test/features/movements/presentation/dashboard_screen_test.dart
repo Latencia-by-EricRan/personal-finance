@@ -15,7 +15,7 @@ import 'package:client_flutter/shared/widgets/index.dart';
 
 class _FakeMovementRepository extends MovementRepository {
   _FakeMovementRepository({this.summaryResult, this.summaryError})
-    : super(Dio());
+      : super(Dio());
 
   final MovementSummaryResponse? summaryResult;
   final Object? summaryError;
@@ -41,31 +41,33 @@ class _FakeMovementRepository extends MovementRepository {
     String? account,
     int? page,
     int? limit,
-  }) async => const [];
+  }) async =>
+      const [];
 }
 
 MovementSummaryResponse _summary({
   required List<Movement> movements,
   double income = 185000,
   double expense = 35000,
-}) => MovementSummaryResponse(
-  month: 7,
-  year: 2026,
-  summary: MovementSummary(
-    items: movements.length,
-    amount: MovementAmountSummary(income: income, expense: expense),
-  ),
-  movements: movements,
-);
+}) =>
+    MovementSummaryResponse(
+      month: 7,
+      year: 2026,
+      summary: MovementSummary(
+        items: movements.length,
+        amount: MovementAmountSummary(income: income, expense: expense),
+      ),
+      movements: movements,
+    );
 
 Movement _movement(String id) => Movement(
-  id: id,
-  amount: 1000,
-  date: DateTime(2026, 7, 1),
-  type: MovementType.ingreso,
-  account: 'acc-1',
-  description: 'Movimiento $id',
-);
+      id: id,
+      amount: 1000,
+      date: DateTime(2026, 7, 1),
+      type: MovementType.ingreso,
+      account: 'acc-1',
+      description: 'Movimiento $id',
+    );
 
 Widget _wrap({required List<Override> overrides}) {
   final router = GoRouter(
@@ -111,7 +113,8 @@ Widget _wrap({required List<Override> overrides}) {
 }
 
 void main() {
-  testWidgets('renders the balance card with the unfiltered whole-month summary', (
+  testWidgets(
+      'renders the balance card with the unfiltered whole-month summary', (
     tester,
   ) async {
     final repository = _FakeMovementRepository(
@@ -248,7 +251,9 @@ void main() {
     expect(find.text('Hola, Eric'), findsOneWidget);
   });
 
-  testWidgets('tapping a MovementTile navigates to /movements/add with the movement as extra', (
+  testWidgets(
+      'tapping a MovementTile navigates to /movements/add with the movement as extra',
+      (
     tester,
   ) async {
     final repository = _FakeMovementRepository(
@@ -272,7 +277,8 @@ void main() {
     expect(find.text('edit-movement-marker:mv-1'), findsOneWidget);
   });
 
-  testWidgets('bottom nav starts on Resumen and navigates to the other destinations', (
+  testWidgets(
+      'bottom nav starts on Resumen and navigates to the other destinations', (
     tester,
   ) async {
     final repository = _FakeMovementRepository(
