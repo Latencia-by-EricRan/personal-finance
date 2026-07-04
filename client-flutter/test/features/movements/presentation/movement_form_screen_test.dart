@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:client_flutter/core/format/index.dart';
 import 'package:client_flutter/core/network/index.dart';
 import 'package:client_flutter/core/theme/index.dart';
 import 'package:client_flutter/features/accounts/data/index.dart';
@@ -63,6 +64,8 @@ class _FakeMovementRepository extends MovementRepository {
   Future<void> delete(String id) async {
     deleteCallCount++;
     lastDeleteId = id;
+    final gate = this.gate;
+    if (gate != null) await gate.future;
     final error = deleteError;
     if (error != null) throw error;
   }
@@ -305,6 +308,57 @@ void main() {
   );
 
   testWidgets(
+    'edit mode: picking a new date via the date picker flows into the '
+    'submitted request',
+    (tester) async {
+      final repository = _FakeMovementRepository();
+      final router = _buildRouter();
+      final initial = Movement(
+        id: 'mv-1',
+        amount: 2500,
+        category: _category2,
+        date: DateTime(2026, 6, 15),
+        type: MovementType.ingreso,
+        account: 'acc-2',
+        description: 'Sueldo extra',
+      );
+
+      await tester.pumpWidget(
+        _wrap(overrides: _baseOverrides(repository), router: router),
+      );
+      router.push('/movements/add', extra: initial);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('movement-form-date-field')));
+      await tester.pumpAndSettle();
+
+      // The picker opens on June 2026 (the initial date's month). Pick a
+      // different day within the same visible month to avoid navigating
+      // between months.
+      await tester.tap(find.text('20'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('OK'));
+      await tester.pumpAndSettle();
+
+      expect(
+        tester
+            .widget<TextFormField>(
+              find.byKey(const Key('movement-form-date-field')),
+            )
+            .controller
+            ?.text,
+        AppFormatters.shortDate(DateTime(2026, 6, 20)),
+      );
+
+      await tester.tap(find.byKey(const Key('movement-form-save-button')));
+      await tester.pumpAndSettle();
+
+      expect(repository.updateCallCount, 1);
+      expect(repository.lastUpdateRequest?.date, DateTime(2026, 6, 20));
+    },
+  );
+
+  testWidgets(
     'delete: confirming the dialog calls delete and pops',
     (tester) async {
       final repository = _FakeMovementRepository();
@@ -477,6 +531,221 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('No se pudo actualizar'), findsOneWidget);
+      expect(find.byType(MovementFormScreen), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'create mode: category load error blocks submit with a clear message '
+    'and never calls create',
+    (tester) async {
+      final repository = _FakeMovementRepository();
+      final router = _buildRouter();
+      final overrides = [
+        movementRepositoryProvider.overrideWithValue(repository),
+        categoriesProvider.overrideWith((ref) async {
+          throw Exception('categories down');
+        }),
+        accountsProvider.overrideWith((ref) async => [_account1, _account2]),
+      ];
+
+      await tester.pumpWidget(_wrap(overrides: overrides, router: router));
+      router.push('/movements/add');
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('movement-form-save-button')));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text(
+          'No se pudieron cargar las categorías o cuentas. Probá de nuevo.',
+        ),
+        findsOneWidget,
+      );
+      expect(repository.createCallCount, 0);
+      expect(repository.updateCallCount, 0);
+    },
+  );
+
+  testWidgets(
+    'create mode: account load error blocks submit with a clear message '
+    'and never calls create',
+    (tester) async {
+      final repository = _FakeMovementRepository();
+      final router = _buildRouter();
+      final overrides = [
+        movementRepositoryProvider.overrideWithValue(repository),
+        categoriesProvider.overrideWith(
+          (ref) async => [_category1, _category2],
+        ),
+        accountsProvider.overrideWith((ref) async {
+          throw Exception('accounts down');
+        }),
+      ];
+
+      await tester.pumpWidget(_wrap(overrides: overrides, router: router));
+      router.push('/movements/add');
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('movement-form-save-button')));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text(
+          'No se pudieron cargar las categorías o cuentas. Probá de nuevo.',
+        ),
+        findsOneWidget,
+      );
+      expect(repository.createCallCount, 0);
+      expect(repository.updateCallCount, 0);
+    },
+  );
+
+  testWidgets('create mode: a negative amount does not submit', (
+    tester,
+  ) async {
+    final repository = _FakeMovementRepository();
+    final router = _buildRouter();
+
+    await tester.pumpWidget(
+      _wrap(overrides: _baseOverrides(repository), router: router),
+    );
+    router.push('/movements/add');
+    await tester.pumpAndSettle();
+
+    await _fillValidForm(tester);
+    await tester.enterText(
+      find.byKey(const Key('movement-form-amount-field')),
+      '-5',
+    );
+
+    await tester.tap(find.byKey(const Key('movement-form-save-button')));
+    await tester.pumpAndSettle();
+
+    expect(repository.createCallCount, 0);
+    expect(find.text('Ingresá un monto válido'), findsOneWidget);
+  });
+
+  testWidgets('create mode: a zero amount does not submit', (tester) async {
+    final repository = _FakeMovementRepository();
+    final router = _buildRouter();
+
+    await tester.pumpWidget(
+      _wrap(overrides: _baseOverrides(repository), router: router),
+    );
+    router.push('/movements/add');
+    await tester.pumpAndSettle();
+
+    await _fillValidForm(tester);
+    await tester.enterText(
+      find.byKey(const Key('movement-form-amount-field')),
+      '0',
+    );
+
+    await tester.tap(find.byKey(const Key('movement-form-save-button')));
+    await tester.pumpAndSettle();
+
+    expect(repository.createCallCount, 0);
+    expect(find.text('Ingresá un monto válido'), findsOneWidget);
+  });
+
+  testWidgets('create mode: a non-numeric amount does not submit', (
+    tester,
+  ) async {
+    final repository = _FakeMovementRepository();
+    final router = _buildRouter();
+
+    await tester.pumpWidget(
+      _wrap(overrides: _baseOverrides(repository), router: router),
+    );
+    router.push('/movements/add');
+    await tester.pumpAndSettle();
+
+    await _fillValidForm(tester);
+    await tester.enterText(
+      find.byKey(const Key('movement-form-amount-field')),
+      'abc',
+    );
+
+    await tester.tap(find.byKey(const Key('movement-form-save-button')));
+    await tester.pumpAndSettle();
+
+    expect(repository.createCallCount, 0);
+    expect(find.text('Ingresá un monto válido'), findsOneWidget);
+  });
+
+  testWidgets('a rapid double delete-confirm only triggers a single delete call', (
+    tester,
+  ) async {
+    final gate = Completer<void>();
+    final repository = _FakeMovementRepository(gate: gate);
+    final router = _buildRouter();
+    final initial = Movement(
+      id: 'mv-1',
+      amount: 2500,
+      date: DateTime(2026, 6, 15),
+      type: MovementType.ingreso,
+      account: 'acc-2',
+    );
+
+    await tester.pumpWidget(
+      _wrap(overrides: _baseOverrides(repository), router: router),
+    );
+    router.push('/movements/add', extra: initial);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('movement-form-delete-button')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Eliminar'));
+    await tester.pump();
+
+    final button = tester.widget<IconButton>(
+      find.byKey(const Key('movement-form-delete-button')),
+    );
+    expect(button.onPressed, isNull);
+
+    await tester.tap(
+      find.byKey(const Key('movement-form-delete-button')),
+      warnIfMissed: false,
+    );
+    await tester.pump();
+
+    gate.complete();
+    await tester.pumpAndSettle();
+
+    expect(repository.deleteCallCount, 1);
+  });
+
+  testWidgets(
+    'delete: a non-ApiException failure is still caught and shows a fallback message',
+    (tester) async {
+      final repository = _FakeMovementRepository(
+        deleteError: Exception('boom'),
+      );
+      final router = _buildRouter();
+      final initial = Movement(
+        id: 'mv-1',
+        amount: 2500,
+        date: DateTime(2026, 6, 15),
+        type: MovementType.ingreso,
+        account: 'acc-2',
+      );
+
+      await tester.pumpWidget(
+        _wrap(overrides: _baseOverrides(repository), router: router),
+      );
+      router.push('/movements/add', extra: initial);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('movement-form-delete-button')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Eliminar'));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text('Ocurrió un error inesperado. Probá de nuevo.'),
+        findsOneWidget,
+      );
       expect(find.byType(MovementFormScreen), findsOneWidget);
     },
   );

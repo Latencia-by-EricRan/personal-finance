@@ -94,6 +94,20 @@ class _MovementFormScreenState extends ConsumerState<MovementFormScreen> {
 
   Future<void> _submit() async {
     if (_isSubmitting) return;
+
+    final categoriesAsync = ref.read(categoriesProvider);
+    final accountsAsync = ref.read(accountsProvider);
+    if (categoriesAsync.hasError || accountsAsync.hasError) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'No se pudieron cargar las categorías o cuentas. Probá de nuevo.',
+          ),
+        ),
+      );
+      return;
+    }
+
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
     setState(() => _isSubmitting = true);
@@ -162,6 +176,7 @@ class _MovementFormScreenState extends ConsumerState<MovementFormScreen> {
   }
 
   Future<void> _delete() async {
+    if (_isSubmitting) return;
     setState(() => _isSubmitting = true);
     try {
       await ref.read(movementRepositoryProvider).delete(widget.initial!.id!);
