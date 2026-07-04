@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/accounts/index.dart';
 import '../../features/auth/index.dart';
+import '../../features/categories/index.dart';
 import '../../features/movements/index.dart';
 import '../../shared/models/index.dart';
 import '../auth/session_provider.dart';
@@ -75,6 +76,14 @@ GoRouter buildAppRouter({
       GoRoute(
         path: '/accounts/transfer',
         builder: (context, state) => const TransferScreen(),
+      ),
+      GoRoute(
+        path: '/categories',
+        builder: (context, state) => const CategoriesScreen(),
+      ),
+      GoRoute(
+        path: '/categories/add',
+        builder: (context, state) => const _StubScreen(name: 'category-add'),
       ),
       GoRoute(
         path: '/budgets',

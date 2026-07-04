@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:client_flutter/core/network/index.dart';
 import 'package:client_flutter/features/categories/data/index.dart';
+import 'package:client_flutter/shared/models/index.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -81,6 +82,130 @@ void main() {
 
     await expectLater(
       repository.getAll(),
+      throwsA(
+        isA<ApiException>()
+            .having((error) => error.message, 'message', 'Server error')
+            .having((error) => error.statusCode, 'statusCode', 500),
+      ),
+    );
+  });
+
+  test('upsert posts the exact PascalCase body and parses the result',
+      () async {
+    final adapter = _ScriptedAdapter(201, {
+      '_id': 'cat-1',
+      'Description': 'Groceries',
+      'Name': 'Supermarket',
+      'Tag': 'food',
+      'Type': 'variable',
+    });
+    final repository = CategoryRepository(_buildDio(adapter));
+
+    final category = await repository.upsert(
+      name: 'Supermarket',
+      description: 'Groceries',
+      type: CategoryType.variable,
+      tag: 'food',
+    );
+
+    expect(category.id, 'cat-1');
+    expect(category.name, 'Supermarket');
+    expect(adapter.lastRequestOptions?.path, '/category');
+    expect(adapter.lastRequestOptions?.method, 'POST');
+    expect(adapter.lastRequestOptions?.data, {
+      'Name': 'Supermarket',
+      'Description': 'Groceries',
+      'Type': 'variable',
+      'Tag': 'food',
+    });
+  });
+
+  test('upsert includes Icon in the body when provided', () async {
+    final adapter = _ScriptedAdapter(201, {
+      '_id': 'cat-3',
+      'Description': 'Groceries',
+      'Name': 'Supermarket',
+      'Tag': 'food',
+      'Type': 'variable',
+      'Icon': '🛒',
+    });
+    final repository = CategoryRepository(_buildDio(adapter));
+
+    await repository.upsert(
+      name: 'Supermarket',
+      description: 'Groceries',
+      type: CategoryType.variable,
+      tag: 'food',
+      icon: '🛒',
+    );
+
+    expect(adapter.lastRequestOptions?.data, {
+      'Name': 'Supermarket',
+      'Description': 'Groceries',
+      'Type': 'variable',
+      'Tag': 'food',
+      'Icon': '🛒',
+    });
+  });
+
+  test('upsert omits Tag and Icon from the body when they are null',
+      () async {
+    final adapter = _ScriptedAdapter(201, {
+      '_id': 'cat-2',
+      'Description': 'Rent',
+      'Name': 'Alquiler',
+      'Tag': '',
+      'Type': 'fijo',
+    });
+    final repository = CategoryRepository(_buildDio(adapter));
+
+    await repository.upsert(
+      name: 'Alquiler',
+      description: 'Rent',
+      type: CategoryType.fijo,
+    );
+
+    expect(adapter.lastRequestOptions?.data, {
+      'Name': 'Alquiler',
+      'Description': 'Rent',
+      'Type': 'fijo',
+    });
+  });
+
+  test('upsert throws an ApiException on a server error', () async {
+    final adapter = _ScriptedAdapter(500, {'message': 'Server error'});
+    final repository = CategoryRepository(_buildDio(adapter));
+
+    await expectLater(
+      repository.upsert(
+        name: 'Supermarket',
+        description: 'Groceries',
+        type: CategoryType.variable,
+      ),
+      throwsA(
+        isA<ApiException>()
+            .having((error) => error.message, 'message', 'Server error')
+            .having((error) => error.statusCode, 'statusCode', 500),
+      ),
+    );
+  });
+
+  test('delete sends a DELETE request to /category/:id', () async {
+    final adapter = _ScriptedAdapter(200, {'deleted': true, 'id': 'cat-1'});
+    final repository = CategoryRepository(_buildDio(adapter));
+
+    await repository.delete('cat-1');
+
+    expect(adapter.lastRequestOptions?.path, '/category/cat-1');
+    expect(adapter.lastRequestOptions?.method, 'DELETE');
+  });
+
+  test('delete throws an ApiException on a server error', () async {
+    final adapter = _ScriptedAdapter(500, {'message': 'Server error'});
+    final repository = CategoryRepository(_buildDio(adapter));
+
+    await expectLater(
+      repository.delete('cat-1'),
       throwsA(
         isA<ApiException>()
             .having((error) => error.message, 'message', 'Server error')
