@@ -120,6 +120,34 @@ void main() {
     });
   });
 
+  test('upsert includes Icon in the body when provided', () async {
+    final adapter = _ScriptedAdapter(201, {
+      '_id': 'cat-3',
+      'Description': 'Groceries',
+      'Name': 'Supermarket',
+      'Tag': 'food',
+      'Type': 'variable',
+      'Icon': '🛒',
+    });
+    final repository = CategoryRepository(_buildDio(adapter));
+
+    await repository.upsert(
+      name: 'Supermarket',
+      description: 'Groceries',
+      type: CategoryType.variable,
+      tag: 'food',
+      icon: '🛒',
+    );
+
+    expect(adapter.lastRequestOptions?.data, {
+      'Name': 'Supermarket',
+      'Description': 'Groceries',
+      'Type': 'variable',
+      'Tag': 'food',
+      'Icon': '🛒',
+    });
+  });
+
   test('upsert omits Tag and Icon from the body when they are null',
       () async {
     final adapter = _ScriptedAdapter(201, {

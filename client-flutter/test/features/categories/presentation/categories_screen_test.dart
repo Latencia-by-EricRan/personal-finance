@@ -112,18 +112,38 @@ void main() {
       await tester.pumpAndSettle();
 
       final container = tester.widget<Container>(
-        find
-            .descendant(
-              of: find.byKey(const Key('category-card-c1')),
-              matching: find.byType(Container),
-            )
-            .first,
+        find.byKey(const Key('category-avatar-c1')),
       );
       final decoration = container.decoration! as BoxDecoration;
       final expectedKey = category.id ?? category.tag;
       final expectedColor = AppColors.categoryPalette[
           expectedKey.hashCode.abs() % AppColors.categoryPalette.length];
       expect(decoration.color, expectedColor);
+    },
+  );
+
+  testWidgets(
+    'the category avatar falls back to a 1-letter monogram for a short name',
+    (tester) async {
+      final category = _category(id: 'c9', name: 'A');
+      final repository = _FakeCategoryRepository(categoriesResult: [category]);
+
+      await tester.pumpWidget(
+        _wrap(
+          overrides: [
+            categoryRepositoryProvider.overrideWithValue(repository),
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('category-avatar-c9')),
+          matching: find.text('A'),
+        ),
+        findsOneWidget,
+      );
     },
   );
 

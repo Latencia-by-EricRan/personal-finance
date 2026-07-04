@@ -98,6 +98,7 @@ class _CategoryAvatar extends StatelessWidget {
         (letters.length >= 2 ? letters.substring(0, 2) : letters).toUpperCase();
 
     return Container(
+      key: Key('category-avatar-${category.id}'),
       width: 44,
       height: 44,
       alignment: Alignment.center,
