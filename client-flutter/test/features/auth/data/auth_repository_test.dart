@@ -74,12 +74,45 @@ void main() {
     await expectLater(
       repository.login(email: 'user@example.com', password: 'wrong'),
       throwsA(
-        isA<ApiException>().having(
-          (error) => error.message,
-          'message',
-          'Invalid credentials',
-        ),
+        isA<ApiException>()
+            .having((error) => error.message, 'message', 'Invalid credentials')
+            .having((error) => error.statusCode, 'statusCode', 401),
       ),
     );
   });
+
+  test(
+    'login surfaces an ApiException when the request fails with no response',
+    () async {
+      final dio = Dio(BaseOptions(baseUrl: 'http://localhost:3000'))
+        ..httpClientAdapter = _NoResponseAdapter();
+      final repository = AuthRepository(dio);
+
+      await expectLater(
+        repository.login(email: 'user@example.com', password: 'wrong'),
+        throwsA(
+          isA<ApiException>()
+              .having((error) => error.statusCode, 'statusCode', isNull)
+              .having((error) => error.message, 'message', isNotEmpty),
+        ),
+      );
+    },
+  );
+}
+
+class _NoResponseAdapter implements HttpClientAdapter {
+  @override
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<Uint8List>? requestStream,
+    Future<void>? cancelFuture,
+  ) {
+    throw DioException.connectionTimeout(
+      timeout: const Duration(seconds: 1),
+      requestOptions: options,
+    );
+  }
+
+  @override
+  void close({bool force = false}) {}
 }

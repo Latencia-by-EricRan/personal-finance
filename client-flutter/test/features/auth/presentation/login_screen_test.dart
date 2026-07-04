@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:client_flutter/core/auth/index.dart';
 import 'package:client_flutter/core/network/index.dart';
 import 'package:client_flutter/features/auth/index.dart';
@@ -11,16 +13,21 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../support/fake_token_store.dart';
 
 class _FakeAuthRepository extends AuthRepository {
-  _FakeAuthRepository({this.response, this.error}) : super(Dio());
+  _FakeAuthRepository({this.response, this.error, this.gate}) : super(Dio());
 
   final AuthTokenResponse? response;
   final Object? error;
+  final Completer<void>? gate;
+  var callCount = 0;
 
   @override
   Future<AuthTokenResponse> login({
     required String email,
     required String password,
   }) async {
+    callCount++;
+    final gate = this.gate;
+    if (gate != null) await gate.future;
     if (error != null) throw error!;
     return response!;
   }
@@ -61,6 +68,52 @@ void main() {
   });
 
   testWidgets(
+    'a rapid double submit only triggers a single login call',
+    (tester) async {
+      final tokenStore = FakeTokenStore();
+      final gate = Completer<void>();
+      final fakeRepository = _FakeAuthRepository(
+        response: const AuthTokenResponse(token: 't', expiresIn: '1d'),
+        gate: gate,
+      );
+
+      await tester.pumpWidget(
+        _wrap(
+          const LoginScreen(),
+          overrides: [
+            authTokenStoreProvider.overrideWithValue(tokenStore),
+            authRepositoryProvider.overrideWithValue(fakeRepository),
+          ],
+        ),
+      );
+
+      await tester.enterText(
+        find.byKey(const Key('login-email-field')),
+        'user@example.com',
+      );
+      await tester.enterText(
+        find.byKey(const Key('login-password-field')),
+        's3cret',
+      );
+
+      await tester.tap(find.byType(FilledButton));
+      await tester.pump();
+      // The button shows a spinner and its onPressed is disabled while the
+      // first submission is still in flight.
+      final button = tester.widget<FilledButton>(find.byType(FilledButton));
+      expect(button.onPressed, isNull);
+
+      await tester.tap(find.byType(FilledButton), warnIfMissed: false);
+      await tester.pump();
+
+      gate.complete();
+      await tester.pumpAndSettle();
+
+      expect(fakeRepository.callCount, 1);
+    },
+  );
+
+  testWidgets(
     'a successful login stores the token and flips the session',
     (tester) async {
       final tokenStore = FakeTokenStore();
@@ -90,10 +143,13 @@ void main() {
       );
 
       await tester.enterText(
-        find.byType(TextFormField).at(0),
+        find.byKey(const Key('login-email-field')),
         'user@example.com',
       );
-      await tester.enterText(find.byType(TextFormField).at(1), 's3cret');
+      await tester.enterText(
+        find.byKey(const Key('login-password-field')),
+        's3cret',
+      );
       await tester.tap(find.text('Ingresar'));
       await tester.pumpAndSettle();
 
@@ -122,10 +178,13 @@ void main() {
       );
 
       await tester.enterText(
-        find.byType(TextFormField).at(0),
+        find.byKey(const Key('login-email-field')),
         'user@example.com',
       );
-      await tester.enterText(find.byType(TextFormField).at(1), 'wrong');
+      await tester.enterText(
+        find.byKey(const Key('login-password-field')),
+        'wrong',
+      );
       await tester.tap(find.text('Ingresar'));
       await tester.pumpAndSettle();
 
