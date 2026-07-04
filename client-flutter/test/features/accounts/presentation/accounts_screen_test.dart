@@ -133,6 +133,26 @@ void main() {
     expect(find.text('Tarjeta Visa'), findsOneWidget);
     expect(find.textContaining('1.000,00'), findsOneWidget);
     expect(find.textContaining('200,00'), findsOneWidget);
+    expect(find.text('Cuenta bancaria'), findsOneWidget);
+    expect(find.text('Tarjeta de crédito'), findsOneWidget);
+  });
+
+  testWidgets('renders the efectivo account type label', (tester) async {
+    final repository = _FakeAccountRepository(
+      accountsResult: [
+        _account(id: 'a1', name: 'Billetera', type: AccountType.efectivo),
+      ],
+      balances: {'a1': 100},
+    );
+
+    await tester.pumpWidget(
+      _wrap(
+        overrides: [accountRepositoryProvider.overrideWithValue(repository)],
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Efectivo'), findsOneWidget);
   });
 
   testWidgets('renders a negative balance in the expense color', (
@@ -155,6 +175,29 @@ void main() {
     );
     expect(balanceText.style?.color, AppColors.expense);
   });
+
+  testWidgets(
+    'renders a positive balance in a neutral color, never the income green',
+    (tester) async {
+      final repository = _FakeAccountRepository(
+        accountsResult: [_account(id: 'a1', name: 'Cuenta Sueldo')],
+        balances: {'a1': 1000},
+      );
+
+      await tester.pumpWidget(
+        _wrap(
+          overrides: [accountRepositoryProvider.overrideWithValue(repository)],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final balanceText = tester.widget<Text>(
+        find.byKey(const Key('account-balance-a1')),
+      );
+      expect(balanceText.style?.color, AppColors.textPrimary);
+      expect(balanceText.style?.color, isNot(AppColors.income));
+    },
+  );
 
   testWidgets('shows the empty state when there are no accounts', (
     tester,
