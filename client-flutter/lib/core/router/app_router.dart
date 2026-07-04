@@ -93,7 +93,8 @@ GoRouter buildAppRouter({
       ),
       GoRoute(
         path: '/budgets/add',
-        builder: (context, state) => const _StubScreen(name: 'budget-add'),
+        builder: (context, state) =>
+            BudgetFormScreen(initial: state.extra as BudgetStatus?),
       ),
       GoRoute(
         path: '/recurring',
