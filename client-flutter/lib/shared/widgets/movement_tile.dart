@@ -7,9 +7,10 @@ import '../../features/accounts/data/index.dart';
 import '../models/index.dart';
 
 class MovementTile extends ConsumerWidget {
-  const MovementTile({super.key, required this.movement});
+  const MovementTile({super.key, required this.movement, this.onTap});
 
   final Movement movement;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,6 +40,7 @@ class MovementTile extends ConsumerWidget {
 
     return ListTile(
       key: Key('movement-tile-${movement.id}'),
+      onTap: onTap,
       leading: _CategoryAvatar(category: category),
       title: Text(title, style: theme.textTheme.titleMedium),
       subtitle: subtitleParts.isEmpty

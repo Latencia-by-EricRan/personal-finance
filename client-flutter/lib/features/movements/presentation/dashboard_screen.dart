@@ -145,7 +145,11 @@ class _DashboardBody extends ConsumerWidget {
               : Column(
                   children: [
                     for (final movement in movements)
-                      MovementTile(movement: movement),
+                      MovementTile(
+                        movement: movement,
+                        onTap: () =>
+                            context.push('/movements/add', extra: movement),
+                      ),
                   ],
                 ),
           loading: () => const Padding(

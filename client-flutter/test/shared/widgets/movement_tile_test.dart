@@ -89,4 +89,25 @@ void main() {
 
     expect(find.byIcon(Icons.swap_horiz), findsOneWidget);
   });
+
+  testWidgets('invokes onTap when tapped', (tester) async {
+    final movement = Movement(
+      id: 'mv-4',
+      amount: 5000,
+      date: DateTime(2026, 7, 3),
+      type: MovementType.egreso,
+      account: 'acc-1',
+    );
+    var tapCount = 0;
+
+    await tester.pumpWidget(
+      _wrap(MovementTile(movement: movement, onTap: () => tapCount++)),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('movement-tile-mv-4')));
+    await tester.pumpAndSettle();
+
+    expect(tapCount, 1);
+  });
 }
