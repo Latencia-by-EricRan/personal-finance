@@ -1,10 +1,16 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:client_flutter/core/auth/index.dart';
 import 'package:client_flutter/core/router/index.dart';
+import 'package:client_flutter/features/accounts/data/index.dart';
 import 'package:client_flutter/features/auth/index.dart';
+import 'package:client_flutter/features/categories/data/index.dart';
+import 'package:client_flutter/features/movements/index.dart';
+import 'package:client_flutter/shared/models/index.dart';
 
 import '../../support/fake_token_store.dart';
 
@@ -16,6 +22,43 @@ final _authRefreshNotifierProvider = Provider<AuthRefreshNotifier>((ref) {
   ref.onDispose(notifier.dispose);
   return notifier;
 });
+
+/// Stands in for the real repository so rendering the real [DashboardScreen]
+/// at `/` never reaches for the live `http://localhost:3000` backend.
+class _FakeMovementRepository extends MovementRepository {
+  _FakeMovementRepository() : super(Dio());
+
+  @override
+  Future<MovementSummaryResponse> getSummaryByMonth({
+    required int month,
+    required int year,
+  }) async => MovementSummaryResponse(
+    month: month,
+    year: year,
+    summary: const MovementSummary(
+      items: 0,
+      amount: MovementAmountSummary(income: 0, expense: 0),
+    ),
+    movements: const [],
+  );
+
+  @override
+  Future<List<Movement>> getByRange({
+    required DateTime start,
+    required DateTime end,
+    MovementType? type,
+    String? category,
+    String? account,
+    int? page,
+    int? limit,
+  }) async => const [];
+}
+
+final _dashboardScreenOverrides = <Override>[
+  movementRepositoryProvider.overrideWithValue(_FakeMovementRepository()),
+  categoriesProvider.overrideWith((ref) async => const []),
+  accountsProvider.overrideWith((ref) async => const []),
+];
 
 void main() {
   group('authRedirect', () {
@@ -59,11 +102,29 @@ void main() {
       final router = buildAppRouter(isLoggedIn: () => true);
       router.go(loginRoute);
       await tester.pumpWidget(
-        ProviderScope(child: MaterialApp.router(routerConfig: router)),
+        ProviderScope(
+          overrides: _dashboardScreenOverrides,
+          child: MaterialApp.router(routerConfig: router),
+        ),
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('TODO: dashboard'), findsOneWidget);
+      expect(find.byType(DashboardScreen), findsOneWidget);
+    });
+
+    testWidgets('renders the movement-add placeholder route', (tester) async {
+      final router = buildAppRouter(isLoggedIn: () => true);
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: _dashboardScreenOverrides,
+          child: MaterialApp.router(routerConfig: router),
+        ),
+      );
+
+      router.go('/movements/add');
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('TODO:'), findsOneWidget);
     });
 
     testWidgets('exposes stub placeholders for every Fase 0 route', (
@@ -71,7 +132,10 @@ void main() {
     ) async {
       final router = buildAppRouter(isLoggedIn: () => true);
       await tester.pumpWidget(
-        ProviderScope(child: MaterialApp.router(routerConfig: router)),
+        ProviderScope(
+          overrides: _dashboardScreenOverrides,
+          child: MaterialApp.router(routerConfig: router),
+        ),
       );
 
       for (final route in ['/accounts', '/budgets', '/recurring', '/reports']) {
