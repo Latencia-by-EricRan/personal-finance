@@ -28,8 +28,11 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
   ];
 
   var _showArchived = false;
+  final _restoringIds = <String>{};
 
   Future<void> _restore(String id) async {
+    if (_restoringIds.contains(id)) return;
+    setState(() => _restoringIds.add(id));
     try {
       await ref
           .read(accountRepositoryProvider)
@@ -49,6 +52,8 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
           content: Text('Ocurrió un error inesperado. Probá de nuevo.'),
         ),
       );
+    } finally {
+      if (mounted) setState(() => _restoringIds.remove(id));
     }
   }
 
@@ -83,6 +88,7 @@ class _AccountsScreenState extends ConsumerState<AccountsScreen> {
                   onToggleArchived: () =>
                       setState(() => _showArchived = !_showArchived),
                   onRestore: _restore,
+                  restoringIds: _restoringIds,
                 ),
                 loading: () =>
                     const Center(child: CircularProgressIndicator()),
@@ -142,12 +148,14 @@ class _AccountsBody extends ConsumerWidget {
     required this.showArchived,
     required this.onToggleArchived,
     required this.onRestore,
+    required this.restoringIds,
   });
 
   final List<AccountWithBalance> accounts;
   final bool showArchived;
   final VoidCallback onToggleArchived;
   final ValueChanged<String> onRestore;
+  final Set<String> restoringIds;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -173,16 +181,23 @@ class _AccountsBody extends ConsumerWidget {
           ),
         ),
         if (showArchived)
-          _ArchivedAccountsSection(onRestore: onRestore),
+          _ArchivedAccountsSection(
+            onRestore: onRestore,
+            restoringIds: restoringIds,
+          ),
       ],
     );
   }
 }
 
 class _ArchivedAccountsSection extends ConsumerWidget {
-  const _ArchivedAccountsSection({required this.onRestore});
+  const _ArchivedAccountsSection({
+    required this.onRestore,
+    required this.restoringIds,
+  });
 
   final ValueChanged<String> onRestore;
+  final Set<String> restoringIds;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -211,7 +226,9 @@ class _ArchivedAccountsSection extends ConsumerWidget {
                   subtitle: Text(accountTypeLabel(account.type)),
                   trailing: TextButton(
                     key: Key('archived-restore-${account.id}'),
-                    onPressed: () => onRestore(account.id!),
+                    onPressed: restoringIds.contains(account.id)
+                        ? null
+                        : () => onRestore(account.id!),
                     child: const Text('Restaurar'),
                   ),
                 ),

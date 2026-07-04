@@ -200,6 +200,34 @@ void main() {
     expect(find.text('Ingresá un nombre'), findsOneWidget);
   });
 
+  testWidgets('create mode: empty currency does not submit', (tester) async {
+    final repository = _FakeAccountRepository();
+    final router = _buildRouter();
+
+    await tester.pumpWidget(
+      _wrap(
+        overrides: [accountRepositoryProvider.overrideWithValue(repository)],
+        router: router,
+      ),
+    );
+    router.push('/accounts/add');
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+      find.byKey(const Key('account-form-name-field')),
+      'Cuenta nueva',
+    );
+    await tester.enterText(
+      find.byKey(const Key('account-form-currency-field')),
+      '',
+    );
+    await tester.tap(find.byKey(const Key('account-form-save-button')));
+    await tester.pumpAndSettle();
+
+    expect(repository.createCallCount, 0);
+    expect(find.text('Ingresá una moneda'), findsOneWidget);
+  });
+
   testWidgets(
     'create mode: a valid submit calls create with the right fields and pops',
     (tester) async {

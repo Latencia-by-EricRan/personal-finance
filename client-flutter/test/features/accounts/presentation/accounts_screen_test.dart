@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,6 +22,7 @@ class _FakeAccountRepository extends AccountRepository {
     this.balanceErrors = const {},
     List<Account> archivedResult = const [],
     this.updateError,
+    this.gate,
   }) : _archived = List.of(archivedResult),
        super(Dio());
 
@@ -28,6 +31,7 @@ class _FakeAccountRepository extends AccountRepository {
   final Map<String, num> balances;
   final Map<String, Object> balanceErrors;
   final Object? updateError;
+  final Completer<void>? gate;
   final List<Account> _archived;
   var getAllCallCount = 0;
   var updateCallCount = 0;
@@ -66,6 +70,8 @@ class _FakeAccountRepository extends AccountRepository {
     updateCallCount++;
     lastUpdateId = id;
     lastUpdateArchived = archived;
+    final gate = this.gate;
+    if (gate != null) await gate.future;
     final error = updateError;
     if (error != null) throw error;
     if (archived == false) {
@@ -486,6 +492,58 @@ void main() {
       expect(repository.lastUpdateId, 'a2');
       expect(repository.lastUpdateArchived, isFalse);
       expect(find.text('Cuenta vieja'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'a rapid double restore-tap only triggers a single restore call',
+    (tester) async {
+      final gate = Completer<void>();
+      final repository = _FakeAccountRepository(
+        accountsResult: [_account(id: 'a1', name: 'Cuenta Sueldo')],
+        balances: {'a1': 1000},
+        archivedResult: [
+          const Account(
+            id: 'a2',
+            name: 'Cuenta vieja',
+            type: AccountType.banco,
+            currency: 'ARS',
+            archived: true,
+          ),
+        ],
+        gate: gate,
+      );
+
+      await tester.pumpWidget(
+        _wrap(
+          overrides: [
+            accountRepositoryProvider.overrideWithValue(repository),
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('accounts-show-archived-toggle')));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('archived-restore-a2')));
+      await tester.pump();
+
+      final button = tester.widget<TextButton>(
+        find.byKey(const Key('archived-restore-a2')),
+      );
+      expect(button.onPressed, isNull);
+
+      await tester.tap(
+        find.byKey(const Key('archived-restore-a2')),
+        warnIfMissed: false,
+      );
+      await tester.pump();
+
+      gate.complete();
+      await tester.pumpAndSettle();
+
+      expect(repository.updateCallCount, 1);
     },
   );
 

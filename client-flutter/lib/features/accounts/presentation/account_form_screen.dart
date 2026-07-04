@@ -49,6 +49,12 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
     return null;
   }
 
+  String? _validateCurrency(String? value) {
+    final trimmed = value?.trim() ?? '';
+    if (trimmed.isEmpty) return 'Ingresá una moneda';
+    return null;
+  }
+
   Future<void> _submit() async {
     if (_isSubmitting) return;
     if (!(_formKey.currentState?.validate() ?? false)) return;
@@ -194,6 +200,7 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
                   key: const Key('account-form-currency-field'),
                   controller: _currencyController,
                   decoration: const InputDecoration(labelText: 'Moneda'),
+                  validator: _validateCurrency,
                 ),
                 const SizedBox(height: 24),
                 FilledButton(
