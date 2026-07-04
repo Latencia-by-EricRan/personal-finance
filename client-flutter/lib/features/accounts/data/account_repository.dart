@@ -41,6 +41,67 @@ class AccountRepository {
       throw ApiException.fromDioException(error);
     }
   }
+
+  Future<Account> create({
+    required String name,
+    required AccountType type,
+    String? currency,
+    String? icon,
+  }) async {
+    try {
+      final response = await _dio.post<Map<String, dynamic>>(
+        '/account',
+        data: {
+          'Name': name,
+          'Type': type.name,
+          if (currency != null) 'Currency': currency,
+          if (icon != null) 'Icon': icon,
+        },
+      );
+      return Account.fromJson(response.data!);
+    } on DioException catch (error) {
+      throw ApiException.fromDioException(error);
+    }
+  }
+
+  Future<Account> update(
+    String id, {
+    String? name,
+    AccountType? type,
+    String? currency,
+    String? icon,
+    bool? archived,
+  }) async {
+    try {
+      final response = await _dio.put<Map<String, dynamic>>(
+        '/account/$id',
+        data: {
+          if (name != null) 'Name': name,
+          if (type != null) 'Type': type.name,
+          if (currency != null) 'Currency': currency,
+          if (icon != null) 'Icon': icon,
+          if (archived != null) 'Archived': archived,
+        },
+      );
+      return Account.fromJson(response.data!);
+    } on DioException catch (error) {
+      throw ApiException.fromDioException(error);
+    }
+  }
+
+  // The backend soft-deletes accounts: this returns the archived Account
+  // object itself (200), not the generic {deleted:true,id} shape every other
+  // delete endpoint in this backend uses.
+  Future<Account> archive(String id) async {
+    try {
+      final response = await _dio.delete<Map<String, dynamic>>(
+        '/account/$id',
+      );
+      return Account.fromJson(response.data!);
+    } on DioException catch (error) {
+      throw ApiException.fromDioException(error);
+    }
+  }
 }
 
 final accountRepositoryProvider = Provider<AccountRepository>((ref) {

@@ -68,6 +68,11 @@ GoRouter buildAppRouter({
         builder: (context, state) => const AccountsScreen(),
       ),
       GoRoute(
+        path: '/accounts/add',
+        builder: (context, state) =>
+            AccountFormScreen(initial: state.extra as Account?),
+      ),
+      GoRoute(
         path: '/accounts/transfer',
         builder: (context, state) =>
             const _StubScreen(name: 'accounts-transfer'),

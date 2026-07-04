@@ -190,6 +190,47 @@ void main() {
       expect(find.byType(AccountsScreen), findsOneWidget);
     });
 
+    testWidgets('renders the account form on /accounts/add', (tester) async {
+      final router = buildAppRouter(isLoggedIn: () => true);
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: _dashboardScreenOverrides,
+          child: MaterialApp.router(routerConfig: router),
+        ),
+      );
+
+      router.go('/accounts/add');
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AccountFormScreen), findsOneWidget);
+      expect(find.text('Nueva cuenta'), findsOneWidget);
+    });
+
+    testWidgets(
+      'renders the account form in edit mode when extra carries an Account',
+      (tester) async {
+        final router = buildAppRouter(isLoggedIn: () => true);
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: _dashboardScreenOverrides,
+            child: MaterialApp.router(routerConfig: router),
+          ),
+        );
+
+        const account = Account(
+          id: 'acc-1',
+          name: 'Cuenta sueldo',
+          type: AccountType.banco,
+          currency: 'ARS',
+          archived: false,
+        );
+        router.go('/accounts/add', extra: account);
+        await tester.pumpAndSettle();
+
+        expect(find.text('Editar cuenta'), findsOneWidget);
+      },
+    );
+
     testWidgets('exposes a stub placeholder for /accounts/transfer', (
       tester,
     ) async {
