@@ -103,6 +103,8 @@ class AccountRepository {
     }
   }
 
+  /// Returns the pair `[egresoMovement, ingresoMovement]` the backend creates
+  /// for the transfer (see `AccountService.transfer`), in that order.
   Future<List<Movement>> transfer({
     required String from,
     required String to,

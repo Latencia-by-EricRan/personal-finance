@@ -196,6 +196,43 @@ void main() {
     },
   );
 
+  for (final invalidAmount in ['-5', '0', 'abc']) {
+    testWidgets(
+      'an invalid amount ("$invalidAmount") does not submit',
+      (tester) async {
+        final repository = _FakeAccountRepository();
+        final router = _buildRouter();
+
+        await tester.pumpWidget(
+          _wrap(overrides: _baseOverrides(repository), router: router),
+        );
+        router.push('/accounts/transfer');
+        await tester.pumpAndSettle();
+
+        await _selectAccount(
+          tester,
+          const Key('transfer-form-from-field'),
+          'Cuenta sueldo',
+        );
+        await _selectAccount(
+          tester,
+          const Key('transfer-form-to-field'),
+          'Efectivo',
+        );
+        await tester.enterText(
+          find.byKey(const Key('transfer-form-amount-field')),
+          invalidAmount,
+        );
+
+        await tester.tap(find.byKey(const Key('transfer-form-submit-button')));
+        await tester.pumpAndSettle();
+
+        expect(repository.transferCallCount, 0);
+        expect(find.text('Ingresá un monto válido'), findsOneWidget);
+      },
+    );
+  }
+
   testWidgets(
     'a valid submit calls transfer with the exact right fields and pops',
     (tester) async {
