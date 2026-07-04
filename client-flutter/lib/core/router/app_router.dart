@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/auth/index.dart';
 import '../auth/session_provider.dart';
 
 const loginRoute = '/login';
@@ -48,7 +49,7 @@ GoRouter buildAppRouter({
     routes: [
       GoRoute(
         path: loginRoute,
-        builder: (context, state) => const _StubScreen(name: 'login'),
+        builder: (context, state) => const LoginScreen(),
       ),
       GoRoute(
         path: '/',

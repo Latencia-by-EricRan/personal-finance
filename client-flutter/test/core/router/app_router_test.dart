@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:client_flutter/core/auth/index.dart';
 import 'package:client_flutter/core/router/index.dart';
+import 'package:client_flutter/features/auth/index.dart';
 
 import '../../support/fake_token_store.dart';
 
@@ -46,16 +47,20 @@ void main() {
   group('buildAppRouter wiring', () {
     testWidgets('redirects to /login when logged out', (tester) async {
       final router = buildAppRouter(isLoggedIn: () => false);
-      await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+      await tester.pumpWidget(
+        ProviderScope(child: MaterialApp.router(routerConfig: router)),
+      );
       await tester.pumpAndSettle();
 
-      expect(find.text('TODO: login'), findsOneWidget);
+      expect(find.byType(LoginScreen), findsOneWidget);
     });
 
     testWidgets('redirects away from /login when logged in', (tester) async {
       final router = buildAppRouter(isLoggedIn: () => true);
       router.go(loginRoute);
-      await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+      await tester.pumpWidget(
+        ProviderScope(child: MaterialApp.router(routerConfig: router)),
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('TODO: dashboard'), findsOneWidget);
@@ -65,7 +70,9 @@ void main() {
       tester,
     ) async {
       final router = buildAppRouter(isLoggedIn: () => true);
-      await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+      await tester.pumpWidget(
+        ProviderScope(child: MaterialApp.router(routerConfig: router)),
+      );
 
       for (final route in ['/accounts', '/budgets', '/recurring', '/reports']) {
         router.go(route);
