@@ -10,11 +10,8 @@ import '../../../shared/widgets/index.dart';
 import '../../movements/presentation/providers/selected_month_provider.dart';
 import '../data/index.dart';
 
-Color _categoryColor(Category category) {
-  final key = category.id ?? category.tag;
-  return AppColors
-      .categoryPalette[key.hashCode.abs() % AppColors.categoryPalette.length];
-}
+Color _categoryColor(Category category) =>
+    AppColors.forKey(category.id ?? category.tag);
 
 class ReportsScreen extends ConsumerStatefulWidget {
   const ReportsScreen({super.key});
@@ -384,7 +381,16 @@ class _MonthlyBarSection extends ConsumerWidget {
         ),
         const SizedBox(height: 12),
         monthlyAsync.when(
-          data: (entries) => _MonthlyBarChart(entries: entries),
+          // The backend always returns exactly 12 entries (one per month,
+          // zero-valued where there's no activity), so `entries.isEmpty`
+          // never happens in practice — the real "nothing to show" case for
+          // a year with no movements at all is every entry being zero.
+          data: (entries) =>
+              entries.every((entry) => entry.income == 0 && entry.expense == 0)
+                  ? const EmptyState(
+                      message: 'No hay movimientos registrados este año.',
+                    )
+                  : _MonthlyBarChart(entries: entries),
           loading: () => const Padding(
             padding: EdgeInsets.symmetric(vertical: 32),
             child: Center(child: CircularProgressIndicator()),

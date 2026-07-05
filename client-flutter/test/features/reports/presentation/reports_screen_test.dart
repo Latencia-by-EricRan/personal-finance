@@ -100,11 +100,10 @@ List<MonthlyReportEntry> _twelveMonths(int year) => [
         ),
     ];
 
-Color _expectedCategoryColor(Category category) {
-  final key = category.id ?? category.tag;
-  return AppColors
-      .categoryPalette[key.hashCode.abs() % AppColors.categoryPalette.length];
-}
+// Calls the real shared helper (not a hand-copied re-derivation) so this
+// test actually protects against AppColors.forKey drifting in the future.
+Color _expectedCategoryColor(Category category) =>
+    AppColors.forKey(category.id ?? category.tag);
 
 Widget _wrap({required List<Override> overrides}) {
   final router = GoRouter(
@@ -297,6 +296,28 @@ void main() {
 
       expect(find.byType(EmptyState), findsOneWidget);
       expect(find.byType(PieChart), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'shows the empty state for the monthly section when the year has no '
+    'activity at all',
+    (tester) async {
+      final zeroMonths = [
+        for (var month = 1; month <= 12; month++)
+          MonthlyReportEntry(month: month, income: 0, expense: 0, net: 0),
+      ];
+      final repository = _FakeReportRepository(monthlyEntries: zeroMonths);
+
+      await tester.pumpWidget(
+        _wrap(
+          overrides: [reportRepositoryProvider.overrideWithValue(repository)],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(EmptyState), findsWidgets);
+      expect(find.byType(BarChart), findsNothing);
     },
   );
 
