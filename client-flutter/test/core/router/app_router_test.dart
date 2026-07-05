@@ -173,12 +173,59 @@ void main() {
         ),
       );
 
-      for (final route in ['/recurring/add', '/reports']) {
+      for (final route in ['/reports']) {
         router.go(route);
         await tester.pumpAndSettle();
         expect(find.textContaining('TODO:'), findsOneWidget);
       }
     });
+
+    testWidgets('renders the recurring form on /recurring/add', (
+      tester,
+    ) async {
+      final router = buildAppRouter(isLoggedIn: () => true);
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: _dashboardScreenOverrides,
+          child: MaterialApp.router(routerConfig: router),
+        ),
+      );
+
+      router.go('/recurring/add');
+      await tester.pumpAndSettle();
+
+      expect(find.byType(RecurringFormScreen), findsOneWidget);
+      expect(find.text('Nuevo recurrente'), findsOneWidget);
+    });
+
+    testWidgets(
+      'renders the recurring form in edit mode when extra carries a '
+      'Recurring',
+      (tester) async {
+        final router = buildAppRouter(isLoggedIn: () => true);
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: _dashboardScreenOverrides,
+            child: MaterialApp.router(routerConfig: router),
+          ),
+        );
+
+        const recurring = Recurring(
+          id: 'rec-1',
+          type: MovementType.egreso,
+          amount: 1500,
+          category: 'cat-1',
+          account: 'acc-1',
+          dayOfMonth: 5,
+          frequency: RecurringFrequency.mensual,
+          active: true,
+        );
+        router.go('/recurring/add', extra: recurring);
+        await tester.pumpAndSettle();
+
+        expect(find.text('Editar recurrente'), findsOneWidget);
+      },
+    );
 
     testWidgets('renders the real recurrings screen on /recurring', (
       tester,
