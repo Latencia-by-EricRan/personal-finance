@@ -339,6 +339,57 @@ void main() {
     },
   );
 
+  testWidgets(
+    "toggling one row's switch does not block a different row's switch",
+    (tester) async {
+      final gate = Completer<void>();
+      final repository = _FakeRecurringRepository(
+        recurrings: [
+          _recurring(id: 'rec-1', category: 'cat-1', account: 'acc-1'),
+          _recurring(id: 'rec-2', category: 'cat-1', account: 'acc-1'),
+        ],
+        setActiveGate: gate,
+      );
+
+      await tester.pumpWidget(
+        _wrap(
+          overrides: [
+            recurringRepositoryProvider.overrideWithValue(repository),
+            categoriesProvider.overrideWith((ref) async => const []),
+            accountsProvider.overrideWith((ref) async => const []),
+          ],
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final row1Switch = find.byKey(
+        const Key('recurring-active-switch-rec-1'),
+      );
+      final row2Switch = find.byKey(
+        const Key('recurring-active-switch-rec-2'),
+      );
+
+      // Start row 1's toggle and let it hang on the shared gate.
+      await tester.tap(row1Switch);
+      await tester.pump();
+
+      expect(repository.setActiveCallCount, 1);
+      expect(tester.widget<Switch>(row1Switch).onChanged, isNull);
+
+      // Row 2 must remain independently tappable while row 1 is in flight.
+      expect(tester.widget<Switch>(row2Switch).onChanged, isNotNull);
+      await tester.tap(row2Switch);
+      await tester.pump();
+
+      expect(repository.setActiveCallCount, 2);
+
+      gate.complete();
+      await tester.pumpAndSettle();
+
+      expect(repository.setActiveCallCount, 2);
+    },
+  );
+
   testWidgets('tapping "+" navigates to /recurring/add with no extra',
       (tester) async {
     final repository = _FakeRecurringRepository();
