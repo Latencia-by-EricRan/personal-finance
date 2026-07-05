@@ -13,6 +13,7 @@ import 'package:client_flutter/features/budgets/data/index.dart';
 import 'package:client_flutter/features/budgets/presentation/index.dart';
 import 'package:client_flutter/features/categories/index.dart';
 import 'package:client_flutter/features/movements/index.dart';
+import 'package:client_flutter/features/recurring/index.dart';
 import 'package:client_flutter/shared/models/index.dart';
 
 import '../../support/fake_token_store.dart';
@@ -65,6 +66,7 @@ final _dashboardScreenOverrides = <Override>[
   accountsProvider.overrideWith((ref) async => const []),
   accountsWithBalanceProvider.overrideWith((ref) async => const []),
   budgetStatusProvider.overrideWith((ref) async => const []),
+  recurringsProvider.overrideWith((ref) async => const []),
 ];
 
 void main() {
@@ -171,11 +173,28 @@ void main() {
         ),
       );
 
-      for (final route in ['/recurring', '/reports']) {
+      for (final route in ['/recurring/add', '/reports']) {
         router.go(route);
         await tester.pumpAndSettle();
         expect(find.textContaining('TODO:'), findsOneWidget);
       }
+    });
+
+    testWidgets('renders the real recurrings screen on /recurring', (
+      tester,
+    ) async {
+      final router = buildAppRouter(isLoggedIn: () => true);
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: _dashboardScreenOverrides,
+          child: MaterialApp.router(routerConfig: router),
+        ),
+      );
+
+      router.go('/recurring');
+      await tester.pumpAndSettle();
+
+      expect(find.byType(RecurringsScreen), findsOneWidget);
     });
 
     testWidgets('renders the real budgets screen on /budgets', (

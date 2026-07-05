@@ -7,6 +7,7 @@ import '../../features/auth/index.dart';
 import '../../features/budgets/index.dart';
 import '../../features/categories/index.dart';
 import '../../features/movements/index.dart';
+import '../../features/recurring/index.dart';
 import '../../shared/models/index.dart';
 import '../auth/session_provider.dart';
 
@@ -98,7 +99,12 @@ GoRouter buildAppRouter({
       ),
       GoRoute(
         path: '/recurring',
-        builder: (context, state) => const _StubScreen(name: 'recurring'),
+        builder: (context, state) => const RecurringsScreen(),
+      ),
+      GoRoute(
+        path: '/recurring/add',
+        builder: (context, state) =>
+            const _StubScreen(name: 'recurring-add'),
       ),
       GoRoute(
         path: '/reports',
