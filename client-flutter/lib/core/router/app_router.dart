@@ -8,6 +8,7 @@ import '../../features/budgets/index.dart';
 import '../../features/categories/index.dart';
 import '../../features/movements/index.dart';
 import '../../features/recurring/index.dart';
+import '../../features/reports/index.dart';
 import '../../shared/models/index.dart';
 import '../auth/session_provider.dart';
 
@@ -108,7 +109,7 @@ GoRouter buildAppRouter({
       ),
       GoRoute(
         path: '/reports',
-        builder: (context, state) => const _StubScreen(name: 'reports'),
+        builder: (context, state) => const ReportsScreen(),
       ),
     ],
   );
@@ -123,13 +124,3 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   );
 });
 
-class _StubScreen extends StatelessWidget {
-  const _StubScreen({required this.name});
-
-  final String name;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text('TODO: $name')));
-  }
-}
