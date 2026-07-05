@@ -51,6 +51,83 @@ class RecurringRepository {
       throw ApiException.fromDioException(error);
     }
   }
+
+  // `Frequency` is always sent explicitly as `'mensual'` on create — it's
+  // the only value the backend accepts, and being explicit here matches
+  // this codebase's general preference for explicit request bodies over
+  // relying on a backend default.
+  Future<Recurring> create({
+    required MovementType type,
+    required double amount,
+    required String category,
+    required String account,
+    required int dayOfMonth,
+    bool active = true,
+    String? description,
+    String? card,
+  }) async {
+    try {
+      final response = await _dio.post<Map<String, dynamic>>(
+        '/recurring',
+        data: {
+          'Type': type.name,
+          'Amount': amount,
+          'Category': category,
+          'Account': account,
+          'DayOfMonth': dayOfMonth,
+          'Frequency': 'mensual',
+          'Active': active,
+          if (description != null) 'Description': description,
+          if (card != null) 'Card': card,
+        },
+      );
+      return Recurring.fromJson(response.data!);
+    } on DioException catch (error) {
+      throw ApiException.fromDioException(error);
+    }
+  }
+
+  // `Frequency` and `LastRunYearMonth` are deliberately never sent from this
+  // form: `Frequency` has only one valid value (set once at create time),
+  // and `LastRunYearMonth` is system-managed by the backend's `run` cycle.
+  Future<Recurring> update(
+    String id, {
+    MovementType? type,
+    double? amount,
+    String? category,
+    String? account,
+    int? dayOfMonth,
+    bool? active,
+    String? description,
+    String? card,
+  }) async {
+    try {
+      final response = await _dio.put<Map<String, dynamic>>(
+        '/recurring/$id',
+        data: {
+          if (type != null) 'Type': type.name,
+          if (amount != null) 'Amount': amount,
+          if (category != null) 'Category': category,
+          if (account != null) 'Account': account,
+          if (dayOfMonth != null) 'DayOfMonth': dayOfMonth,
+          if (active != null) 'Active': active,
+          if (description != null) 'Description': description,
+          if (card != null) 'Card': card,
+        },
+      );
+      return Recurring.fromJson(response.data!);
+    } on DioException catch (error) {
+      throw ApiException.fromDioException(error);
+    }
+  }
+
+  Future<void> delete(String id) async {
+    try {
+      await _dio.delete<Map<String, dynamic>>('/recurring/$id');
+    } on DioException catch (error) {
+      throw ApiException.fromDioException(error);
+    }
+  }
 }
 
 final recurringRepositoryProvider = Provider<RecurringRepository>((ref) {

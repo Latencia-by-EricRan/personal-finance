@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:client_flutter/core/network/index.dart';
 import 'package:client_flutter/features/recurring/data/index.dart';
+import 'package:client_flutter/shared/models/index.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -186,6 +187,174 @@ void main() {
         isA<ApiException>()
             .having((error) => error.message, 'message', 'Server error')
             .having((error) => error.statusCode, 'statusCode', 500),
+      ),
+    );
+  });
+
+  test(
+      'create sends the exact PascalCase body with explicit Frequency: '
+      'mensual and parses the created entity', () async {
+    final adapter = _ScriptedAdapter(200, _recurringJson());
+    final repository = RecurringRepository(_buildDio(adapter));
+
+    final recurring = await repository.create(
+      type: MovementType.egreso,
+      amount: 1500,
+      category: 'cat-1',
+      account: 'acc-1',
+      dayOfMonth: 5,
+    );
+
+    expect(recurring.id, 'rec-1');
+    expect(adapter.lastRequestOptions?.path, '/recurring');
+    expect(adapter.lastRequestOptions?.method, 'POST');
+    expect(adapter.lastRequestOptions?.data, {
+      'Type': 'egreso',
+      'Amount': 1500.0,
+      'Category': 'cat-1',
+      'Account': 'acc-1',
+      'DayOfMonth': 5,
+      'Frequency': 'mensual',
+      'Active': true,
+    });
+  });
+
+  test('create includes optional Description and Card when provided',
+      () async {
+    final adapter = _ScriptedAdapter(200, _recurringJson());
+    final repository = RecurringRepository(_buildDio(adapter));
+
+    await repository.create(
+      type: MovementType.egreso,
+      amount: 1500,
+      category: 'cat-1',
+      account: 'acc-1',
+      dayOfMonth: 5,
+      active: false,
+      description: 'Alquiler',
+      card: 'Visa',
+    );
+
+    expect(adapter.lastRequestOptions?.data, {
+      'Type': 'egreso',
+      'Amount': 1500.0,
+      'Category': 'cat-1',
+      'Account': 'acc-1',
+      'DayOfMonth': 5,
+      'Frequency': 'mensual',
+      'Active': false,
+      'Description': 'Alquiler',
+      'Card': 'Visa',
+    });
+  });
+
+  test('create throws an ApiException on a server error', () async {
+    final adapter = _ScriptedAdapter(500, {'message': 'Server error'});
+    final repository = RecurringRepository(_buildDio(adapter));
+
+    await expectLater(
+      repository.create(
+        type: MovementType.egreso,
+        amount: 1500,
+        category: 'cat-1',
+        account: 'acc-1',
+        dayOfMonth: 5,
+      ),
+      throwsA(
+        isA<ApiException>()
+            .having((error) => error.message, 'message', 'Server error')
+            .having((error) => error.statusCode, 'statusCode', 500),
+      ),
+    );
+  });
+
+  test(
+      'update sends only the provided fields and never includes Frequency '
+      'or LastRunYearMonth', () async {
+    final adapter = _ScriptedAdapter(200, _recurringJson());
+    final repository = RecurringRepository(_buildDio(adapter));
+
+    await repository.update('rec-1', amount: 2000, dayOfMonth: 10);
+
+    expect(adapter.lastRequestOptions?.path, '/recurring/rec-1');
+    expect(adapter.lastRequestOptions?.method, 'PUT');
+    expect(adapter.lastRequestOptions?.data, {
+      'Amount': 2000.0,
+      'DayOfMonth': 10,
+    });
+  });
+
+  test('update sends every field when all are provided', () async {
+    final adapter = _ScriptedAdapter(200, _recurringJson());
+    final repository = RecurringRepository(_buildDio(adapter));
+
+    await repository.update(
+      'rec-1',
+      type: MovementType.ingreso,
+      amount: 3000,
+      category: 'cat-2',
+      account: 'acc-2',
+      dayOfMonth: 15,
+      active: false,
+      description: 'Sueldo',
+      card: 'Visa',
+    );
+
+    expect(adapter.lastRequestOptions?.data, {
+      'Type': 'ingreso',
+      'Amount': 3000.0,
+      'Category': 'cat-2',
+      'Account': 'acc-2',
+      'DayOfMonth': 15,
+      'Active': false,
+      'Description': 'Sueldo',
+      'Card': 'Visa',
+    });
+  });
+
+  test('update parses the returned entity', () async {
+    final adapter = _ScriptedAdapter(200, _recurringJson(active: false));
+    final repository = RecurringRepository(_buildDio(adapter));
+
+    final recurring = await repository.update('rec-1', active: false);
+
+    expect(recurring.active, isFalse);
+  });
+
+  test('update throws an ApiException on a server error', () async {
+    final adapter = _ScriptedAdapter(404, {'message': 'Recurring not found'});
+    final repository = RecurringRepository(_buildDio(adapter));
+
+    await expectLater(
+      repository.update('missing', amount: 100),
+      throwsA(
+        isA<ApiException>()
+            .having((error) => error.message, 'message', 'Recurring not found')
+            .having((error) => error.statusCode, 'statusCode', 404),
+      ),
+    );
+  });
+
+  test('delete sends a DELETE to /recurring/:id', () async {
+    final adapter = _ScriptedAdapter(200, {'deleted': true, 'id': 'rec-1'});
+    final repository = RecurringRepository(_buildDio(adapter));
+
+    await repository.delete('rec-1');
+
+    expect(adapter.lastRequestOptions?.path, '/recurring/rec-1');
+    expect(adapter.lastRequestOptions?.method, 'DELETE');
+  });
+
+  test('delete throws an ApiException on a server error', () async {
+    final adapter = _ScriptedAdapter(404, {'message': 'Recurring not found'});
+    final repository = RecurringRepository(_buildDio(adapter));
+
+    await expectLater(
+      repository.delete('missing'),
+      throwsA(
+        isA<ApiException>()
+            .having((error) => error.message, 'message', 'Recurring not found')
+            .having((error) => error.statusCode, 'statusCode', 404),
       ),
     );
   });

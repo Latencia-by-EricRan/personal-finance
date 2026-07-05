@@ -104,7 +104,7 @@ GoRouter buildAppRouter({
       GoRoute(
         path: '/recurring/add',
         builder: (context, state) =>
-            const _StubScreen(name: 'recurring-add'),
+            RecurringFormScreen(initial: state.extra as Recurring?),
       ),
       GoRoute(
         path: '/reports',
