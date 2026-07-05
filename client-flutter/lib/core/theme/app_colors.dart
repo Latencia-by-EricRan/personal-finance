@@ -33,4 +33,10 @@ abstract final class AppColors {
     Color(0xFFE0468B), // magenta
     Color(0xFFB85F35), // terracotta
   ];
+
+  /// Single source of truth for slot assignment — every screen that colors a
+  /// category/account by identity must call this, not re-derive the formula,
+  /// so the same entity never shows a different color on different screens.
+  static Color forKey(String key) =>
+      categoryPalette[key.hashCode.abs() % categoryPalette.length];
 }

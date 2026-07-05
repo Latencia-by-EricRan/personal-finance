@@ -51,4 +51,9 @@ abstract final class AppFormatters {
 
   static String monthYear(int month, int year) =>
       '${_monthNames[month - 1]} $year';
+
+  /// Public by-index accessor for the monthly bar chart's x-axis labels
+  /// (`ReportsScreen`'s monthly report has no `DateTime`, only a raw
+  /// 1-12 `month` int, so it can't call [shortDate]).
+  static String monthAbbreviation(int month) => _monthAbbreviations[month - 1];
 }

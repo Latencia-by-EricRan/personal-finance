@@ -14,6 +14,8 @@ import 'package:client_flutter/features/budgets/presentation/index.dart';
 import 'package:client_flutter/features/categories/index.dart';
 import 'package:client_flutter/features/movements/index.dart';
 import 'package:client_flutter/features/recurring/index.dart';
+import 'package:client_flutter/features/reports/data/index.dart';
+import 'package:client_flutter/features/reports/presentation/index.dart';
 import 'package:client_flutter/shared/models/index.dart';
 
 import '../../support/fake_token_store.dart';
@@ -60,6 +62,30 @@ class _FakeMovementRepository extends MovementRepository {
       const [];
 }
 
+/// Stands in for the real repository so rendering the real [ReportsScreen]
+/// at `/reports` never reaches for the live `http://localhost:3000` backend.
+class _FakeReportRepository extends ReportRepository {
+  _FakeReportRepository() : super(Dio());
+
+  @override
+  Future<List<CategoryReportEntry>> getByCategory({
+    required int month,
+    required int year,
+  }) async =>
+      const [];
+
+  @override
+  Future<List<MonthlyReportEntry>> getMonthly({required int year}) async =>
+      const [];
+
+  @override
+  Future<CashflowReport> getCashflow({
+    required int month,
+    required int year,
+  }) async =>
+      const CashflowReport(month: 1, year: 2026, income: 0, expense: 0, net: 0);
+}
+
 final _dashboardScreenOverrides = <Override>[
   movementRepositoryProvider.overrideWithValue(_FakeMovementRepository()),
   categoriesProvider.overrideWith((ref) async => const []),
@@ -67,6 +93,7 @@ final _dashboardScreenOverrides = <Override>[
   accountsWithBalanceProvider.overrideWith((ref) async => const []),
   budgetStatusProvider.overrideWith((ref) async => const []),
   recurringsProvider.overrideWith((ref) async => const []),
+  reportRepositoryProvider.overrideWithValue(_FakeReportRepository()),
 ];
 
 void main() {
@@ -162,7 +189,7 @@ void main() {
       },
     );
 
-    testWidgets('exposes stub placeholders for every remaining Fase 0 route', (
+    testWidgets('renders the real reports screen on /reports', (
       tester,
     ) async {
       final router = buildAppRouter(isLoggedIn: () => true);
@@ -173,11 +200,10 @@ void main() {
         ),
       );
 
-      for (final route in ['/reports']) {
-        router.go(route);
-        await tester.pumpAndSettle();
-        expect(find.textContaining('TODO:'), findsOneWidget);
-      }
+      router.go('/reports');
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ReportsScreen), findsOneWidget);
     });
 
     testWidgets('renders the recurring form on /recurring/add', (

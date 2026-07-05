@@ -79,8 +79,7 @@ class _CategoryAvatar extends StatelessWidget {
     }
 
     final key = category.id ?? category.tag;
-    final color = AppColors
-        .categoryPalette[key.hashCode.abs() % AppColors.categoryPalette.length];
+    final color = AppColors.forKey(key);
     final letters = category.name.trim();
     final monogram =
         (letters.length >= 2 ? letters.substring(0, 2) : letters).toUpperCase();

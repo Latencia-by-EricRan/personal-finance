@@ -50,4 +50,18 @@ void main() {
       expect(AppFormatters.currencyHero(-35000.5), r'$ -35.000,50');
     });
   });
+
+  group('AppFormatters.monthAbbreviation', () {
+    test('formats January correctly (index boundary)', () {
+      expect(AppFormatters.monthAbbreviation(1), 'ene');
+    });
+
+    test('formats a mid-year month', () {
+      expect(AppFormatters.monthAbbreviation(7), 'jul');
+    });
+
+    test('formats December correctly (index boundary)', () {
+      expect(AppFormatters.monthAbbreviation(12), 'dic');
+    });
+  });
 }
