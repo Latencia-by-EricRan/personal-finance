@@ -280,6 +280,54 @@ void main() {
     expect(find.text('Ingresá un día válido (1-31)'), findsOneWidget);
   });
 
+  testWidgets('create mode: DayOfMonth 1 (valid boundary) submits and '
+      'reaches create with dayOfMonth: 1', (tester) async {
+    final repository = _FakeRecurringRepository();
+    final router = _buildRouter();
+
+    await tester.pumpWidget(
+      _wrap(overrides: _baseOverrides(repository), router: router),
+    );
+    router.push('/recurring/add');
+    await tester.pumpAndSettle();
+
+    await _fillValidForm(tester);
+    await tester.enterText(
+      find.byKey(const Key('recurring-form-day-field')),
+      '1',
+    );
+
+    await tester.tap(find.byKey(const Key('recurring-form-save-button')));
+    await tester.pumpAndSettle();
+
+    expect(repository.createCallCount, 1);
+    expect(repository.lastDayOfMonth, 1);
+  });
+
+  testWidgets('create mode: DayOfMonth 31 (valid boundary) submits and '
+      'reaches create with dayOfMonth: 31', (tester) async {
+    final repository = _FakeRecurringRepository();
+    final router = _buildRouter();
+
+    await tester.pumpWidget(
+      _wrap(overrides: _baseOverrides(repository), router: router),
+    );
+    router.push('/recurring/add');
+    await tester.pumpAndSettle();
+
+    await _fillValidForm(tester);
+    await tester.enterText(
+      find.byKey(const Key('recurring-form-day-field')),
+      '31',
+    );
+
+    await tester.tap(find.byKey(const Key('recurring-form-save-button')));
+    await tester.pumpAndSettle();
+
+    expect(repository.createCallCount, 1);
+    expect(repository.lastDayOfMonth, 31);
+  });
+
   testWidgets(
     'create mode: a valid submit calls create with the right fields '
     'including active: true by default',
@@ -442,6 +490,44 @@ void main() {
       expect(repository.lastActive, isFalse);
       expect(repository.lastDescription, 'Sueldo extra');
       expect(find.text('back-marker'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'edit mode: clearing the Description field and submitting calls update '
+    'with description: null so the backend actually clears it',
+    (tester) async {
+      final repository = _FakeRecurringRepository();
+      final router = _buildRouter();
+      const initial = Recurring(
+        id: 'rec-1',
+        type: MovementType.ingreso,
+        amount: 2500,
+        category: 'cat-2',
+        account: 'acc-2',
+        dayOfMonth: 10,
+        frequency: RecurringFrequency.mensual,
+        active: true,
+        description: 'Sueldo extra',
+      );
+
+      await tester.pumpWidget(
+        _wrap(overrides: _baseOverrides(repository), router: router),
+      );
+      router.push('/recurring/add', extra: initial);
+      await tester.pumpAndSettle();
+
+      await tester.enterText(
+        find.byKey(const Key('recurring-form-description-field')),
+        '',
+      );
+
+      await tester.tap(find.byKey(const Key('recurring-form-save-button')));
+      await tester.pumpAndSettle();
+
+      expect(repository.updateCallCount, 1);
+      expect(repository.lastUpdateId, 'rec-1');
+      expect(repository.lastDescription, isNull);
     },
   );
 

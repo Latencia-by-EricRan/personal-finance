@@ -269,8 +269,9 @@ void main() {
   });
 
   test(
-      'update sends only the provided fields and never includes Frequency '
-      'or LastRunYearMonth', () async {
+      'update sends only the provided fields (plus always-present '
+      'Description) and never includes Frequency or LastRunYearMonth',
+      () async {
     final adapter = _ScriptedAdapter(200, _recurringJson());
     final repository = RecurringRepository(_buildDio(adapter));
 
@@ -281,7 +282,22 @@ void main() {
     expect(adapter.lastRequestOptions?.data, {
       'Amount': 2000.0,
       'DayOfMonth': 10,
+      'Description': null,
     });
+  });
+
+  test(
+      'update sends an explicit Description: null (not an omitted key) when '
+      'clearing a template\'s description, so the backend actually clears '
+      'the old value instead of silently keeping it', () async {
+    final adapter = _ScriptedAdapter(200, _recurringJson());
+    final repository = RecurringRepository(_buildDio(adapter));
+
+    await repository.update('rec-1', description: null);
+
+    final data = adapter.lastRequestOptions?.data as Map<String, dynamic>;
+    expect(data.containsKey('Description'), isTrue);
+    expect(data['Description'], isNull);
   });
 
   test('update sends every field when all are provided', () async {

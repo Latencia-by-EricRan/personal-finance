@@ -111,7 +111,7 @@ class RecurringRepository {
           if (account != null) 'Account': account,
           if (dayOfMonth != null) 'DayOfMonth': dayOfMonth,
           if (active != null) 'Active': active,
-          if (description != null) 'Description': description,
+          'Description': description,
           if (card != null) 'Card': card,
         },
       );
