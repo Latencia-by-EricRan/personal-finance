@@ -9,8 +9,8 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
  * real/production secret. Reused by every e2e suite via `tokenFor()` so each
  * file does not have to re-implement login.
  */
-const KNOWN_EMAIL = 'e2e-harness@test.local';
-const KNOWN_PASSWORD = 'e2e-harness-password';
+export const KNOWN_EMAIL = 'e2e-harness@test.local';
+export const KNOWN_PASSWORD = 'e2e-harness-password';
 
 interface TestApp {
     app: Express;
