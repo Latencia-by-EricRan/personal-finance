@@ -1,8 +1,11 @@
 # Contributing
 
-This is a monorepo with three independent sub-projects — `back/` (Express/TS/MongoDB
-API), `web/` (Angular SSR client), `client-flutter/` (Flutter mobile/web client). See
-each project's own `CLAUDE.md` for stack-specific conventions.
+This is a monorepo with two independent sub-projects — `back/` (Express/TS/MongoDB
+API) and `web/` (Angular SSR client). See each project's own `CLAUDE.md` for
+stack-specific conventions.
+
+The Flutter mobile client (Android/iOS) lives in its own repository,
+`PersonalFinanceApp`, with its own contributing conventions.
 
 ## Branches
 
@@ -23,13 +26,12 @@ for admins), and force-pushes/deletions are disabled.
 - **type** — matches the conventional-commit type of the change: `feature`, `fix`,
   `chore`, `docs`, `refactor`, `test`, `hotfix`.
 - **scope** — the exact top-level folder the change touches: `back`, `web`,
-  `client-flutter`, or `repo` for cross-cutting changes (root docs, CI, `.gitignore`).
+  or `repo` for cross-cutting changes (root docs, CI, `.gitignore`).
 - **short-description** — kebab-case, 2-5 words, in English.
 
 Examples:
 
 ```
-feature/client-flutter/dashboard-screen
 feature/back/recurring-run-endpoint
 fix/web/transfer-validation
 chore/repo/branch-protection-docs
