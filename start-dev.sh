@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # start-dev.sh — punto de entrada único para levantar/bajar el stack del monorepo
-# (mongodb + back + web Angular, todo containerizado) y para correr el cliente
-# Flutter en sus distintos targets (web / android / ios).
+# (mongodb + back + web Angular, todo containerizado).
 #
 # Uso:
 #   ./start-dev.sh up               — levanta el stack completo (mongo+back+web) en background
@@ -10,13 +9,6 @@
 #   ./start-dev.sh restart          — down + build + up, en ese orden
 #   ./start-dev.sh logs             — sigue los logs del stack completo
 #   ./start-dev.sh status           — muestra qué contenedores del stack están corriendo
-#   ./start-dev.sh web              — corre client-flutter en modo web (foreground, Ctrl+C corta)
-#   ./start-dev.sh android          — genera un APK debug de client-flutter (vía Docker)
-#   ./start-dev.sh ios              — genera el build de iOS de client-flutter (nativo, requiere
-#                                      macOS + Xcode; no soportado vía Docker)
-#
-# `web`/`android`/`ios` delegan en client-flutter/start-dev.sh — ese es el único lugar
-# donde vive la lógica específica de Flutter; este script solo la expone desde la raíz.
 
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
@@ -72,12 +64,8 @@ case "$COMMAND" in
     exec docker compose ps
     ;;
 
-  web|android|ios)
-    exec ./client-flutter/start-dev.sh "$COMMAND"
-    ;;
-
   *)
-    echo "Uso: $0 {up|down|build|restart|logs|status|web|android|ios}" >&2
+    echo "Uso: $0 {up|down|build|restart|logs|status}" >&2
     exit 1
     ;;
 esac
