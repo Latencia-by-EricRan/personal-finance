@@ -13,16 +13,16 @@
         "low": 0
       },
       "by_status": {
-        "pending": 4,
+        "pending": 3,
         "in_progress": 0,
-        "done": 2,
+        "done": 3,
         "blocked": 0,
         "skipped": 0
       },
       "by_category": {
         "tooling": 6
       },
-      "completion_pct": 33.33
+      "completion_pct": 50
     }
   },
   "tasks": [
@@ -71,7 +71,7 @@
       "category": "tooling",
       "priority": "high",
       "priority_weight": 2,
-      "status": "pending",
+      "status": "done",
       "title": "Generic Repository port + contract test, fake then real adapter (Phase 3)",
       "description": "back/src/shared/application/ports/Repository.ts generic port. _example gets a real Mongoose adapter (mongodb-memory-server) and an in-memory fake adapter, both proven interchangeable via ONE parametrized contract test.",
       "affected_files": [
@@ -82,9 +82,9 @@
       "depends_on": ["HEX-02"],
       "tags": ["sdd/back-hexagonal-skeleton", "shared-kernel", "repository-port", "example-context"],
       "created_at": "2026-07-13T10:46:13Z",
-      "updated_at": "2026-07-13T10:46:13Z",
-      "completed_at": null,
-      "notes": "PR2 -- branch off qa AFTER PR1 (HEX-01/02) confirmed merged, per sequential (not stacked) delivery to avoid the auto-delete-branch-on-merge gotcha from Fase 0."
+      "updated_at": "2026-07-13T12:15:00Z",
+      "completed_at": "2026-07-13T12:15:00Z",
+      "notes": "Branch feat/back/hexagonal-skeleton-repository-port off fresh qa, commit 86013fd. One real parametrized contract test (runContract helper) run against InMemory fake + real Mongoose adapter -- confirmed genuine, no vi.mock on Mongoose. Minor deviation: Repository<T,Id> port dropped design's `Id = Identity` default type param (harmless, only consumer supplies Identity explicitly). 245/245 tests, build clean. Fresh-context validated PASS."
     },
     {
       "id": "HEX-04",
