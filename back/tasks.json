@@ -13,16 +13,16 @@
         "low": 0
       },
       "by_status": {
-        "pending": 3,
+        "pending": 0,
         "in_progress": 0,
-        "done": 3,
+        "done": 6,
         "blocked": 0,
         "skipped": 0
       },
       "by_category": {
         "tooling": 6
       },
-      "completion_pct": 50
+      "completion_pct": 100
     }
   },
   "tasks": [
@@ -91,7 +91,7 @@
       "category": "tooling",
       "priority": "high",
       "priority_weight": 2,
-      "status": "pending",
+      "status": "done",
       "title": "PoC use case (Phase 4)",
       "description": "A use case in src/contexts/_example/application/ (e.g. RegisterExampleItem) exercising the Repository port, driven by a test against the in-memory fake adapter.",
       "affected_files": ["src/contexts/_example/application/"],
@@ -99,16 +99,16 @@
       "depends_on": ["HEX-03"],
       "tags": ["sdd/back-hexagonal-skeleton", "example-context", "use-case"],
       "created_at": "2026-07-13T10:46:13Z",
-      "updated_at": "2026-07-13T10:46:13Z",
-      "completed_at": null,
-      "notes": "PR3 scope."
+      "updated_at": "2026-07-13T12:45:00Z",
+      "completed_at": "2026-07-13T12:45:00Z",
+      "notes": "Branch feat/back/hexagonal-skeleton-composition-root off fresh qa, commit 1715f1c. RegisterExampleItem depends on the port interface (constructor-injected), tested against InMemory fake."
     },
     {
       "id": "HEX-05",
       "category": "tooling",
       "priority": "high",
       "priority_weight": 2,
-      "status": "pending",
+      "status": "done",
       "title": "Composition root (Phase 5)",
       "description": "back/src/composition-root.ts -- createCompositionRoot(options?) factory, real Mongoose adapter by default, any port overridable via CompositionOptions. Wiring test proving the whole chain (port -> use case -> adapter -> composition root) end-to-end. Does NOT touch start-test-app.ts (deferred to category migration).",
       "affected_files": ["src/composition-root.ts"],
@@ -116,16 +116,16 @@
       "depends_on": ["HEX-04"],
       "tags": ["sdd/back-hexagonal-skeleton", "composition-root"],
       "created_at": "2026-07-13T10:46:13Z",
-      "updated_at": "2026-07-13T10:46:13Z",
-      "completed_at": null,
-      "notes": "PR3 scope."
+      "updated_at": "2026-07-13T12:45:00Z",
+      "completed_at": "2026-07-13T12:45:00Z",
+      "notes": "Same commit as HEX-04. Wiring test proves both default (real Mongoose adapter, real round-trip via mongodb-memory-server) and override (injected fake) resolution paths. start-test-app.ts confirmed byte-identical, untouched."
     },
     {
       "id": "HEX-06",
       "category": "tooling",
       "priority": "high",
       "priority_weight": 2,
-      "status": "pending",
+      "status": "done",
       "title": "Full regression + non-goal verification (Phase 6)",
       "description": "Full npm test regression run. Explicit non-goal checks: no route wired for _example (grep _routes.ts/app.ts), no tsconfig path aliases added, start-test-app.ts untouched, src/modules/services/* untouched.",
       "affected_files": [],
@@ -133,9 +133,9 @@
       "depends_on": ["HEX-05"],
       "tags": ["sdd/back-hexagonal-skeleton", "verify"],
       "created_at": "2026-07-13T10:46:13Z",
-      "updated_at": "2026-07-13T10:46:13Z",
-      "completed_at": null,
-      "notes": "PR3 scope, final task of the change."
+      "updated_at": "2026-07-13T12:45:00Z",
+      "completed_at": "2026-07-13T12:45:00Z",
+      "notes": "249/249 tests, build clean. All non-goals re-verified independently by fresh-context validator: zero _example/composition-root mentions in _routes.ts/app.ts, no tsconfig aliases, start-test-app.ts byte-identical, zero src/modules/services/* files touched across all 3 PRs. FINAL whole-chain gate PASS. CHANGE COMPLETE, all 6/6 done -- next: sdd-verify."
     }
   ]
 }
