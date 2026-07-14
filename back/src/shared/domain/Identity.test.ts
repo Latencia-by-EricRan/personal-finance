@@ -36,4 +36,15 @@ describe('Identity', () => {
 
         expect(roundTripped.toString()).toBe(objectId.toString());
     });
+
+    it('generate() returns a 24-hex string accepted by Identity.create()', () => {
+        const generated = Identity.generate();
+
+        expect(generated).toMatch(/^[a-f0-9]{24}$/i);
+        expect(() => Identity.create(generated)).not.toThrow();
+    });
+
+    it('generate() mints a fresh id on every call', () => {
+        expect(Identity.generate()).not.toBe(Identity.generate());
+    });
 });

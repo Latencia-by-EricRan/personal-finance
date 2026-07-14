@@ -17,6 +17,10 @@ export class Identity {
         return new Identity(objectId.toString());
     }
 
+    static generate(): string {
+        return new Types.ObjectId().toString();
+    }
+
     toObjectId(): Types.ObjectId {
         return new Types.ObjectId(this._value);
     }
