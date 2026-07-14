@@ -8,15 +8,26 @@ import { FindCategories } from './contexts/category/application/FindCategories';
 import { FindCategoryById } from './contexts/category/application/FindCategoryById';
 import { DeleteCategory } from './contexts/category/application/DeleteCategory';
 import { MongooseCategoryRepository } from './contexts/category/infrastructure/MongooseCategoryRepository';
+import { MovementRepository } from './contexts/movement/application/ports/MovementRepository';
+import { MovementUseCases } from './contexts/movement/application/MovementUseCases';
+import { CreateMovement } from './contexts/movement/application/CreateMovement';
+import { UpdateMovement } from './contexts/movement/application/UpdateMovement';
+import { DeleteMovement } from './contexts/movement/application/DeleteMovement';
+import { FindMovements } from './contexts/movement/application/FindMovements';
+import { SaveManyMovements } from './contexts/movement/application/SaveManyMovements';
+import { GetMonthlySummary } from './contexts/movement/application/GetMonthlySummary';
+import { MongooseMovementRepository } from './contexts/movement/infrastructure/MongooseMovementRepository';
 
 export interface AppContainer {
     exampleItemRepository: ExampleItemRepository;
     category: CategoryUseCases;
+    movement: MovementUseCases;
 }
 
 export interface CompositionOptions {
     exampleItemRepository?: ExampleItemRepository;
     categoryRepository?: CategoryRepository;
+    movementRepository?: MovementRepository;
 }
 
 const buildCategoryUseCases = (repository: CategoryRepository): CategoryUseCases => ({
@@ -27,9 +38,19 @@ const buildCategoryUseCases = (repository: CategoryRepository): CategoryUseCases
     deleteCategory: new DeleteCategory(repository),
 });
 
+const buildMovementUseCases = (repository: MovementRepository): MovementUseCases => ({
+    createMovement: new CreateMovement(repository),
+    updateMovement: new UpdateMovement(repository),
+    deleteMovement: new DeleteMovement(repository),
+    findMovements: new FindMovements(repository),
+    saveManyMovements: new SaveManyMovements(repository),
+    getMonthlySummary: new GetMonthlySummary(repository),
+});
+
 export const createCompositionRoot = (options: CompositionOptions = {}): AppContainer => ({
     exampleItemRepository: options.exampleItemRepository ?? new MongooseExampleItemRepository(),
     category: buildCategoryUseCases(options.categoryRepository ?? new MongooseCategoryRepository()),
+    movement: buildMovementUseCases(options.movementRepository ?? new MongooseMovementRepository()),
 });
 
 let container: AppContainer | undefined;
