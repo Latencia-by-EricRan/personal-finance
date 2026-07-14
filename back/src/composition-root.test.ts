@@ -14,6 +14,10 @@ import { CreateMovement } from './contexts/movement/application/CreateMovement';
 import { InMemoryMovementRepository } from './contexts/movement/infrastructure/InMemoryMovementRepository';
 import MovementModel from './contexts/movement/infrastructure/MovementModel';
 import { MovementType } from './contexts/movement/domain/Movement';
+import { CreateAccount } from './contexts/account/application/CreateAccount';
+import { InMemoryAccountRepository } from './contexts/account/infrastructure/InMemoryAccountRepository';
+import { InMemoryMovementGateway } from './contexts/account/infrastructure/InMemoryMovementGateway';
+import AccountModel from './contexts/account/infrastructure/AccountModel';
 import { createCompositionRoot, getContainer } from './composition-root';
 
 describe('createCompositionRoot', () => {
@@ -168,6 +172,56 @@ describe('createCompositionRoot', () => {
         });
     });
 
+    describe('account use cases wiring (design D1, PR3)', () => {
+        let mongod: MongoMemoryServer;
+
+        beforeAll(async () => {
+            mongod = await MongoMemoryServer.create();
+            await mongoose.connect(mongod.getUri(), { dbName: 'composition-root-account' });
+        });
+
+        afterAll(async () => {
+            await mongoose.disconnect();
+            await mongod.stop();
+        });
+
+        beforeEach(async () => {
+            await AccountModel.deleteMany({});
+        });
+
+        it('resolves the real MongooseAccountRepository/MongooseMovementGateway-backed use cases and persists a real round trip', async () => {
+            const container = createCompositionRoot();
+
+            expect(container.account.createAccount).toBeInstanceOf(CreateAccount);
+
+            const saved = await container.account.createAccount.execute({
+                Name: 'Composition Account',
+                Type: 'banco',
+            });
+
+            const found = await container.account.findAccountById.execute(saved._id);
+            expect(found?._id).toBe(saved._id);
+            expect(found?.Name).toBe('Composition Account');
+        });
+
+        it('resolves the supplied fake account repository and movement gateway instead of the real ones', async () => {
+            const fakeAccountRepository = new InMemoryAccountRepository();
+            const fakeMovementGateway = new InMemoryMovementGateway();
+            const container = createCompositionRoot({
+                accountRepository: fakeAccountRepository,
+                movementGateway: fakeMovementGateway,
+            });
+
+            const saved = await container.account.createAccount.execute({
+                Name: 'Fake Account',
+                Type: 'efectivo',
+            });
+
+            const balance = await container.account.getAccountBalance.execute(saved._id);
+            expect(balance).toEqual({ Account: saved._id, Balance: 0 });
+        });
+    });
+
     describe('getContainer (lazy singleton)', () => {
         it('returns the same container instance on repeated calls', () => {
             const first = getContainer();
@@ -177,6 +231,7 @@ describe('createCompositionRoot', () => {
             expect(first.category.saveCategory).toBeInstanceOf(SaveCategory);
             expect(first.category.saveCategory).not.toBeInstanceOf(InMemoryCategoryRepository);
             expect(first.movement.createMovement).toBeInstanceOf(CreateMovement);
+            expect(first.account.createAccount).toBeInstanceOf(CreateAccount);
         });
     });
 });
