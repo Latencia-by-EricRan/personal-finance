@@ -29,10 +29,10 @@ describe('Account', () => {
             expect(account.archived).toBe(true);
         });
 
-        it('trims Name', () => {
+        it('preserves Name exactly as provided (legacy parity - no trimming)', () => {
             const account = Account.create({ Name: '  Tarjeta  ', Type: 'tarjeta' });
 
-            expect(account.name).toBe('Tarjeta');
+            expect(account.name).toBe('  Tarjeta  ');
         });
 
         it('rejects an empty or blank Name', () => {

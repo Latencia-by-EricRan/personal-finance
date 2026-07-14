@@ -1,5 +1,9 @@
 import { Identity } from '../../../shared/domain/Identity';
 
+// Plain union, not an enum like MovementType: the legacy
+// `account.interface.ts` already models `Type` this way, and there is no
+// runtime value (like `MovementType.INGRESO`) that any consumer needs to
+// import — only the type-level discriminant.
 export type AccountType = 'efectivo' | 'banco' | 'tarjeta';
 
 const VALID_TYPES: AccountType[] = ['efectivo', 'banco', 'tarjeta'];
@@ -34,7 +38,7 @@ export class Account {
 
         return new Account(
             undefined,
-            props.Name.trim(),
+            props.Name,
             props.Type,
             props.Currency ?? 'ARS',
             props.Icon ?? '',
@@ -47,7 +51,7 @@ export class Account {
 
         return new Account(
             id,
-            props.Name.trim(),
+            props.Name,
             props.Type,
             props.Currency ?? 'ARS',
             props.Icon ?? '',

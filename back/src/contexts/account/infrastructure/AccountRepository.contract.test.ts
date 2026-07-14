@@ -73,6 +73,16 @@ const runAccountContract = (
             expect(page).toHaveLength(1);
         });
 
+        it('find treats limit:0 as unlimited (Mongoose parity, not "return nothing")', async () => {
+            const repo = makeRepo();
+            await repo.create(Account.create({ Name: 'Active 1', Type: 'efectivo' }));
+            await repo.create(Account.create({ Name: 'Active 2', Type: 'efectivo' }));
+            await repo.create(Account.create({ Name: 'Active 3', Type: 'efectivo' }));
+
+            const all = await repo.find({}, { skip: 1, limit: 0 });
+            expect(all).toHaveLength(2);
+        });
+
         it('update applies a partial patch (only the given field changes)', async () => {
             const repo = makeRepo();
             const created = await repo.create(Account.create({ Name: 'Tarjeta', Type: 'tarjeta' }));
@@ -91,6 +101,19 @@ const runAccountContract = (
             await expect(
                 repo.update(Identity.create(created._id), { Type: 'invalid-type' as never }),
             ).rejects.toThrow();
+        });
+
+        it('update accepts a blank Currency or untrimmed Name unchanged (legacy parity - no domain re-validation)', async () => {
+            const repo = makeRepo();
+            const created = await repo.create(Account.create({ Name: 'Tarjeta', Type: 'tarjeta' }));
+
+            const updated = await repo.update(Identity.create(created._id), {
+                Name: '  Padded  ',
+                Currency: '   ',
+            });
+
+            expect(updated?.Name).toBe('  Padded  ');
+            expect(updated?.Currency).toBe('   ');
         });
 
         it('update returns null when the id does not exist', async () => {
