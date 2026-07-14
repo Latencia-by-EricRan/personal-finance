@@ -1,12 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('../models/Movement.model', () => ({
-    default: {
+vi.mock('../../contexts/movement', () => ({
+    MovementModel: {
         find: vi.fn(),
     },
+    MovementType: { INGRESO: 'ingreso', EGRESO: 'egreso' },
 }));
 
-import MovementModel from '../models/Movement.model';
+import { MovementModel } from '../../contexts/movement';
 import ReportService from './report.service';
 
 beforeEach(() => {

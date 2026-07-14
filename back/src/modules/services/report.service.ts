@@ -1,6 +1,5 @@
 import { Types } from 'mongoose';
-import MovementModel from '../models/Movement.model';
-import { TypeMovement } from '../interfaces/movement.interface';
+import { MovementModel, MovementType } from '../../contexts/movement';
 import type { CategoryView } from '../../contexts/category';
 
 type ReportFilter = Record<string, unknown>;
@@ -36,7 +35,7 @@ export default class ReportService {
 
     static async byCategory(month: number, year: number): Promise<CategoryReport[]> {
         const filter: ReportFilter = {
-            Type: TypeMovement.EGRESO,
+            Type: MovementType.EGRESO,
             Date: monthDateRange(month, year),
         };
 
@@ -68,8 +67,8 @@ export default class ReportService {
             const movements = await MovementModel.find(filter);
 
             const fnAccAmount = (acc: number, movement: { Amount: number }) => acc + movement.Amount;
-            const Income = movements.filter((movement) => movement.Type === TypeMovement.INGRESO).reduce(fnAccAmount, 0);
-            const Expense = movements.filter((movement) => movement.Type === TypeMovement.EGRESO).reduce(fnAccAmount, 0);
+            const Income = movements.filter((movement) => movement.Type === MovementType.INGRESO).reduce(fnAccAmount, 0);
+            const Expense = movements.filter((movement) => movement.Type === MovementType.EGRESO).reduce(fnAccAmount, 0);
 
             months.push({ Month: month, Income, Expense, Net: Income - Expense });
         }
@@ -82,8 +81,8 @@ export default class ReportService {
         const movements = await MovementModel.find(filter);
 
         const fnAccAmount = (acc: number, movement: { Amount: number }) => acc + movement.Amount;
-        const Income = movements.filter((movement) => movement.Type === TypeMovement.INGRESO).reduce(fnAccAmount, 0);
-        const Expense = movements.filter((movement) => movement.Type === TypeMovement.EGRESO).reduce(fnAccAmount, 0);
+        const Income = movements.filter((movement) => movement.Type === MovementType.INGRESO).reduce(fnAccAmount, 0);
+        const Expense = movements.filter((movement) => movement.Type === MovementType.EGRESO).reduce(fnAccAmount, 0);
 
         return { Month: month, Year: year, Income, Expense, Net: Income - Expense };
     }
