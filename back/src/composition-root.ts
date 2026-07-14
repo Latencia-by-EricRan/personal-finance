@@ -62,6 +62,10 @@ const buildMovementUseCases = (repository: MovementRepository): MovementUseCases
     getMonthlySummary: new GetMonthlySummary(repository),
 });
 
+// Only builder taking a second dependency: getAccountBalance/transfer need
+// the MovementGateway seam to read/write movement persistence (see
+// application/ports/MovementGateway.ts), unlike category/movement's
+// single-repository use cases.
 const buildAccountUseCases = (repository: AccountRepository, gateway: MovementGateway): AccountUseCases => ({
     findAccounts: new FindAccounts(repository),
     findAccountById: new FindAccountById(repository),

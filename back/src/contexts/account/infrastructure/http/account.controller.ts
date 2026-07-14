@@ -30,6 +30,12 @@ import { TransferInput } from '../../application/Transfer';
  * `AccountService.transfer`, and via `getAccountBalance`'s now-relocated
  * existence check) while the underlying implementation moved into the use
  * case layer.
+ *
+ * If a CRUD use case (`findAccounts`/`findAccountById`/`createAccount`/
+ * `updateAccount`/`archiveAccount`) is ever changed to throw `ServiceError`
+ * for a non-500 case, its handler needs the same `instanceof` mapping added
+ * — do not "fix" this asymmetry into uniform 500-only handling without
+ * checking the use case first.
  */
 export const createAccountController = (useCases: AccountUseCases) => {
     const getAccounts = async (req: Request, res: Response) => {
