@@ -23,8 +23,13 @@ const isPost = (_value: unknown, { req }: Meta) => req.method === 'POST';
 const addUpdateBodyValidate: ValidationChain[] = [
     body('Type').if(isPost).notEmpty().withMessage('Type is required'),
     body('Type').optional().isString().isIn(['ingreso', 'egreso']).withMessage('Type must be either "ingreso" or "egreso"'),
-    body('Amount').if(isPost).notEmpty().withMessage('Amount is required'),
-    body('Amount').optional().isNumeric().withMessage('Amount must be a number'),
+    // .toFloat() on both chains below is required (the legacy validator didn't need it):
+    // Mongoose used to auto-cast a numeric-string Amount at the schema layer, but
+    // Movement.assertInvariants now enforces `typeof Amount === 'number'` before Mongoose
+    // ever sees it. Both chains sanitize because they run concurrently via Promise.all in
+    // addUpdateValidator, and only the POST-gated chain actually executes on a POST request.
+    body('Amount').if(isPost).notEmpty().withMessage('Amount is required').toFloat(),
+    body('Amount').optional().isNumeric().withMessage('Amount must be a number').toFloat(),
     body('Category').if(isPost).notEmpty().withMessage('Category is required'),
     body('Category').optional().isMongoId().withMessage('Category must be a valid id'),
     body('Account').if(isPost).notEmpty().withMessage('Account is required'),

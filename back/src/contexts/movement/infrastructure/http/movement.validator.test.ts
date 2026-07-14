@@ -213,6 +213,46 @@ describe('addUpdateValidator — Date', () => {
     });
 });
 
+describe('addUpdateValidator — Amount numeric-string coercion', () => {
+    it('coerces a numeric-string Amount to a number on POST, matching the legacy Mongoose auto-cast behavior', async () => {
+        const req = mockReq({
+            method: 'POST',
+            body: {
+                Type: 'ingreso',
+                Amount: '100',
+                Category: '507f1f77bcf86cd799439011',
+                Account: '507f1f77bcf86cd799439099',
+                Date: '2026-01-01',
+            },
+        });
+        const res = mockRes();
+        const next: NextFunction = vi.fn();
+
+        await addUpdateValidator(req, res, next);
+
+        expect(next).toHaveBeenCalledTimes(1);
+        expect(res.status).not.toHaveBeenCalled();
+        expect(req.body.Amount).toBe(100);
+        expect(typeof req.body.Amount).toBe('number');
+    });
+
+    it('coerces a numeric-string Amount to a number on a partial PUT', async () => {
+        const req = mockReq({
+            method: 'PUT',
+            params: { id: '507f1f77bcf86cd799439011' },
+            body: { Amount: '250.5', Date: '2026-01-01' },
+        });
+        const res = mockRes();
+        const next: NextFunction = vi.fn();
+
+        await addUpdateValidator(req, res, next);
+
+        expect(next).toHaveBeenCalledTimes(1);
+        expect(res.status).not.toHaveBeenCalled();
+        expect(req.body.Amount).toBe(250.5);
+    });
+});
+
 describe('paramBodyValidator — filter body', () => {
     it('calls next() when a GET request carries no body (no filters means match the whole date range)', async () => {
         const req = mockReq({
