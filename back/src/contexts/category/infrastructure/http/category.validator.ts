@@ -1,13 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { body, param, ValidationChain, validationResult } from 'express-validator';
-import { validate } from '../../interceptors/validator.interceptor';
-import { errorResponse } from '../../middlewares/response.middleware';
-import { checkKeys } from '../../utils/validator.util';
-import { CategoryI } from '../interfaces/category.interface';
-
-
-// Variables
-
+import { validate } from '../../../../interceptors/validator.interceptor';
+import { errorResponse } from '../../../../middlewares/response.middleware';
+import { checkKeys } from '../../../../utils/validator.util';
+import { CategoryProps } from '../../domain/Category';
 
 // Validates
 const bodyValidate: ValidationChain[] = [
@@ -20,7 +16,6 @@ const bodyValidate: ValidationChain[] = [
     body().optional().custom(checkKeys.bind(null, ['Name', 'Description', 'Type', 'Tag', 'Icon'])),
 ];
 
-
 // Middlewares
 const idValidator = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -31,7 +26,15 @@ const idValidator = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-
+/**
+ * Per-item field validation for array bodies (mass-assignment `checkKeys`
+ * guard + required-field rules — byte-identical contract to the legacy
+ * `modules/validators/category.validator.ts`). Duplicate Tag/Name detection
+ * across the batch is intentionally NOT here anymore: it moved into
+ * `BulkSaveCategory` (design D2), and the controller maps its typed
+ * `DuplicateCategoryKeyError` back to this same 400 `Validation failed`
+ * shape.
+ */
 const validateArrayBody = async (req: Request, res: Response, next: NextFunction) => {
     await body().isArray().notEmpty().run(req);
     const arrayResult = validationResult(req);
@@ -40,7 +43,7 @@ const validateArrayBody = async (req: Request, res: Response, next: NextFunction
     }
 
     const errors: string[] = [];
-    await Promise.all(req.body.map(async (item: CategoryI, index: number) => {
+    await Promise.all(req.body.map(async (item: CategoryProps, index: number) => {
         const fakeReq = { body: item } as Request;
         await Promise.all(bodyValidate.map(validation => validation.run(fakeReq)));
         const itemResult = validationResult(fakeReq);
@@ -51,25 +54,6 @@ const validateArrayBody = async (req: Request, res: Response, next: NextFunction
 
     if (errors.length > 0) {
         return errorResponse(res, 'Validation failed', 400, errors);
-    }
-
-    const keyToIndexes = new Map<string, number[]>();
-    req.body.forEach((item: CategoryI, index: number) => {
-        const key = item.Tag || item.Name;
-        const indexes = keyToIndexes.get(key) ?? [];
-        indexes.push(index);
-        keyToIndexes.set(key, indexes);
-    });
-
-    const duplicateErrors: string[] = [];
-    keyToIndexes.forEach((indexes, key) => {
-        if (indexes.length > 1) {
-            duplicateErrors.push(`Duplicate Tag/Name "${key}" at indexes [${indexes.join(', ')}]`);
-        }
-    });
-
-    if (duplicateErrors.length > 0) {
-        return errorResponse(res, 'Validation failed', 400, duplicateErrors);
     }
 
     next();
@@ -96,9 +80,8 @@ const manySaveValidator = async (req: Request, res: Response, next: NextFunction
     }
 };
 
-
 export {
     idValidator,
     bodyValidator,
     manySaveValidator,
-}
+};
