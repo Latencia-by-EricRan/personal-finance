@@ -17,17 +17,32 @@ import { FindMovements } from './contexts/movement/application/FindMovements';
 import { SaveManyMovements } from './contexts/movement/application/SaveManyMovements';
 import { GetMonthlySummary } from './contexts/movement/application/GetMonthlySummary';
 import { MongooseMovementRepository } from './contexts/movement/infrastructure/MongooseMovementRepository';
+import { AccountRepository } from './contexts/account/application/ports/AccountRepository';
+import { MovementGateway } from './contexts/account/application/ports/MovementGateway';
+import { AccountUseCases } from './contexts/account/application/AccountUseCases';
+import { FindAccounts } from './contexts/account/application/FindAccounts';
+import { FindAccountById } from './contexts/account/application/FindAccountById';
+import { CreateAccount } from './contexts/account/application/CreateAccount';
+import { UpdateAccount } from './contexts/account/application/UpdateAccount';
+import { ArchiveAccount } from './contexts/account/application/ArchiveAccount';
+import { GetAccountBalance } from './contexts/account/application/GetAccountBalance';
+import { Transfer } from './contexts/account/application/Transfer';
+import { MongooseAccountRepository } from './contexts/account/infrastructure/MongooseAccountRepository';
+import { MongooseMovementGateway } from './contexts/account/infrastructure/MongooseMovementGateway';
 
 export interface AppContainer {
     exampleItemRepository: ExampleItemRepository;
     category: CategoryUseCases;
     movement: MovementUseCases;
+    account: AccountUseCases;
 }
 
 export interface CompositionOptions {
     exampleItemRepository?: ExampleItemRepository;
     categoryRepository?: CategoryRepository;
     movementRepository?: MovementRepository;
+    accountRepository?: AccountRepository;
+    movementGateway?: MovementGateway;
 }
 
 const buildCategoryUseCases = (repository: CategoryRepository): CategoryUseCases => ({
@@ -47,10 +62,28 @@ const buildMovementUseCases = (repository: MovementRepository): MovementUseCases
     getMonthlySummary: new GetMonthlySummary(repository),
 });
 
+// Only builder taking a second dependency: getAccountBalance/transfer need
+// the MovementGateway seam to read/write movement persistence (see
+// application/ports/MovementGateway.ts), unlike category/movement's
+// single-repository use cases.
+const buildAccountUseCases = (repository: AccountRepository, gateway: MovementGateway): AccountUseCases => ({
+    findAccounts: new FindAccounts(repository),
+    findAccountById: new FindAccountById(repository),
+    createAccount: new CreateAccount(repository),
+    updateAccount: new UpdateAccount(repository),
+    archiveAccount: new ArchiveAccount(repository),
+    getAccountBalance: new GetAccountBalance(repository, gateway),
+    transfer: new Transfer(repository, gateway),
+});
+
 export const createCompositionRoot = (options: CompositionOptions = {}): AppContainer => ({
     exampleItemRepository: options.exampleItemRepository ?? new MongooseExampleItemRepository(),
     category: buildCategoryUseCases(options.categoryRepository ?? new MongooseCategoryRepository()),
     movement: buildMovementUseCases(options.movementRepository ?? new MongooseMovementRepository()),
+    account: buildAccountUseCases(
+        options.accountRepository ?? new MongooseAccountRepository(),
+        options.movementGateway ?? new MongooseMovementGateway(),
+    ),
 });
 
 let container: AppContainer | undefined;
