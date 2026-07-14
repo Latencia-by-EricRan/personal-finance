@@ -1,14 +1,22 @@
 import mongoose, { Schema } from 'mongoose';
-import { CategoryI } from '../../../modules/interfaces/category.interface';
 
-// Re-exported for parity with the legacy module's document shape. PR1 is a
-// pure compatibility shim: it intentionally keeps typing identical to the
-// pre-migration model (`mongoose.model<CategoryI>(...)`) so every existing
-// consumer (category.service.ts, report.service.ts, e2e suites) compiles
-// unchanged. A domain-owned document type replaces this once PR2 introduces
-// the `Category` entity, `CategoryMapper`, and decouples `report.service.ts`
-// from `CategoryI` (see design D5).
-export type CategoryDocument = CategoryI;
+// Domain-owned document type (PR2): structurally identical to the legacy
+// `CategoryI` (`modules/interfaces/category.interface.ts`) that PR1's shim
+// aliased directly, but no longer imports it. `category.service.ts`,
+// `category.controller.ts`, etc. still compile unchanged against this model
+// because the shape (field names/optionality) is preserved byte-for-byte —
+// only the import path changed. This closes the PR1 note: with no remaining
+// dependency from `contexts/category` onto `modules/interfaces/category.interface.ts`,
+// that legacy interface becomes fully deletable once PR3 removes the
+// layer-first `category` module.
+export interface CategoryDocument {
+    Description: string;
+    Name: string;
+    Tag: string;
+    Type: 'variable' | 'fijo';
+    Icon?: string;
+    _id?: Schema.Types.ObjectId;
+}
 
 const CategorySchema: Schema = new Schema<CategoryDocument>({
     Description: { type: String, required: true },
