@@ -5,15 +5,17 @@ import AccountModel from '../modules/models/Account.model';
 /**
  * Characterization baseline for PR3 (back-hexagonal-account, task 3.1, design D2).
  *
- * Captures the BYTE-EXACT response shape every `/account` endpoint returns
- * TODAY, against the still-live layer-first `account.route.ts`, BEFORE any
- * `http/` adapter file in `contexts/account` is created. `account.e2e.test.ts`
- * already covers `/account/transfer`'s TransferId-sharing behavior; this
- * suite locks down every key across ALL 7 endpoints (list, get-by-id, create,
- * update, archive-delete, balance, transfer) so the new hex path
+ * Captured against the still-live layer-first `account.route.ts` BEFORE any
+ * `http/` adapter file in `contexts/account` was created (PR3, task 3.1),
+ * then reran unmodified after `_routes.ts` flipped to
+ * `createAccountRouter(getContainer().account)` to prove the new hex path
  * (`createAccountController`/`AccountRepository`/`MovementGateway`) is
- * provably identical once `_routes.ts` flips to
- * `createAccountRouter(getContainer().account)`.
+ * byte-identical. The legacy `account.route.ts` was deleted in PR4;
+ * `AccountModel` is still imported through the retained
+ * `modules/models/Account.model.ts` shim. `account.e2e.test.ts` already
+ * covers `/account/transfer`'s TransferId-sharing behavior; this suite locks
+ * down every key across ALL 7 endpoints (list, get-by-id, create, update,
+ * archive-delete, balance, transfer).
  *
  * Why these exact keys: `successResponse(res, data)` serializes whatever
  * `AccountService`/raw Mongoose resolves. `AccountModel` has
