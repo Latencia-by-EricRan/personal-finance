@@ -1,11 +1,11 @@
 import { Types } from 'mongoose';
 import MovementModel from '../models/Movement.model';
 import { TypeMovement } from '../interfaces/movement.interface';
-import { CategoryI } from '../interfaces/category.interface';
+import type { CategoryView } from '../../contexts/category';
 
 type ReportFilter = Record<string, unknown>;
 
-type PopulatedCategory = CategoryI & { _id: Types.ObjectId };
+type PopulatedCategory = CategoryView & { _id: Types.ObjectId };
 
 interface CategoryReport {
     Category: PopulatedCategory;
