@@ -7,10 +7,13 @@ import mongoose, { Schema } from 'mongoose';
 // `modules/services/account.service.ts` were deleted in PR4; the PR1
 // carveout that kept an `_id?: Schema.Types.ObjectId` field on
 // `AccountDocument` solely for that legacy consumer's compile compatibility
-// has been removed accordingly. Existing consumers that resolve the model by
-// registration name only — `recurring.service.ts`, `Recurring.model.ts`'s
-// `ref:'Account'`, `MovementModel.ts`'s `ref:'Account'`, `scripts/seed.ts`,
-// and the e2e suites — keep working unchanged regardless. The domain-owned
+// has been removed accordingly. `Recurring.model.ts`'s `ref:'Account'` and
+// `MovementModel.ts`'s `ref:'Account'` are string refs resolved by the
+// preserved registration name, unaffected by this file's location.
+// `scripts/seed.ts`, `scripts/backfill-movement-accounts.ts`, and the e2e
+// suites import the model directly through the retained
+// `modules/models/Account.model.ts` shim — all keep working unchanged. The
+// domain-owned
 // read model (`AccountView`) is the read path, introduced in PR2a via the
 // `Account` aggregate, `AccountMapper`, and `MongooseAccountRepository`
 // (see design D2, D3, D7).
