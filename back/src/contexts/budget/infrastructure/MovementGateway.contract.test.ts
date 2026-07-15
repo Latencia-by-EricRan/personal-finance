@@ -39,7 +39,10 @@ interface GatewayLifecycle {
     beforeEach?: () => Promise<void>;
 }
 
-const categoryId = (): string => new Types.ObjectId().toString();
+// Generic id generator — used for both the Category under test and any
+// other required-but-irrelevant ObjectId ref (e.g. Movement's `Account`
+// field in the Mongoose seeding path below).
+const objectId = (): string => new Types.ObjectId().toString();
 
 const runMovementGatewayContract = (
     suiteName: string,
@@ -60,7 +63,7 @@ const runMovementGatewayContract = (
 
         it('findEgresoAmounts returns egreso rows for the category within the date window', async () => {
             const gateway = makeGateway();
-            const category = categoryId();
+            const category = objectId();
 
             await insertMovement(gateway, {
                 Type: 'egreso', Category: category, Amount: 40, Date: new Date(2026, 6, 15),
@@ -72,9 +75,24 @@ const runMovementGatewayContract = (
             expect(rows[0]).toEqual({ Amount: 40 });
         });
 
+        it('includes egreso movements dated exactly at the inclusive window boundaries', async () => {
+            const gateway = makeGateway();
+            const category = objectId();
+            const gteDate = new Date(2026, 6, 1);
+            const lteDate = new Date(2026, 6, 31);
+
+            await insertMovement(gateway, { Type: 'egreso', Category: category, Amount: 5, Date: gteDate });
+            await insertMovement(gateway, { Type: 'egreso', Category: category, Amount: 7, Date: lteDate });
+
+            const rows = await gateway.findEgresoAmounts(category, gteDate, lteDate);
+
+            expect(rows).toHaveLength(2);
+            expect(rows.reduce((acc, row) => acc + row.Amount, 0)).toBe(12);
+        });
+
         it('excludes ingreso movements for the same category/date-window', async () => {
             const gateway = makeGateway();
-            const category = categoryId();
+            const category = objectId();
 
             await insertMovement(gateway, {
                 Type: 'ingreso', Category: category, Amount: 999, Date: new Date(2026, 6, 10),
@@ -87,7 +105,7 @@ const runMovementGatewayContract = (
 
         it('excludes egreso movements outside the date window', async () => {
             const gateway = makeGateway();
-            const category = categoryId();
+            const category = objectId();
 
             await insertMovement(gateway, {
                 Type: 'egreso', Category: category, Amount: 15, Date: new Date(2026, 7, 1),
@@ -100,8 +118,8 @@ const runMovementGatewayContract = (
 
         it('excludes egreso movements for a different category', async () => {
             const gateway = makeGateway();
-            const category = categoryId();
-            const otherCategory = categoryId();
+            const category = objectId();
+            const otherCategory = objectId();
 
             await insertMovement(gateway, {
                 Type: 'egreso', Category: otherCategory, Amount: 25, Date: new Date(2026, 6, 15),
@@ -114,7 +132,7 @@ const runMovementGatewayContract = (
 
         it('returns one row per matching egreso movement (sum is the caller\'s responsibility)', async () => {
             const gateway = makeGateway();
-            const category = categoryId();
+            const category = objectId();
 
             await insertMovement(gateway, {
                 Type: 'egreso', Category: category, Amount: 10, Date: new Date(2026, 6, 5),
@@ -148,7 +166,7 @@ runMovementGatewayContract(
         await MovementModel.create({
             Type: input.Type,
             Category: input.Category,
-            Account: categoryId(),
+            Account: objectId(),
             Amount: input.Amount,
             Date: input.Date,
         });
