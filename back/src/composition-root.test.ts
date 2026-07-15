@@ -18,6 +18,10 @@ import { CreateAccount } from './contexts/account/application/CreateAccount';
 import { InMemoryAccountRepository } from './contexts/account/infrastructure/InMemoryAccountRepository';
 import { InMemoryMovementGateway } from './contexts/account/infrastructure/InMemoryMovementGateway';
 import AccountModel from './contexts/account/infrastructure/AccountModel';
+import { CreateBudget } from './contexts/budget/application/CreateBudget';
+import { InMemoryBudgetRepository } from './contexts/budget/infrastructure/InMemoryBudgetRepository';
+import { InMemoryMovementGateway as InMemoryBudgetMovementGateway } from './contexts/budget/infrastructure/InMemoryMovementGateway';
+import BudgetModel from './contexts/budget/infrastructure/BudgetModel';
 import { createCompositionRoot, getContainer } from './composition-root';
 
 describe('createCompositionRoot', () => {
@@ -219,6 +223,62 @@ describe('createCompositionRoot', () => {
 
             const balance = await container.account.getAccountBalance.execute(saved._id);
             expect(balance).toEqual({ Account: saved._id, Balance: 0 });
+        });
+    });
+
+    describe('budget use cases wiring (design D11, PR3)', () => {
+        let mongod: MongoMemoryServer;
+
+        beforeAll(async () => {
+            mongod = await MongoMemoryServer.create();
+            await mongoose.connect(mongod.getUri(), { dbName: 'composition-root-budget' });
+        });
+
+        afterAll(async () => {
+            await mongoose.disconnect();
+            await mongod.stop();
+        });
+
+        beforeEach(async () => {
+            await BudgetModel.deleteMany({});
+        });
+
+        it('resolves the real MongooseBudgetRepository/MongooseMovementGateway-backed use cases and persists a real round trip', async () => {
+            const container = createCompositionRoot();
+
+            expect(container.budget.createBudget).toBeInstanceOf(CreateBudget);
+
+            const saved = await container.budget.createBudget.execute({
+                Category: new Types.ObjectId().toString(),
+                Month: 6,
+                Year: 2026,
+                Limit: 500,
+            });
+
+            const found = await container.budget.findBudgetById.execute(saved._id);
+            expect(found?._id).toBe(saved._id);
+            expect(found?.Limit).toBe(500);
+        });
+
+        it('resolves the supplied fake budget repository and movement gateway instead of the real ones', async () => {
+            const fakeBudgetRepository = new InMemoryBudgetRepository();
+            const fakeBudgetMovementGateway = new InMemoryBudgetMovementGateway();
+            const container = createCompositionRoot({
+                budgetRepository: fakeBudgetRepository,
+                budgetMovementGateway: fakeBudgetMovementGateway,
+            });
+
+            const saved = await container.budget.createBudget.execute({
+                Category: new Types.ObjectId().toString(),
+                Month: 3,
+                Year: 2026,
+                Limit: 100,
+            });
+
+            const status = await container.budget.getBudgetStatus.execute(3, 2026);
+            expect(status).toEqual([
+                { Category: saved.Category, Limit: 100, Spent: 0, Remaining: 100, Percent: 0 },
+            ]);
         });
     });
 

@@ -12,9 +12,8 @@ import { UpdateBudget } from './UpdateBudget';
  * builds this shape from `MongooseBudgetRepository` + `MongooseMovementGateway`
  * (budget-local, PR2b), the HTTP adapter only calls `.execute(...)` on each
  * use case. Mirrors `AccountUseCases`/`MovementUseCases`/`CategoryUseCases`
- * 1:1. `getBudgetStatus` is now included (PR2b) alongside the 5 CRUD use
- * cases from PR2a — still unwired until PR3's composition-root/`_routes.ts`
- * changes land.
+ * 1:1. `getBudgetStatus` was added in PR2b alongside the 5 CRUD use cases
+ * from PR2a; PR3 wires this shape into `composition-root.ts`/`_routes.ts`.
  */
 export interface BudgetUseCases {
     findBudgets: FindBudgets;
