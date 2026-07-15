@@ -183,6 +183,11 @@ runBudgetContract('MongooseBudgetRepository', () => new MongooseBudgetRepository
     beforeAll: async () => {
         mongod = await MongoMemoryServer.create();
         await mongoose.connect(mongod.getUri(), { dbName: 'budget-repository-contract' });
+        // autoIndex:true builds the unique {Category,Month,Year} index in the
+        // background; under full-suite load the duplicate-key tests below can
+        // race ahead of that build and see a false negative. Model.init()
+        // waits for index creation to finish before the suite proceeds.
+        await BudgetModel.init();
     },
     afterAll: async () => {
         await mongoose.disconnect();

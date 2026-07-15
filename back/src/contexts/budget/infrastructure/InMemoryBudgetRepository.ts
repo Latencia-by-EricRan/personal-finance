@@ -87,7 +87,10 @@ export class InMemoryBudgetRepository implements BudgetRepository {
         if (patch.Month !== undefined && (!Number.isInteger(patch.Month) || patch.Month < 1 || patch.Month > 12)) {
             throw new Error(`Budget.Month must be an integer between 1 and 12, got "${String(patch.Month)}"`);
         }
-        if (patch.Limit !== undefined && (typeof patch.Limit !== 'number' || patch.Limit < 0)) {
+        if (patch.Year !== undefined && (typeof patch.Year !== 'number' || Number.isNaN(patch.Year))) {
+            throw new Error('Budget.Year must be a number');
+        }
+        if (patch.Limit !== undefined && (typeof patch.Limit !== 'number' || Number.isNaN(patch.Limit) || patch.Limit < 0)) {
             throw new Error('Budget.Limit must be a number >= 0');
         }
 
@@ -117,10 +120,14 @@ export class InMemoryBudgetRepository implements BudgetRepository {
     }
 
     private assertUnique(candidate: StoredBudget, excludeId: string | undefined): void {
+        // ObjectId hex is case-insensitive in real Mongo; normalize before
+        // comparing so this fake doesn't accept a mixed-case duplicate that
+        // MongooseBudgetRepository would reject (review-risk finding).
+        const candidateCategory = candidate.Category.toLowerCase();
         const collision = Array.from(this.budgets.entries()).some(
             ([id, budget]) =>
                 id !== excludeId &&
-                budget.Category === candidate.Category &&
+                budget.Category.toLowerCase() === candidateCategory &&
                 budget.Month === candidate.Month &&
                 budget.Year === candidate.Year,
         );
