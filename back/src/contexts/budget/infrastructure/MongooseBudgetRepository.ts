@@ -40,11 +40,11 @@ export class MongooseBudgetRepository implements BudgetRepository {
         const document = this.mapper.toPersistence(budget);
         // `document.Category` is the bare id string (design D8's write
         // shape). Mongoose casts it to an ObjectId automatically at runtime
-        // (same as legacy `budget.service.ts:34` passing raw `req.body`);
-        // the cast below is ONLY to satisfy `BudgetDocument`'s pre-existing
-        // `Category: Schema.Types.ObjectId` field type (a SchemaType
-        // descriptor, not a value type — kept untouched, see `BudgetModel`'s
-        // note, to avoid breaking the legacy `budget.service.ts` consumer).
+        // (same as the now-deleted legacy `budget.service.ts:34` passing raw
+        // `req.body`); the cast below is ONLY to satisfy `BudgetDocument`'s
+        // pre-existing `Category: Schema.Types.ObjectId` field type (a
+        // SchemaType descriptor, not a value type — kept untouched, see
+        // `BudgetModel`'s note).
         const created = await BudgetModel.create(document as unknown as BudgetDocument);
 
         return this.mapper.toView(created.toObject() as unknown as BudgetReadRow);
