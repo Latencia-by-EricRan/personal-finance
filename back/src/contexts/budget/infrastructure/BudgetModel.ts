@@ -11,6 +11,15 @@ import mongoose, { Schema } from 'mongoose';
 // replaces this on the read path once PR2a introduces the `Budget`
 // aggregate, `BudgetMapper`, and `MongooseBudgetRepository` (see design
 // D2, D3, D8).
+//
+// NOTE: `Category: Schema.Types.ObjectId` (a SchemaType-descriptor type,
+// not a runtime ObjectId value) is copied verbatim from legacy
+// `budget.interface.ts` and kept AS-IS deliberately — `budget.service.ts`
+// still types its return values against `BudgetI`/this shape until PR4
+// deletes it, and changing this field's type here breaks that legacy
+// consumer's compile (verified). `MongooseBudgetRepository` (PR2a) works
+// around this pre-existing quirk locally via a narrow cast rather than
+// touching this shared type.
 export interface BudgetDocument {
     Category: Schema.Types.ObjectId;
     Month: number;
