@@ -29,12 +29,24 @@ import { GetAccountBalance } from './contexts/account/application/GetAccountBala
 import { Transfer } from './contexts/account/application/Transfer';
 import { MongooseAccountRepository } from './contexts/account/infrastructure/MongooseAccountRepository';
 import { MongooseMovementGateway } from './contexts/account/infrastructure/MongooseMovementGateway';
+import { BudgetRepository } from './contexts/budget/application/ports/BudgetRepository';
+import { MovementGateway as BudgetMovementGateway } from './contexts/budget/application/ports/MovementGateway';
+import { BudgetUseCases } from './contexts/budget/application/BudgetUseCases';
+import { FindBudgets } from './contexts/budget/application/FindBudgets';
+import { FindBudgetById } from './contexts/budget/application/FindBudgetById';
+import { CreateBudget } from './contexts/budget/application/CreateBudget';
+import { UpdateBudget } from './contexts/budget/application/UpdateBudget';
+import { DeleteBudget } from './contexts/budget/application/DeleteBudget';
+import { GetBudgetStatus } from './contexts/budget/application/GetBudgetStatus';
+import { MongooseBudgetRepository } from './contexts/budget/infrastructure/MongooseBudgetRepository';
+import { MongooseMovementGateway as MongooseBudgetMovementGateway } from './contexts/budget/infrastructure/MongooseMovementGateway';
 
 export interface AppContainer {
     exampleItemRepository: ExampleItemRepository;
     category: CategoryUseCases;
     movement: MovementUseCases;
     account: AccountUseCases;
+    budget: BudgetUseCases;
 }
 
 export interface CompositionOptions {
@@ -43,6 +55,8 @@ export interface CompositionOptions {
     movementRepository?: MovementRepository;
     accountRepository?: AccountRepository;
     movementGateway?: MovementGateway;
+    budgetRepository?: BudgetRepository;
+    budgetMovementGateway?: BudgetMovementGateway;
 }
 
 const buildCategoryUseCases = (repository: CategoryRepository): CategoryUseCases => ({
@@ -76,6 +90,19 @@ const buildAccountUseCases = (repository: AccountRepository, gateway: MovementGa
     transfer: new Transfer(repository, gateway),
 });
 
+// Second builder taking a second dependency (mirrors buildAccountUseCases):
+// getBudgetStatus needs the budget-local, read-only MovementGateway seam to
+// read egreso movements for its Spent/Remaining/Percent computation (design
+// D5/D11), unlike category/movement's single-repository use cases.
+const buildBudgetUseCases = (repository: BudgetRepository, gateway: BudgetMovementGateway): BudgetUseCases => ({
+    findBudgets: new FindBudgets(repository),
+    findBudgetById: new FindBudgetById(repository),
+    createBudget: new CreateBudget(repository),
+    updateBudget: new UpdateBudget(repository),
+    deleteBudget: new DeleteBudget(repository),
+    getBudgetStatus: new GetBudgetStatus(repository, gateway),
+});
+
 export const createCompositionRoot = (options: CompositionOptions = {}): AppContainer => ({
     exampleItemRepository: options.exampleItemRepository ?? new MongooseExampleItemRepository(),
     category: buildCategoryUseCases(options.categoryRepository ?? new MongooseCategoryRepository()),
@@ -83,6 +110,10 @@ export const createCompositionRoot = (options: CompositionOptions = {}): AppCont
     account: buildAccountUseCases(
         options.accountRepository ?? new MongooseAccountRepository(),
         options.movementGateway ?? new MongooseMovementGateway(),
+    ),
+    budget: buildBudgetUseCases(
+        options.budgetRepository ?? new MongooseBudgetRepository(),
+        options.budgetMovementGateway ?? new MongooseBudgetMovementGateway(),
     ),
 });
 

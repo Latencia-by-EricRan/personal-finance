@@ -2,6 +2,7 @@ export { default as BudgetModel } from './infrastructure/BudgetModel';
 export type { BudgetView } from './application/ports/BudgetRepository';
 export type { BudgetStatus } from './application/GetBudgetStatus';
 
-// NOTE: still unwired (PR2a+PR2b are additive-only) — nothing in
-// composition-root or _routes.ts references these exports yet. HTTP wiring
-// (composition-root + `_routes.ts` flip) lands in PR3.
+// Wired (PR3): `composition-root.ts` builds `container.budget` from
+// `MongooseBudgetRepository` + `MongooseMovementGateway`, and `_routes.ts`
+// mounts `createBudgetRouter(getContainer().budget)` at `/budget`, replacing
+// the legacy `modules/routes/budget.route.ts` (design D1/D11).
