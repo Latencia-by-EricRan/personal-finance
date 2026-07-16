@@ -6,8 +6,8 @@ const validEnvironment = {
     MONGO_DB_NAME: 'personal_finance',
     PORT: '3000',
     CORS_ORIGINS: 'http://localhost:5173',
-    AUTH_EMAIL: 'developer@local.test',
-    AUTH_PASSWORD_HASH: '$2b$12$abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNO123456789',
+    AUTH_ROOT_EMAIL: 'developer@local.test',
+    AUTH_ROOT_PASSWORD: 'a-plain-password',
     JWT_SECRET: 'abcdefghijklmnopqrstuvwxyz123456',
     JWT_EXPIRES_IN: '1d',
 };
@@ -24,8 +24,10 @@ describe('loadEnvironment', () => {
         expect(() => loadEnvironment({ ...validEnvironment, PORT: '70000' })).toThrow('PORT');
     });
 
-    it('rejects a non-bcrypt password hash', () => {
-        expect(() => loadEnvironment({ ...validEnvironment, AUTH_PASSWORD_HASH: 'plain-text' })).toThrow('bcrypt');
+    it('rejects an AUTH_ROOT_PASSWORD shorter than 8 characters', () => {
+        expect(() => loadEnvironment({ ...validEnvironment, AUTH_ROOT_PASSWORD: 'short' })).toThrow(
+            'AUTH_ROOT_PASSWORD must contain at least 8 characters',
+        );
     });
 
     it('rejects a JWT_SECRET shorter than 6 characters', () => {

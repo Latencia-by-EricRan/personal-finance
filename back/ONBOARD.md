@@ -26,13 +26,13 @@ MONGO_CONN_STR=<mongodb connection string>
 MONGO_DB_NAME=<database name>
 PORT=<port, defaults to 80>
 JWT_SECRET=<required, no default — server throws at startup if missing>
-AUTH_EMAIL=<the single user's email>
-AUTH_PASSWORD_HASH=<bcrypt hash — generate with npm run hash-password>
+AUTH_ROOT_EMAIL=<the single user email>
+AUTH_ROOT_PASSWORD=<the single user plaintext password — hashed internally at startup>
 JWT_EXPIRES_IN=<optional, default '1d'>
 CORS_ORIGINS=<optional, comma-separated allow-list; empty means CORS is fully closed>
 ```
 
-There's no seed data and no test database fixtures — this is a from-scratch personal instance. To get an auth token: `npm run hash-password <your-password>` to generate `AUTH_PASSWORD_HASH`, put it and `AUTH_EMAIL` in `.env`, start the server, then `POST /auth/login` with `{ Email, Password }`.
+There is no seed data and no test database fixtures — this is a from-scratch personal instance. To get an auth token: put `AUTH_ROOT_EMAIL` and `AUTH_ROOT_PASSWORD` (plaintext) in `.env`, start the server, then `POST /auth/login` with `{ Email, Password }`.
 
 Once running, `GET /docs` serves Swagger UI reading `openapi.yaml` (public, no auth needed, still behind the global rate limiter). Every other route requires `Authorization: Bearer <token>`.
 
@@ -62,7 +62,7 @@ Shared utilities: `src/middlewares/response.middleware.ts` (`successResponse`, `
 
 | Module | Mount | What it does |
 |---|---|---|
-| `auth` | `/auth` | Single-user login. `POST /auth/login` issues a JWT. No user collection — credentials live in env vars. |
+| `auth` | `/auth` | Single-user login. `POST /auth/login` issues a JWT. Credentials live in env vars. |
 | `movement` | `/movement` | Income/expense records. `Type` (`ingreso`/`egreso`), `Amount`, `Date`, `Category` (ref), `Description`, `Card`. |
 | `category` | `/category` | Movement categories (`Name`, `Type: 'variable'|'fijo'`, `Tag`, `Icon`). Supports single or bulk create. |
 | `account` | `/account` | Wallets/accounts (`Name`, `Type: 'efectivo'|'banco'|'tarjeta'`, `Currency`, `Icon`). Soft-delete only (`Archived`, restorable via `PUT`). Excluded from listings by default unless `?includeArchived=true`. |

@@ -63,19 +63,18 @@ describe('dependency installation', () => {
 });
 
 describe('environment file safety', () => {
-    it('creates a private file containing only hashed credentials', async () => {
+    it('creates a private file containing the plaintext generated password', async () => {
         const directory = await mkdtemp(join(tmpdir(), 'pf-env-'));
         const envPath = join(directory, '.env');
         const password = await createEnvironment({
             envPath,
-            hashPassword: async () => '$2b$12$test-hash',
             randomString: (bytes) => (bytes === 18 ? 'plain-generated-password' : 'a'.repeat(64)),
         });
         const contents = await readFile(envPath, 'utf8');
 
         expect(password).toBe('plain-generated-password');
-        expect(contents).toContain('AUTH_PASSWORD_HASH=$2b$12$test-hash');
-        expect(contents).not.toContain('plain-generated-password');
+        expect(contents).toContain('AUTH_ROOT_PASSWORD=plain-generated-password');
+        expect(contents).toContain('AUTH_ROOT_EMAIL=developer@local.test');
         expect(contents).toContain('CORS_ORIGINS=http://localhost:4200');
         expect((await stat(envPath)).mode & 0o777).toBe(0o600);
     });

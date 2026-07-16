@@ -9,7 +9,6 @@
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "hash-password": "ts-node scripts/hash-password.ts",
     "backfill-movement-accounts": "ts-node scripts/backfill-movement-accounts.ts",
     "env:check": "ts-node scripts/validate-env.ts",
     "seed": "ts-node scripts/seed.ts",

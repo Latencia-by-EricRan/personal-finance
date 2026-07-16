@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
 import supertest from 'supertest';
 import type { Express } from 'express';
 import { MongoMemoryServer } from 'mongodb-memory-server';
@@ -43,7 +42,8 @@ export const stopTestApp = async (): Promise<void> => {
 
 /**
  * Boots a fully isolated app instance for e2e characterization tests:
- * - sets the env vars `auth.config.ts` requires at import time
+ * - sets the plaintext env vars `auth.config.ts` requires at import time
+ *   (it hashes the password internally)
  * - starts a fresh in-memory MongoDB instance
  * - points `MONGO_CONN_STR`/`MONGO_DB_NAME` at it
  * - dynamically imports `../app` (must happen AFTER the env vars are set)
@@ -54,8 +54,8 @@ export const stopTestApp = async (): Promise<void> => {
  */
 export const startTestApp = async (): Promise<TestApp> => {
     process.env.JWT_SECRET = 'e2e-harness-jwt-secret';
-    process.env.AUTH_EMAIL = KNOWN_EMAIL;
-    process.env.AUTH_PASSWORD_HASH = bcrypt.hashSync(KNOWN_PASSWORD, 10);
+    process.env.AUTH_ROOT_EMAIL = KNOWN_EMAIL;
+    process.env.AUTH_ROOT_PASSWORD = KNOWN_PASSWORD;
 
     mongod = await MongoMemoryServer.create();
     process.env.MONGO_CONN_STR = mongod.getUri();
@@ -71,9 +71,7 @@ export const startTestApp = async (): Promise<TestApp> => {
     const request = supertest(app);
 
     const tokenFor = async (): Promise<string> => {
-        const response = await request
-            .post('/auth/login')
-            .send({ Email: KNOWN_EMAIL, Password: KNOWN_PASSWORD });
+        const response = await request.post('/auth/login').send({ Email: KNOWN_EMAIL, Password: KNOWN_PASSWORD });
 
         return response.body.token as string;
     };

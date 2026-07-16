@@ -8,7 +8,6 @@
 npm run dev          # ts-node-dev with hot reload (runs npm i first — intentional but slow)
 npm run build        # tsc → dist/
 npm start            # node dist/index.js (requires build first)
-npm run hash-password <plain>  # bcrypt-hash a password → prints AUTH_PASSWORD_HASH for .env
 ```
 
 **No test runner is configured.** `npm test` exits with code 1. Do not assume tests pass or exist.
@@ -19,8 +18,8 @@ npm run hash-password <plain>  # bcrypt-hash a password → prints AUTH_PASSWORD
 MONGO_CONN_STR=<mongodb connection string>
 MONGO_DB_NAME=<database name>
 PORT=<port, defaults to 80>
-AUTH_EMAIL=<single-user login email>
-AUTH_PASSWORD_HASH=<bcrypt hash — generate with npm run hash-password>
+AUTH_ROOT_EMAIL=<single-user login email>
+AUTH_ROOT_PASSWORD=<single-user plaintext password — hashed internally at startup>
 ```
 
 Use `.env.example` as the template. Never commit `.env`.
@@ -51,7 +50,7 @@ Non-module shared code:
 - **Model field names are PascalCase** (`Amount`, `Date`, `Type`, `Category`) — intentional and consistent in schemas, interfaces, query filters, and body validators. Do not convert to camelCase.
 - **`TypeMovement` enum**: `'ingreso'` | `'egreso'` — the canonical discriminator for movement records.
 - **All responses go through `successResponse` / `errorResponse`** from the response middleware. Never call `res.json()` directly.
-- **Auth is single-user JWT** — credentials live in `.env` (`AUTH_EMAIL` + `AUTH_PASSWORD_HASH`). No User collection. `POST /auth/login` issues the token; the `authenticate` middleware guards `/movement` and `/category`.
+- **Auth is single-user JWT** — credentials live in `.env` (`AUTH_ROOT_EMAIL` + `AUTH_ROOT_PASSWORD`, both plaintext; the app hashes the password internally at config-load time). `POST /auth/login` issues the token; the `authenticate` middleware guards protected modules.
 
 ## Known bugs — do not workaround, fix from tasks.json
 

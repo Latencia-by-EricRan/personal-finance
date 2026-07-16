@@ -10,8 +10,8 @@ describe('createApp (smoke)', () => {
 
     beforeAll(async () => {
         process.env.JWT_SECRET = 'e2e-smoke-test-secret';
-        process.env.AUTH_EMAIL = 'e2e-smoke@test.local';
-        process.env.AUTH_PASSWORD_HASH = '$2b$10$CwTycUXWue0Thq9StjUM0uJ8gLgHmZ4/8L4LizXbNfoyLZk9Bh7wS';
+        process.env.AUTH_ROOT_EMAIL = 'e2e-smoke@test.local';
+        process.env.AUTH_ROOT_PASSWORD = 'e2e-smoke-test-password';
 
         const { createApp } = await import('../app');
         app = createApp();
@@ -39,10 +39,7 @@ describe('createApp (smoke)', () => {
         expect(response.status).toBe(400);
         expect(body.message).toBe('Validation failed');
         expect(body.errors).toEqual(
-            expect.arrayContaining([
-                'Email must be a valid email address',
-                'Password is required',
-            ]),
+            expect.arrayContaining(['Email must be a valid email address', 'Password is required']),
         );
     });
 });

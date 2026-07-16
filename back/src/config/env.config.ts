@@ -8,7 +8,7 @@ export interface EnvironmentConfig {
     port: number;
     corsOrigins: string[];
     authEmail: string;
-    authPasswordHash: string;
+    authPassword: string;
     jwtSecret: string;
     jwtExpiresIn: string;
 }
@@ -46,12 +46,12 @@ export const loadEnvironment = (environment: NodeJS.ProcessEnv = process.env): E
         throw new Error('[Config] MONGO_CONN_STR must be a MongoDB connection string');
     }
 
-    const authEmail = required('AUTH_EMAIL', environment);
-    if (!/^\S+@\S+\.\S+$/.test(authEmail)) throw new Error('[Config] AUTH_EMAIL must be a valid email');
+    const authEmail = required('AUTH_ROOT_EMAIL', environment);
+    if (!/^\S+@\S+\.\S+$/.test(authEmail)) throw new Error('[Config] AUTH_ROOT_EMAIL must be a valid email');
 
-    const authPasswordHash = required('AUTH_PASSWORD_HASH', environment);
-    if (!/^\$2[aby]\$\d{2}\$/.test(authPasswordHash)) {
-        throw new Error('[Config] AUTH_PASSWORD_HASH must be a bcrypt hash');
+    const authPassword = required('AUTH_ROOT_PASSWORD', environment);
+    if (authPassword.length < 8) {
+        throw new Error('[Config] AUTH_ROOT_PASSWORD must contain at least 8 characters');
     }
 
     const jwtSecret = required('JWT_SECRET', environment);
@@ -63,7 +63,7 @@ export const loadEnvironment = (environment: NodeJS.ProcessEnv = process.env): E
         port: parsePort(environment.PORT?.trim() || '80'),
         corsOrigins: parseOrigins(environment.CORS_ORIGINS?.trim() || ''),
         authEmail,
-        authPasswordHash,
+        authPassword,
         jwtSecret,
         jwtExpiresIn: environment.JWT_EXPIRES_IN?.trim() || '1d',
     };

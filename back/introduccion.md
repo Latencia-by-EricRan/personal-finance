@@ -37,7 +37,7 @@ npm run seed
 npm run dev
 ```
 
-Podés generar el hash de una contraseña con `npm run hash-password -- <contraseña>` y un secreto JWT con `openssl rand -base64 48`. Si perdés la contraseña generada por quickstart, generá un hash nuevo: no existe una copia recuperable en texto plano.
+Definí `AUTH_ROOT_EMAIL` y `AUTH_ROOT_PASSWORD` (ambos en texto plano) en `.env` — la app hashea la contraseña internamente al arrancar — y un secreto JWT con `openssl rand -base64 48`.
 
 ## Solución de problemas
 
