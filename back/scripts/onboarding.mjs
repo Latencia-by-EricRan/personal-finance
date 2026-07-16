@@ -62,7 +62,6 @@ export const installDependencies = async ({ directory = '.', commandRunner = run
 
 export const createEnvironment = async ({
     envPath = ENV_PATH,
-    hashPassword,
     randomString = (bytes) => randomBytes(bytes).toString('base64url'),
 } = {}) => {
     if (await exists(envPath)) {
@@ -71,17 +70,14 @@ export const createEnvironment = async ({
     }
 
     const password = randomString(18);
-    const passwordHash = hashPassword
-        ? await hashPassword(password)
-        : await import('bcryptjs').then(({ hash }) => hash(password, 12));
     const jwtSecret = randomString(48);
     const contents = [
         'MONGO_CONN_STR=mongodb://127.0.0.1:27017',
         'MONGO_DB_NAME=personal_finance',
         'PORT=3000',
         'CORS_ORIGINS=http://localhost:4200',
-        'AUTH_EMAIL=developer@local.test',
-        `AUTH_PASSWORD_HASH=${passwordHash}`,
+        'AUTH_ROOT_EMAIL=developer@local.test',
+        `AUTH_ROOT_PASSWORD=${password}`,
         `JWT_SECRET=${jwtSecret}`,
         'JWT_EXPIRES_IN=1d',
         '',
