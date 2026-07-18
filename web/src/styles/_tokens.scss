@@ -16,6 +16,19 @@
   --expense: #e5484d;
   --font-display: 'Sora', system-ui, sans-serif;
   --font-body: 'Manrope', system-ui, sans-serif;
+
+  // Category identity swatches — deterministic fallback palette for
+  // categories without a user-assigned `Color`. Kept separate from the
+  // semantic `--income`/`--gold`/`--expense` tokens, which are reserved for
+  // budget-progress bands. Dark-only (no light-mode overrides yet).
+  --cat-1: #5b8def;
+  --cat-2: #9b6bda;
+  --cat-3: #e07bc4;
+  --cat-4: #ef8354;
+  --cat-5: #f2c14e;
+  --cat-6: #6fcf97;
+  --cat-7: #56c2c9;
+  --cat-8: #b0a8b9;
 }
 
 :root[data-theme='light'] {
