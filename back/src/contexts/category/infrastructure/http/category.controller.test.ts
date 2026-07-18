@@ -56,6 +56,7 @@ describe('createCategoryController', () => {
                 Tag: 'food-tag',
                 Type: 'variable',
                 Icon: '',
+                Color: '',
             });
         });
 
@@ -170,6 +171,7 @@ describe('createCategoryController', () => {
                     Tag: 'food-tag',
                     Type: 'variable',
                     Icon: '',
+                    Color: '',
                 },
             ]);
         });
@@ -194,6 +196,7 @@ describe('createCategoryController', () => {
                 Tag: 'food-tag',
                 Type: 'variable',
                 Icon: '',
+                Color: '',
             });
         });
 

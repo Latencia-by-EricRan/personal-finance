@@ -22,7 +22,7 @@ import CategoryModel from '../modules/models/Category.model';
  * `versionKey:false` — CRUD responses carry
  * `_id, Category, Month, Year, Limit, createdAt, updatedAt` (no `__v`).
  * `CategoryModel` has `versionKey:false`/`timestamps:false` — a populated
- * `Category` sub-document carries `_id, Description, Name, Tag, Type, Icon`
+ * `Category` sub-document carries `_id, Description, Name, Tag, Type, Icon, Color`
  * (no `createdAt`/`updatedAt`/`__v`). `budget.e2e.test.ts` already covers the
  * `GetStatus` Spent/Remaining/Percent computation in depth; this suite adds
  * only a shape check for status's populated `Category` and focuses on the 5
@@ -52,6 +52,7 @@ describe('budget HTTP characterization (current, unwired, pre-refactor baseline)
         'Tag',
         'Type',
         'Icon',
+        'Color',
     ].sort();
 
     beforeAll(async () => {

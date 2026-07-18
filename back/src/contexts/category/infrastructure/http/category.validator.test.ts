@@ -39,6 +39,17 @@ describe('bodyValidator', () => {
         expect(res.status).not.toHaveBeenCalled();
     });
 
+    it('passes a valid single body including Color through to next() (Color is whitelisted)', async () => {
+        const req = mockReq({ Name: 'Food', Description: 'Groceries', Type: 'variable', Color: 'green' });
+        const res = mockRes();
+        const next: NextFunction = vi.fn();
+
+        await bodyValidator(req, res, next);
+
+        expect(next).toHaveBeenCalledTimes(1);
+        expect(res.status).not.toHaveBeenCalled();
+    });
+
     it('rejects an array whose item is missing a required field with 400', async () => {
         const body = [
             { Name: 'Food', Description: 'Groceries', Type: 'variable' },
@@ -58,6 +69,21 @@ describe('bodyValidator', () => {
         const body = [
             { Name: 'Food', Description: 'Groceries', Type: 'variable' },
             { Name: 'Food', Description: 'Other groceries', Type: 'fijo' },
+        ];
+        const req = mockReq(body);
+        const res = mockRes();
+        const next: NextFunction = vi.fn();
+
+        await bodyValidator(req, res, next);
+
+        expect(next).toHaveBeenCalledTimes(1);
+        expect(res.status).not.toHaveBeenCalled();
+    });
+
+    it('passes an array body where items with and without Color both validate successfully', async () => {
+        const body = [
+            { Name: 'Food', Description: 'Groceries', Type: 'variable', Color: 'red' },
+            { Name: 'Rent', Description: 'Monthly rent', Type: 'fijo' },
         ];
         const req = mockReq(body);
         const res = mockRes();

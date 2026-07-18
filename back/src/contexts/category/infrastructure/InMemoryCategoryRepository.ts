@@ -77,6 +77,7 @@ export class InMemoryCategoryRepository implements CategoryRepository {
             Type: category.type,
             Tag: category.tag,
             Icon: category.icon,
+            Color: category.color,
         });
     }
 

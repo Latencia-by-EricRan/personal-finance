@@ -15,6 +15,7 @@ export interface CategoryDocument {
     Tag: string;
     Type: 'variable' | 'fijo';
     Icon?: string;
+    Color?: string;
     _id?: Schema.Types.ObjectId;
 }
 
@@ -24,6 +25,7 @@ const CategorySchema: Schema = new Schema<CategoryDocument>({
     Tag: { type: String, default: '' }, // Campo opcional, libre para el usuario
     Type: { type: String, enum: ['variable', 'fijo'], required: true },
     Icon: { type: String, default: '' }, // Campo opcional, libre para el usuario
+    Color: { type: String, default: '' }, // Campo opcional, libre para el usuario
 }, {
     timestamps: false, // Adds createdAt and updatedAt fields
     validateBeforeSave: true,

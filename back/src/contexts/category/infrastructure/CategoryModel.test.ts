@@ -36,6 +36,10 @@ describe('CategoryModel', () => {
         expect(paths.Icon).toBeDefined();
         expect(paths.Icon.instance).toBe('String');
         expect(paths.Icon.defaultValue).toBe('');
+
+        expect(paths.Color).toBeDefined();
+        expect(paths.Color.instance).toBe('String');
+        expect(paths.Color.defaultValue).toBe('');
     });
 
     it('keeps versionKey disabled and timestamps disabled, matching legacy schema options', () => {

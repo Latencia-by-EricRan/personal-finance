@@ -12,6 +12,7 @@ interface CategoryResponseBody {
     Tag: string;
     Type: string;
     Icon: string;
+    Color: string;
 }
 
 const toResponseBody = (category: Category): CategoryResponseBody => ({
@@ -21,6 +22,7 @@ const toResponseBody = (category: Category): CategoryResponseBody => ({
     Tag: category.tag,
     Type: category.type,
     Icon: category.icon,
+    Color: category.color,
 });
 
 /**

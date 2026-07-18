@@ -131,6 +131,33 @@ const runCategoryContract = (
             expect(neverSaved).toBeNull();
         });
 
+        it('round-trips Color through upsert and find/findById', async () => {
+            const repo = makeRepo();
+            const saved = await repo.upsert(
+                Category.create({ Description: 'Colorful', Name: 'contract-color', Type: 'variable', Tag: 'contract-color-tag', Color: 'red' }),
+            );
+
+            expect(saved.color).toBe('red');
+
+            const found = await repo.findById(saved.id!);
+            expect(found?.color).toBe('red');
+
+            const [viaFind] = await repo.find({ Tag: 'contract-color-tag' });
+            expect(viaFind.color).toBe('red');
+        });
+
+        it('reads back Color as empty string for a legacy-shape category saved without Color', async () => {
+            const repo = makeRepo();
+            const saved = await repo.upsert(
+                Category.create({ Description: 'Legacy', Name: 'contract-legacy-color', Type: 'variable', Tag: 'contract-legacy-color-tag' }),
+            );
+
+            expect(saved.color).toBe('');
+
+            const found = await repo.findById(saved.id!);
+            expect(found?.color).toBe('');
+        });
+
         it('delete removes the category so it can no longer be found, and returns the deleted entity', async () => {
             const repo = makeRepo();
             const created = await repo.upsert(Category.create({ Description: 'to delete', Name: 'contract-to-delete', Type: 'variable' }));

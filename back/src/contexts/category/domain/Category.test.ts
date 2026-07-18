@@ -4,7 +4,7 @@ import { Category } from './Category';
 
 describe('Category', () => {
     describe('create', () => {
-        it('creates a category defaulting Tag/Icon to empty string when omitted', () => {
+        it('creates a category defaulting Tag/Icon/Color to empty string when omitted', () => {
             const category = Category.create({ Description: 'Monthly rent', Name: 'Rent', Type: 'fijo' });
 
             expect(category.description).toBe('Monthly rent');
@@ -12,20 +12,23 @@ describe('Category', () => {
             expect(category.type).toBe('fijo');
             expect(category.tag).toBe('');
             expect(category.icon).toBe('');
+            expect(category.color).toBe('');
             expect(category.id).toBeUndefined();
         });
 
-        it('keeps a provided Tag and Icon', () => {
+        it('keeps a provided Tag, Icon and Color', () => {
             const category = Category.create({
                 Description: 'Utilities',
                 Name: 'Utilities',
                 Type: 'variable',
                 Tag: 'utils-tag',
                 Icon: 'bolt',
+                Color: '#FF0000',
             });
 
             expect(category.tag).toBe('utils-tag');
             expect(category.icon).toBe('bolt');
+            expect(category.color).toBe('#FF0000');
         });
 
         it('rejects an empty or blank Name', () => {
@@ -70,11 +73,31 @@ describe('Category', () => {
                 Type: 'fijo',
                 Tag: 'rent-tag',
                 Icon: 'home',
+                Color: 'teal',
             });
 
             expect(category.id?.equals(id)).toBe(true);
             expect(category.name).toBe('Rent');
             expect(category.tag).toBe('rent-tag');
+            expect(category.color).toBe('teal');
+        });
+    });
+
+    describe('equals', () => {
+        it('returns false when only Color differs', () => {
+            const base = { Description: 'x', Name: 'x', Type: 'variable' as const, Tag: 'same-tag', Icon: 'same-icon' };
+            const red = Category.create({ ...base, Color: 'red' });
+            const blue = Category.create({ ...base, Color: 'blue' });
+
+            expect(red.equals(blue)).toBe(false);
+        });
+
+        it('returns true when Color matches along with every other field', () => {
+            const props = { Description: 'x', Name: 'x', Type: 'variable' as const, Tag: 'same-tag', Icon: 'same-icon', Color: 'red' };
+            const a = Category.create(props);
+            const b = Category.create(props);
+
+            expect(a.equals(b)).toBe(true);
         });
     });
 

@@ -13,7 +13,8 @@ const bodyValidate: ValidationChain[] = [
     body('Type').isString().notEmpty().isIn(['variable', 'fijo']),
     body('Tag').isString().optional(),
     body('Icon').isString().optional(),
-    body().optional().custom(checkKeys.bind(null, ['Name', 'Description', 'Type', 'Tag', 'Icon'])),
+    body('Color').isString().optional(),
+    body().optional().custom(checkKeys.bind(null, ['Name', 'Description', 'Type', 'Tag', 'Icon', 'Color'])),
 ];
 
 // Middlewares
