@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import reportRoute from './modules/routes/report.route';
 import authRoute from './modules/routes/auth.route';
 import docsRoute from './modules/routes/docs.route';
 import { authenticate } from './middlewares/auth.middleware';
@@ -8,6 +7,7 @@ import { createMovementRouter } from './contexts/movement/infrastructure/http/mo
 import { createAccountRouter } from './contexts/account/infrastructure/http/account.route';
 import { createBudgetRouter } from './contexts/budget/infrastructure/http/budget.route';
 import { createRecurringRouter } from './contexts/recurring/infrastructure/http/recurring.route';
+import { createReportRouter } from './contexts/report/infrastructure/http/report.route';
 import { getContainer } from './composition-root';
 
 const router = Router();
@@ -20,6 +20,6 @@ router.use('/category', createCategoryRouter(getContainer().category));
 router.use('/account', createAccountRouter(getContainer().account));
 router.use('/budget', createBudgetRouter(getContainer().budget));
 router.use('/recurring', createRecurringRouter(getContainer().recurring));
-router.use('/report', reportRoute);
+router.use('/report', createReportRouter(getContainer().report));
 
 export default router;
