@@ -1,24 +1,10 @@
-import mongoose, { Schema } from 'mongoose';
-import { RecurringI } from '../interfaces/recurring.interface';
-
-const RecurringSchema: Schema = new Schema<RecurringI>(
-    {
-        Type: { type: String, enum: ['ingreso', 'egreso'], required: true },
-        Amount: { type: Number, required: true },
-        Category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
-        Account: { type: Schema.Types.ObjectId, ref: 'Account', required: true },
-        Description: { type: String, default: '' },
-        Card: { type: String, default: '' },
-        Frequency: { type: String, enum: ['mensual'], required: true, default: 'mensual' },
-        DayOfMonth: { type: Number, required: true, min: 1, max: 31 },
-        Active: { type: Boolean, default: true },
-        LastRunYearMonth: { type: String, default: null },
-    },
-    {
-        timestamps: true,
-        versionKey: false,
-        autoIndex: true,
-    },
-);
-
-export default mongoose.model<RecurringI>('Recurring', RecurringSchema);
+// Compatibility shim: the canonical Mongoose model registration now lives in
+// `src/contexts/recurring/infrastructure/RecurringModel.ts` (the ONLY place
+// that calls `mongoose.model('Recurring', schema)`). This re-export keeps
+// existing consumers (e2e suites) working without a double registration,
+// which would throw `OverwriteModelError` (see `Account.model.ts`/
+// `Category.model.ts`/`Movement.model.ts`/`Budget.model.ts` for the same
+// precedent).
+// (The layer-first `recurring.service.ts`/`recurring.interface.ts` were
+// deleted in PR1b and no longer use this shim.)
+export { default } from '../../contexts/recurring/infrastructure/RecurringModel';
