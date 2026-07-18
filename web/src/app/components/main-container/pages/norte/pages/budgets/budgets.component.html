@@ -1,0 +1,32 @@
+<div class="budgets">
+  <h1 class="budgets__title">Budgets</h1>
+
+  @if (error()) {
+    <div class="budgets__error">Couldn't load data. Try again.</div>
+  }
+
+  <div class="budgets__selector">
+    <label class="budgets__selector-field">
+      Month
+      <select [value]="month()" (change)="onMonthChange(+$any($event.target).value)">
+        @for (m of months; track m) {
+          <option [value]="m">{{ m }}</option>
+        }
+      </select>
+    </label>
+    <label class="budgets__selector-field">
+      Year
+      <input type="number" [value]="year()" (change)="onYearChange(+$any($event.target).value)" />
+    </label>
+  </div>
+
+  @if (status().length === 0) {
+    <div class="budgets__empty">No budgets for {{ month() }}/{{ year() }}</div>
+  } @else {
+    <div class="budgets__list">
+      @for (row of status(); track $index) {
+        <app-budget-progress [percent]="row.Percent" [limit]="row.Limit" [label]="categoryName(row)" />
+      }
+    </div>
+  }
+</div>

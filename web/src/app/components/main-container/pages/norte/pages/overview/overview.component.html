@@ -1,0 +1,55 @@
+<div class="overview">
+  <h1 class="overview__title">Overview</h1>
+
+  @if (error()) {
+    <div class="overview__error">Couldn't load data. Try again.</div>
+  }
+
+  <section class="overview__section">
+    <div class="overview__kpi">
+      @if (cashflow(); as cf) {
+        <div class="overview__kpi-item">
+          <span class="overview__kpi-label">Income</span>
+          <span class="overview__kpi-value">{{ cf.Income }}</span>
+        </div>
+        <div class="overview__kpi-item">
+          <span class="overview__kpi-label">Expense</span>
+          <span class="overview__kpi-value">{{ cf.Expense }}</span>
+        </div>
+        <div class="overview__kpi-item">
+          <span class="overview__kpi-label">Net</span>
+          <span class="overview__kpi-value">{{ cf.Net }}</span>
+        </div>
+      } @else {
+        <div class="overview__empty">No cashflow data for this month</div>
+      }
+    </div>
+  </section>
+
+  <section class="overview__section">
+    <h2>Net Trend</h2>
+    <app-trend-chart [points]="netTrend()" />
+  </section>
+
+  <section class="overview__section">
+    <h2>Expenses by Category</h2>
+    @if (byCategory().length === 0) {
+      <div class="overview__empty">No expense data for this month</div>
+    } @else {
+      <app-donut-chart [segments]="donutSegments()" />
+    }
+  </section>
+
+  <section class="overview__section">
+    <h2>Budgets</h2>
+    @if (status().length === 0) {
+      <div class="overview__empty">No budgets for this month</div>
+    } @else {
+      <div class="overview__budgets">
+        @for (row of status(); track $index) {
+          <app-budget-progress [percent]="row.Percent" [limit]="row.Limit" [label]="categoryName(row)" />
+        }
+      </div>
+    }
+  </section>
+</div>

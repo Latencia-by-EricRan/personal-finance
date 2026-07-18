@@ -1,0 +1,44 @@
+:host {
+  display: block;
+}
+
+.budgets__title {
+  color: var(--text);
+  margin-bottom: 1em;
+}
+
+.budgets__selector {
+  display: flex;
+  gap: 1em;
+  margin-bottom: 1.5em;
+}
+
+.budgets__selector-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+  color: var(--text-dim);
+}
+
+.budgets__empty {
+  padding: 1.5em;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  background-color: var(--surface);
+  color: var(--text-dim);
+}
+
+.budgets__error {
+  padding: 1em 1.5em;
+  border: 1px solid var(--expense);
+  border-radius: 8px;
+  background-color: var(--surface);
+  color: var(--expense);
+  margin-bottom: 1.5em;
+}
+
+.budgets__list {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
