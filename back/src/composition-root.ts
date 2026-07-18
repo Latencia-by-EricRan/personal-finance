@@ -51,6 +51,14 @@ import { DeleteRecurring } from './contexts/recurring/application/DeleteRecurrin
 import { RunRecurrings } from './contexts/recurring/application/RunRecurrings';
 import { MongooseRecurringRepository } from './contexts/recurring/infrastructure/MongooseRecurringRepository';
 import { MongooseMovementGateway as MongooseRecurringMovementGateway } from './contexts/recurring/infrastructure/MongooseMovementGateway';
+import { MovementGateway as ReportMovementGateway } from './contexts/report/application/ports/MovementGateway';
+import { CategoryGateway as ReportCategoryGateway } from './contexts/report/application/ports/CategoryGateway';
+import { ReportUseCases } from './contexts/report/application/ReportUseCases';
+import { GetReportByCategory } from './contexts/report/application/GetReportByCategory';
+import { GetReportMonthly } from './contexts/report/application/GetReportMonthly';
+import { GetReportCashflow } from './contexts/report/application/GetReportCashflow';
+import { MongooseMovementGateway as MongooseReportMovementGateway } from './contexts/report/infrastructure/MongooseMovementGateway';
+import { MongooseCategoryGateway as MongooseReportCategoryGateway } from './contexts/report/infrastructure/MongooseCategoryGateway';
 
 export interface AppContainer {
     exampleItemRepository: ExampleItemRepository;
@@ -59,6 +67,7 @@ export interface AppContainer {
     account: AccountUseCases;
     budget: BudgetUseCases;
     recurring: RecurringUseCases;
+    report: ReportUseCases;
 }
 
 export interface CompositionOptions {
@@ -71,6 +80,8 @@ export interface CompositionOptions {
     budgetMovementGateway?: BudgetMovementGateway;
     recurringRepository?: RecurringRepository;
     recurringMovementGateway?: RecurringMovementGateway;
+    reportMovementGateway?: ReportMovementGateway;
+    reportCategoryGateway?: ReportCategoryGateway;
 }
 
 const buildCategoryUseCases = (repository: CategoryRepository): CategoryUseCases => ({
@@ -130,6 +141,16 @@ const buildRecurringUseCases = (repository: RecurringRepository, gateway: Recurr
     runRecurrings: new RunRecurrings(repository, gateway),
 });
 
+// Fourth builder taking two dependencies (mirrors buildAccountUseCases/
+// buildBudgetUseCases/buildRecurringUseCases), but no repository — report
+// owns no aggregate/domain (design D13). getReportByCategory needs both the
+// movement and category read gateways; monthly/cashflow need movement only.
+const buildReportUseCases = (movementGateway: ReportMovementGateway, categoryGateway: ReportCategoryGateway): ReportUseCases => ({
+    getReportByCategory: new GetReportByCategory(movementGateway, categoryGateway),
+    getReportMonthly: new GetReportMonthly(movementGateway),
+    getReportCashflow: new GetReportCashflow(movementGateway),
+});
+
 export const createCompositionRoot = (options: CompositionOptions = {}): AppContainer => ({
     exampleItemRepository: options.exampleItemRepository ?? new MongooseExampleItemRepository(),
     category: buildCategoryUseCases(options.categoryRepository ?? new MongooseCategoryRepository()),
@@ -145,6 +166,10 @@ export const createCompositionRoot = (options: CompositionOptions = {}): AppCont
     recurring: buildRecurringUseCases(
         options.recurringRepository ?? new MongooseRecurringRepository(),
         options.recurringMovementGateway ?? new MongooseRecurringMovementGateway(),
+    ),
+    report: buildReportUseCases(
+        options.reportMovementGateway ?? new MongooseReportMovementGateway(),
+        options.reportCategoryGateway ?? new MongooseReportCategoryGateway(),
     ),
 });
 
