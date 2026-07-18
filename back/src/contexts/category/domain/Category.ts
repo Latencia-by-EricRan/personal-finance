@@ -7,7 +7,7 @@ const VALID_TYPES: CategoryType[] = ['variable', 'fijo'];
 /**
  * Named-property input for `Category.create`/`Category.rehydrate`. Mirrors
  * exactly the mass-assignment whitelist enforced today by
- * `category.validator.ts`'s `checkKeys(['Name','Description','Type','Tag','Icon'])`
+ * `category.validator.ts`'s `checkKeys(['Name','Description','Type','Tag','Icon','Color'])`
  * (design D2) — any other key on the caller's object is structurally ignored
  * since the constructor never spreads its input, it destructures named props.
  */
@@ -17,6 +17,7 @@ export interface CategoryProps {
     Type: CategoryType;
     Tag?: string;
     Icon?: string;
+    Color?: string;
 }
 
 export interface CategoryNaturalKey {
@@ -35,18 +36,35 @@ export class Category {
         private readonly _type: CategoryType,
         private readonly _tag: string,
         private readonly _icon: string,
+        private readonly _color: string,
     ) {}
 
     static create(props: CategoryProps): Category {
         Category.assertInvariants(props);
 
-        return new Category(undefined, props.Description, props.Name, props.Type, props.Tag ?? '', props.Icon ?? '');
+        return new Category(
+            undefined,
+            props.Description,
+            props.Name,
+            props.Type,
+            props.Tag ?? '',
+            props.Icon ?? '',
+            props.Color ?? '',
+        );
     }
 
     static rehydrate(id: Identity, props: CategoryProps): Category {
         Category.assertInvariants(props);
 
-        return new Category(id, props.Description, props.Name, props.Type, props.Tag ?? '', props.Icon ?? '');
+        return new Category(
+            id,
+            props.Description,
+            props.Name,
+            props.Type,
+            props.Tag ?? '',
+            props.Icon ?? '',
+            props.Color ?? '',
+        );
     }
 
     private static assertInvariants(props: CategoryProps): void {
@@ -85,6 +103,10 @@ export class Category {
         return this._icon;
     }
 
+    get color(): string {
+        return this._color;
+    }
+
     /**
      * The upsert-by-business-key rule (Tag when present, otherwise Name),
      * consumed by both `SaveCategory` (single) and `BulkSaveCategory` (batch)
@@ -102,6 +124,7 @@ export class Category {
             this._type === other._type &&
             this._tag === other._tag &&
             this._icon === other._icon &&
+            this._color === other._color &&
             (this._id === undefined
                 ? other._id === undefined
                 : other._id !== undefined && this._id.equals(other._id))

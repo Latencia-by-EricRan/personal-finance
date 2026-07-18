@@ -18,6 +18,7 @@ describe('CategoryMapper', () => {
                 Tag: 'rent-tag',
                 Type: 'fijo',
                 Icon: 'home',
+                Color: 'red',
             });
 
             expect(category.id?.equals(Identity.fromObjectId(objectId))).toBe(true);
@@ -26,6 +27,23 @@ describe('CategoryMapper', () => {
             expect(category.tag).toBe('rent-tag');
             expect(category.type).toBe('fijo');
             expect(category.icon).toBe('home');
+            expect(category.color).toBe('red');
+        });
+
+        it('coalesces a legacy document with no Color key to an empty string', () => {
+            const mapper = new CategoryMapper();
+            const objectId = new Types.ObjectId('507f1f77bcf86cd799439011');
+
+            const category = mapper.toDomain({
+                _id: objectId,
+                Description: 'Legacy',
+                Name: 'Legacy',
+                Tag: '',
+                Type: 'variable',
+                Icon: '',
+            });
+
+            expect(category.color).toBe('');
         });
 
         it('maps a domain Category to its persistence document, whitelisting only the domain fields', () => {
@@ -40,7 +58,23 @@ describe('CategoryMapper', () => {
                 Tag: 'utils-tag',
                 Type: 'variable',
                 Icon: '',
+                Color: '',
             });
+        });
+
+        it('maps a domain Category with a set Color to its persistence document', () => {
+            const mapper = new CategoryMapper();
+            const category = Category.create({
+                Description: 'Utilities',
+                Name: 'Utilities',
+                Type: 'variable',
+                Tag: 'utils-tag',
+                Color: 'blue',
+            });
+
+            const document = mapper.toPersistence(category);
+
+            expect(document.Color).toBe('blue');
         });
     });
 

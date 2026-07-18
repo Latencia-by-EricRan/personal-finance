@@ -84,4 +84,38 @@ describe('POST /category/save characterization (current, unwired, pre-refactor b
         expect(second.body.upsertedIds).toEqual({});
         expect(second.body.insertedIds).toEqual({});
     });
+
+    it('round-trips Color over the wire for a single-save POST followed by GET', async () => {
+        const saveResponse = await testApp.request
+            .post('/category/')
+            .set('Authorization', `Bearer ${token}`)
+            .send({ Name: 'Characterization Color Single', Description: 'Single with color', Type: 'variable', Color: 'teal' });
+
+        expect(saveResponse.status).toBe(201);
+        expect(saveResponse.body.Color).toBe('teal');
+
+        const getResponse = await testApp.request
+            .get(`/category/${saveResponse.body._id}`)
+            .set('Authorization', `Bearer ${token}`);
+
+        expect(getResponse.status).toBe(200);
+        expect(getResponse.body.Color).toBe('teal');
+    });
+
+    it('round-trips Color over the wire for a bulk-save POST followed by GET', async () => {
+        const bulkResponse = await testApp.request
+            .post('/category/save')
+            .set('Authorization', `Bearer ${token}`)
+            .send([{ Name: 'Characterization Color Bulk', Description: 'Bulk with color', Type: 'fijo', Tag: 'char-color-bulk', Color: 'purple' }]);
+
+        expect(bulkResponse.status).toBe(201);
+
+        const listResponse = await testApp.request
+            .get('/category/')
+            .set('Authorization', `Bearer ${token}`);
+
+        expect(listResponse.status).toBe(200);
+        const savedCategory = listResponse.body.find((category: { Tag: string }) => category.Tag === 'char-color-bulk');
+        expect(savedCategory?.Color).toBe('purple');
+    });
 });

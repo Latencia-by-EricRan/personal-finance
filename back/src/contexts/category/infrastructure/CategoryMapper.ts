@@ -25,6 +25,7 @@ export class CategoryMapper implements Mapper<Category, CategoryDocument> {
             Type: raw.Type,
             Tag: raw.Tag,
             Icon: raw.Icon,
+            Color: raw.Color,
         });
     }
 
@@ -35,6 +36,7 @@ export class CategoryMapper implements Mapper<Category, CategoryDocument> {
             Tag: entity.tag,
             Type: entity.type,
             Icon: entity.icon,
+            Color: entity.color,
         };
     }
 
