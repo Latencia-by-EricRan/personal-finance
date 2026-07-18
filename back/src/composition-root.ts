@@ -40,6 +40,17 @@ import { DeleteBudget } from './contexts/budget/application/DeleteBudget';
 import { GetBudgetStatus } from './contexts/budget/application/GetBudgetStatus';
 import { MongooseBudgetRepository } from './contexts/budget/infrastructure/MongooseBudgetRepository';
 import { MongooseMovementGateway as MongooseBudgetMovementGateway } from './contexts/budget/infrastructure/MongooseMovementGateway';
+import { RecurringRepository } from './contexts/recurring/application/ports/RecurringRepository';
+import { MovementGateway as RecurringMovementGateway } from './contexts/recurring/application/ports/MovementGateway';
+import { RecurringUseCases } from './contexts/recurring/application/RecurringUseCases';
+import { FindRecurrings } from './contexts/recurring/application/FindRecurrings';
+import { FindRecurringById } from './contexts/recurring/application/FindRecurringById';
+import { CreateRecurring } from './contexts/recurring/application/CreateRecurring';
+import { UpdateRecurring } from './contexts/recurring/application/UpdateRecurring';
+import { DeleteRecurring } from './contexts/recurring/application/DeleteRecurring';
+import { RunRecurrings } from './contexts/recurring/application/RunRecurrings';
+import { MongooseRecurringRepository } from './contexts/recurring/infrastructure/MongooseRecurringRepository';
+import { MongooseMovementGateway as MongooseRecurringMovementGateway } from './contexts/recurring/infrastructure/MongooseMovementGateway';
 
 export interface AppContainer {
     exampleItemRepository: ExampleItemRepository;
@@ -47,6 +58,7 @@ export interface AppContainer {
     movement: MovementUseCases;
     account: AccountUseCases;
     budget: BudgetUseCases;
+    recurring: RecurringUseCases;
 }
 
 export interface CompositionOptions {
@@ -57,6 +69,8 @@ export interface CompositionOptions {
     movementGateway?: MovementGateway;
     budgetRepository?: BudgetRepository;
     budgetMovementGateway?: BudgetMovementGateway;
+    recurringRepository?: RecurringRepository;
+    recurringMovementGateway?: RecurringMovementGateway;
 }
 
 const buildCategoryUseCases = (repository: CategoryRepository): CategoryUseCases => ({
@@ -103,6 +117,19 @@ const buildBudgetUseCases = (repository: BudgetRepository, gateway: BudgetMoveme
     getBudgetStatus: new GetBudgetStatus(repository, gateway),
 });
 
+// Third builder taking a second dependency (mirrors buildAccountUseCases/
+// buildBudgetUseCases): runRecurrings needs the recurring-local WRITE
+// MovementGateway seam to materialize a Movement per due recurring (design
+// D12), unlike category/movement's single-repository use cases.
+const buildRecurringUseCases = (repository: RecurringRepository, gateway: RecurringMovementGateway): RecurringUseCases => ({
+    findRecurrings: new FindRecurrings(repository),
+    findRecurringById: new FindRecurringById(repository),
+    createRecurring: new CreateRecurring(repository),
+    updateRecurring: new UpdateRecurring(repository),
+    deleteRecurring: new DeleteRecurring(repository),
+    runRecurrings: new RunRecurrings(repository, gateway),
+});
+
 export const createCompositionRoot = (options: CompositionOptions = {}): AppContainer => ({
     exampleItemRepository: options.exampleItemRepository ?? new MongooseExampleItemRepository(),
     category: buildCategoryUseCases(options.categoryRepository ?? new MongooseCategoryRepository()),
@@ -114,6 +141,10 @@ export const createCompositionRoot = (options: CompositionOptions = {}): AppCont
     budget: buildBudgetUseCases(
         options.budgetRepository ?? new MongooseBudgetRepository(),
         options.budgetMovementGateway ?? new MongooseBudgetMovementGateway(),
+    ),
+    recurring: buildRecurringUseCases(
+        options.recurringRepository ?? new MongooseRecurringRepository(),
+        options.recurringMovementGateway ?? new MongooseRecurringMovementGateway(),
     ),
 });
 

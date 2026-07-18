@@ -1,8 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
 import { body, Meta, param, ValidationChain } from 'express-validator';
-import { validate } from '../../interceptors/validator.interceptor';
-import { checkKeys } from '../../utils/validator.util';
+import { validate } from '../../../../interceptors/validator.interceptor';
+import { checkKeys } from '../../../../utils/validator.util';
 
+/**
+ * Copied 1:1 from the legacy `modules/validators/recurring.validator.ts`
+ * (design PR1): route table/validation behavior stays byte-identical, only
+ * the file's location changes to become `recurring`'s inbound HTTP
+ * infrastructure. See `src/e2e/recurring.e2e.test.ts` for the pinned
+ * observable behavior this preserves.
+ */
 
 // Variables
 const isPost = (_value: unknown, { req }: Meta) => req.method === 'POST';
