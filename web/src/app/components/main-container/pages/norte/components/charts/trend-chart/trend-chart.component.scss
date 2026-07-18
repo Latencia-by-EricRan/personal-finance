@@ -1,0 +1,17 @@
+.trend-chart {
+  display: block;
+  width: 100%;
+}
+
+.trend-chart__line {
+  stroke: var(--gold);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.trend-chart__area {
+  fill: var(--gold);
+  opacity: 0.15;
+  stroke: none;
+}
