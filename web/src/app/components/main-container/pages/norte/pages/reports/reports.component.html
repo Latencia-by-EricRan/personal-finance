@@ -1,0 +1,41 @@
+<div class="reports">
+  <h1 class="reports__title">Reports</h1>
+
+  @if (error()) {
+    <div class="reports__error">Couldn't load data. Try again.</div>
+  }
+
+  <div class="reports__selector">
+    <label class="reports__selector-field">
+      Month
+      <select [value]="month()" (change)="onMonthChange(+$any($event.target).value)">
+        @for (m of months; track m) {
+          <option [value]="m">{{ m }}</option>
+        }
+      </select>
+    </label>
+    <label class="reports__selector-field">
+      Year
+      <input type="number" [value]="year()" (change)="onYearChange(+$any($event.target).value)" />
+    </label>
+  </div>
+
+  <section class="reports__section">
+    <h2>Income vs Expense</h2>
+    <app-bar-chart [data]="incomeExpenseBars()" />
+  </section>
+
+  <section class="reports__section">
+    <h2>Net Trend</h2>
+    <app-trend-chart [points]="netTrend()" />
+  </section>
+
+  <section class="reports__section">
+    <h2>Expenses by Category</h2>
+    @if (byCategory().length === 0) {
+      <div class="reports__empty">No expense data for {{ month() }}/{{ year() }}</div>
+    } @else {
+      <app-donut-chart [segments]="donutSegments()" />
+    }
+  </section>
+</div>

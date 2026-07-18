@@ -1,0 +1,28 @@
+<aside class="sidebar-nav">
+  <div class="sidebar-nav__brand">Norte</div>
+
+  <nav class="sidebar-nav__links">
+    <a
+      class="sidebar-nav__link"
+      routerLink="/norte/overview"
+      routerLinkActive="sidebar-nav__link--active"
+      [routerLinkActiveOptions]="{ exact: false }"
+    >Overview</a>
+    <a
+      class="sidebar-nav__link"
+      routerLink="/norte/reports"
+      routerLinkActive="sidebar-nav__link--active"
+      [routerLinkActiveOptions]="{ exact: false }"
+    >Reports</a>
+    <a
+      class="sidebar-nav__link"
+      routerLink="/norte/budgets"
+      routerLinkActive="sidebar-nav__link--active"
+      [routerLinkActiveOptions]="{ exact: false }"
+    >Budgets</a>
+  </nav>
+
+  <div class="sidebar-nav__user">
+    <span class="sidebar-nav__user-name">Account</span>
+  </div>
+</aside>

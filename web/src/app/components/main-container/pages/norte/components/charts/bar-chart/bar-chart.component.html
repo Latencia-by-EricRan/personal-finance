@@ -1,0 +1,27 @@
+<svg
+  class="bar-chart"
+  [attr.viewBox]="'0 0 ' + chartWidth() + ' ' + height()"
+  [attr.height]="height()"
+  role="img"
+  aria-label="Bar chart"
+>
+  <line
+    class="bar-chart__baseline"
+    [attr.x1]="0"
+    [attr.y1]="height()"
+    [attr.x2]="chartWidth()"
+    [attr.y2]="height()"
+  />
+  @for (bar of bars(); track bar.label) {
+    <rect
+      class="bar-chart__bar"
+      [attr.x]="bar.x"
+      [attr.y]="bar.y"
+      [attr.width]="bar.width"
+      [attr.height]="bar.height"
+      [style.fill]="bar.fill"
+    >
+      <title>{{ bar.label }}</title>
+    </rect>
+  }
+</svg>

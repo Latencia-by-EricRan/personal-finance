@@ -9,5 +9,6 @@ export interface ICategory {
   Type: TypeCategory;
   Tag?: string;
   Icon?: string;
+  Color?: string;
   _id?: string;
 }

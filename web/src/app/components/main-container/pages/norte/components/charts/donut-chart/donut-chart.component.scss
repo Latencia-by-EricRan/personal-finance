@@ -1,0 +1,11 @@
+.donut-chart {
+  display: block;
+}
+
+.donut-chart__track {
+  stroke: var(--surface-2);
+}
+
+.donut-chart__arc {
+  transition: stroke-dasharray 0.2s ease;
+}

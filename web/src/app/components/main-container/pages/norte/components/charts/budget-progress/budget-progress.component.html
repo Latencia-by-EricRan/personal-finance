@@ -1,0 +1,8 @@
+<div class="budget-progress" [class.budget-progress--neutral]="isNeutral()">
+  @if (label()) {
+    <span class="budget-progress__label">{{ label() }}</span>
+  }
+  <div class="budget-progress__track">
+    <div class="budget-progress__fill" [style.width]="fillWidth()" [style.background-color]="bandColor()"></div>
+  </div>
+</div>

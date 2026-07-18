@@ -1,0 +1,13 @@
+.bar-chart {
+  display: block;
+  width: 100%;
+}
+
+.bar-chart__baseline {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.bar-chart__bar {
+  transition: height 0.2s ease, y 0.2s ease;
+}

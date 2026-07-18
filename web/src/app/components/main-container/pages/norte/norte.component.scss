@@ -1,0 +1,19 @@
+:host {
+  display: block;
+}
+
+.norte {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+.norte__sidebar {
+  flex: 0 0 auto;
+}
+
+.norte__content {
+  flex: 1 1 auto;
+  padding: 1.5em;
+}
