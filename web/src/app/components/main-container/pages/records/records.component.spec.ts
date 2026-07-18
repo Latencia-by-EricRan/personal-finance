@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideExperimentalZonelessChangeDetection } from '@angular/core';
 
 import { RecordsComponent } from './records.component';
 
@@ -8,7 +9,8 @@ describe('RecordsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RecordsComponent]
+      imports: [RecordsComponent],
+      providers: [provideExperimentalZonelessChangeDetection()]
     })
     .compileComponents();
 
