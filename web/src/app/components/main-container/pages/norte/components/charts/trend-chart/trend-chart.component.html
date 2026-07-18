@@ -1,0 +1,14 @@
+<svg
+  class="trend-chart"
+  [attr.viewBox]="'0 0 ' + width() + ' ' + height()"
+  [attr.height]="height()"
+  role="img"
+  aria-label="Trend chart"
+>
+  @if (areaPath()) {
+    <path class="trend-chart__area" [attr.d]="areaPath()" />
+  }
+  @if (path()) {
+    <path class="trend-chart__line" [attr.d]="path()" fill="none" />
+  }
+</svg>
