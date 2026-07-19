@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { startTestApp, stopTestApp } from '../test-utils/start-test-app';
-import AccountModel from '../modules/models/Account.model';
-import CategoryModel from '../modules/models/Category.model';
-import MovementModel from '../modules/models/Movement.model';
+import { AccountModel } from '../contexts/account';
+import { CategoryModel } from '../contexts/category';
+import { MovementModel } from '../contexts/movement';
 
 describe('Report e2e', () => {
     let testApp: Awaited<ReturnType<typeof startTestApp>>;

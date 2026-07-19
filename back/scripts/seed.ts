@@ -1,7 +1,7 @@
 import mongoose, { Types } from 'mongoose';
 import connectDB from '../src/config/database';
-import AccountModel from '../src/modules/models/Account.model';
-import CategoryModel from '../src/modules/models/Category.model';
+import { AccountModel } from '../src/contexts/account';
+import { CategoryModel } from '../src/contexts/category';
 
 const accounts = [
     {

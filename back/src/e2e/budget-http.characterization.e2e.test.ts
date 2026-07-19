@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { startTestApp, stopTestApp } from '../test-utils/start-test-app';
-import CategoryModel from '../modules/models/Category.model';
+import { CategoryModel } from '../contexts/category';
 
 /**
  * Characterization baseline for PR3 (back-hexagonal-budget, task 3.1, design
