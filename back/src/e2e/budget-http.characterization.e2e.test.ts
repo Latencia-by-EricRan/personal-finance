@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { startTestApp, stopTestApp } from '../test-utils/start-test-app';
 import { CategoryModel } from '../contexts/category';
+import BudgetModel from '../contexts/budget/infrastructure/BudgetModel';
 
 /**
  * Characterization baseline for PR3 (back-hexagonal-budget, task 3.1, design
@@ -58,6 +59,12 @@ describe('budget HTTP characterization (current, unwired, pre-refactor baseline)
     beforeAll(async () => {
         testApp = await startTestApp();
         token = await testApp.tokenFor();
+
+        // autoIndex:true builds the unique {Category,Month,Year} index in the
+        // background; under full-suite load the duplicate-key tests below can
+        // race ahead of that build and see a false negative. Model.init()
+        // waits for index creation to finish before the suite proceeds.
+        await BudgetModel.init();
 
         const category = await CategoryModel.create({
             Description: 'Groceries budget category',
