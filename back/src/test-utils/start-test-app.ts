@@ -42,8 +42,8 @@ export const stopTestApp = async (): Promise<void> => {
 
 /**
  * Boots a fully isolated app instance for e2e characterization tests:
- * - sets the plaintext env vars `auth.config.ts` requires at import time
- *   (it hashes the password internally)
+ * - sets the plaintext env vars `contexts/auth/infrastructure/authConfig.ts`
+ *   requires at import time (it hashes the password internally)
  * - starts a fresh in-memory MongoDB instance
  * - points `MONGO_CONN_STR`/`MONGO_DB_NAME` at it
  * - dynamically imports `../app` (must happen AFTER the env vars are set)
