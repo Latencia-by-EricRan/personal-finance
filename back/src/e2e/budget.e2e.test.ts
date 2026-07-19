@@ -1,9 +1,9 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { startTestApp, stopTestApp } from '../test-utils/start-test-app';
-import CategoryModel from '../modules/models/Category.model';
-import AccountModel from '../modules/models/Account.model';
-import BudgetModel from '../modules/models/Budget.model';
-import MovementModel from '../modules/models/Movement.model';
+import { CategoryModel } from '../contexts/category';
+import { AccountModel } from '../contexts/account';
+import { BudgetModel } from '../contexts/budget';
+import { MovementModel } from '../contexts/movement';
 
 describe('Budget status e2e', () => {
     let testApp: Awaited<ReturnType<typeof startTestApp>>;

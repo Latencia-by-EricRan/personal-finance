@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { startTestApp, stopTestApp } from '../test-utils/start-test-app';
-import AccountModel from '../modules/models/Account.model';
+import { AccountModel } from '../contexts/account';
 
 /**
  * Characterization baseline for PR3 (back-hexagonal-account, task 3.1, design D2).
@@ -11,8 +11,9 @@ import AccountModel from '../modules/models/Account.model';
  * `createAccountRouter(getContainer().account)` to prove the new hex path
  * (`createAccountController`/`AccountRepository`/`MovementGateway`) is
  * byte-identical. The legacy `account.route.ts` was deleted in PR4;
- * `AccountModel` is still imported through the retained
- * `modules/models/Account.model.ts` shim. `account.e2e.test.ts` already
+ * `AccountModel` is imported directly from the `contexts/account` barrel
+ * (the legacy `modules/models/Account.model.ts` shim was deleted in
+ * report-recurring-auth-hexagonal's PR4). `account.e2e.test.ts` already
  * covers `/account/transfer`'s TransferId-sharing behavior; this suite locks
  * down every key across ALL 7 endpoints (list, get-by-id, create, update,
  * archive-delete, balance, transfer).
@@ -263,7 +264,7 @@ describe('account HTTP characterization (current, unwired, pre-refactor baseline
             expect(zeroBalance.status).toBe(200);
             expect(zeroBalance.body).toEqual({ Account: accountId, Balance: 0 });
 
-            const { default: MovementModel } = await import('../modules/models/Movement.model');
+            const { MovementModel } = await import('../contexts/movement');
             await MovementModel.insertMany([
                 { Type: 'ingreso', Amount: 100, Date: new Date(2020, 0, 1), Account: accountId },
                 { Type: 'egreso', Amount: 40, Date: new Date(2020, 0, 2), Account: accountId },

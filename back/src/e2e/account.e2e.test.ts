@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { startTestApp, stopTestApp } from '../test-utils/start-test-app';
-import AccountModel from '../modules/models/Account.model';
+import { AccountModel } from '../contexts/account';
 
 describe('Account transfer e2e', () => {
     let testApp: Awaited<ReturnType<typeof startTestApp>>;

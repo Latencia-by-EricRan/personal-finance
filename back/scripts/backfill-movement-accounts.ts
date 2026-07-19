@@ -4,7 +4,7 @@
  * INT-03 (slice 2B, movement-account integration).
  *
  * Movement.Account became a required field once this slice landed (see
- * src/modules/models/Movement.model.ts). Any Movement document created before
+ * src/contexts/movement/infrastructure/MovementModel.ts). Any Movement document created before
  * that change has no Account and will fail validation on the next update
  * unless it's migrated first.
  *
@@ -25,8 +25,8 @@
 
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import AccountModel from '../src/modules/models/Account.model';
-import MovementModel from '../src/modules/models/Movement.model';
+import { AccountModel } from '../src/contexts/account';
+import { MovementModel } from '../src/contexts/movement';
 
 dotenv.config();
 
