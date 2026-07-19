@@ -31,6 +31,7 @@ describe('Report e2e', () => {
 
         beforeAll(async () => {
             const categoryA = await CategoryModel.create({
+                Color: '#C2410C',
                 Description: 'Report category A',
                 Name: 'Report Category A',
                 Type: 'variable',
@@ -45,11 +46,35 @@ describe('Report e2e', () => {
             categoryBId = categoryB._id.toString();
 
             await MovementModel.insertMany([
-                { Type: 'egreso', Amount: 100, Date: new Date(YEAR, MONTH - 1, 10), Category: categoryAId, Account: accountId },
-                { Type: 'egreso', Amount: 50, Date: new Date(YEAR, MONTH - 1, 12), Category: categoryAId, Account: accountId },
-                { Type: 'egreso', Amount: 300, Date: new Date(YEAR, MONTH - 1, 15), Category: categoryBId, Account: accountId },
+                {
+                    Type: 'egreso',
+                    Amount: 100,
+                    Date: new Date(YEAR, MONTH - 1, 10),
+                    Category: categoryAId,
+                    Account: accountId,
+                },
+                {
+                    Type: 'egreso',
+                    Amount: 50,
+                    Date: new Date(YEAR, MONTH - 1, 12),
+                    Category: categoryAId,
+                    Account: accountId,
+                },
+                {
+                    Type: 'egreso',
+                    Amount: 300,
+                    Date: new Date(YEAR, MONTH - 1, 15),
+                    Category: categoryBId,
+                    Account: accountId,
+                },
                 // ingreso in category A, same month/year — MUST be excluded (service filters Type: EGRESO only)
-                { Type: 'ingreso', Amount: 9000, Date: new Date(YEAR, MONTH - 1, 5), Category: categoryAId, Account: accountId },
+                {
+                    Type: 'ingreso',
+                    Amount: 9000,
+                    Date: new Date(YEAR, MONTH - 1, 5),
+                    Category: categoryAId,
+                    Account: accountId,
+                },
             ]);
         });
 
@@ -66,6 +91,7 @@ describe('Report e2e', () => {
 
             expect(entryA).toBeDefined();
             expect((entryA?.Category as { Name: string }).Name).toBe('Report Category A');
+            expect((entryA?.Category as { Color: string }).Color).toBe('#C2410C');
             expect(entryA?.Total).toBe(150);
 
             expect(entryB).toBeDefined();
@@ -95,9 +121,7 @@ describe('Report e2e', () => {
         });
 
         it('returns a 12-entry breakdown with Income/Expense/Net per month', async () => {
-            const response = await testApp.request
-                .get(`/report/monthly/${YEAR}`)
-                .set('Authorization', authHeader());
+            const response = await testApp.request.get(`/report/monthly/${YEAR}`).set('Authorization', authHeader());
 
             expect(response.status).toBe(200);
 
@@ -129,8 +153,20 @@ describe('Report e2e', () => {
             categoryId = category._id.toString();
 
             await MovementModel.insertMany([
-                { Type: 'ingreso', Amount: 800, Date: new Date(YEAR, MONTH - 1, 8), Category: categoryId, Account: accountId },
-                { Type: 'egreso', Amount: 350, Date: new Date(YEAR, MONTH - 1, 22), Category: categoryId, Account: accountId },
+                {
+                    Type: 'ingreso',
+                    Amount: 800,
+                    Date: new Date(YEAR, MONTH - 1, 8),
+                    Category: categoryId,
+                    Account: accountId,
+                },
+                {
+                    Type: 'egreso',
+                    Amount: 350,
+                    Date: new Date(YEAR, MONTH - 1, 22),
+                    Category: categoryId,
+                    Account: accountId,
+                },
             ]);
         });
 

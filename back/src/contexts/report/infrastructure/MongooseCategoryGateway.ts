@@ -11,15 +11,9 @@ import { CategoryGateway, CategoryRefView } from '../application/ports/CategoryG
  * naturally only returns matches) — this is the seam that reproduces
  * legacy's populate-null skip for a dangling Category ref.
  *
- * KNOWN, DELIBERATELY DEFERRED GAP (design's own open question, not silently
- * dropped): `CategoryModel`'s schema has a `Color` field, but `CategoryView`
- * (the barrel-exported type this gateway maps into) does not include it, so
- * `Color` is NOT echoed here. Legacy's `report.service.ts#byCategory` returns
- * the full populated Mongoose document (including `Color`) at runtime despite
- * a narrower compile-time type. PR2b's `report.e2e.test.ts` is the real
- * byte-identical guard — if it reveals a payload diff on `Color`, the fix is
- * to extend `CategoryView` (design's stated preferred resolution), NOT to
- * special-case `Color` inside this gateway.
+ * The public `CategoryView` includes every persisted field returned by the
+ * legacy populated document, including `Color`, preserving report payload
+ * parity without exposing category infrastructure types.
  */
 export class MongooseCategoryGateway implements CategoryGateway {
     async findByIds(ids: string[]): Promise<CategoryRefView[]> {
@@ -42,6 +36,7 @@ export class MongooseCategoryGateway implements CategoryGateway {
 
         return rows.map((row) => ({
             _id: String(row._id),
+            Color: row.Color,
             Description: row.Description,
             Name: row.Name,
             Tag: row.Tag,

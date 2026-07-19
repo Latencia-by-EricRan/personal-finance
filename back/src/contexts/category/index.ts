@@ -8,6 +8,7 @@ export { default as CategoryModel } from './infrastructure/CategoryModel';
  * `contexts/category`'s internal document/domain types.
  */
 export interface CategoryView {
+    Color?: string;
     Description: string;
     Name: string;
     Tag: string;

@@ -48,13 +48,32 @@ const runCategoryGatewayContract = (
             const idA = objectId();
             const idB = objectId();
 
-            await insertCategory(gateway, { _id: idA, Description: 'Food desc', Name: 'Food', Tag: '', Type: 'variable' });
-            await insertCategory(gateway, { _id: idB, Description: 'Rent desc', Name: 'Rent', Tag: '', Type: 'fijo' });
+            await insertCategory(gateway, {
+                _id: idA,
+                Color: '#C2410C',
+                Description: 'Food desc',
+                Name: 'Food',
+                Tag: '',
+                Type: 'variable',
+            });
+            await insertCategory(gateway, {
+                _id: idB,
+                Color: '#2563EB',
+                Description: 'Rent desc',
+                Name: 'Rent',
+                Tag: '',
+                Type: 'fijo',
+            });
 
             const result = await gateway.findByIds([idA, idB]);
 
             expect(result).toHaveLength(2);
-            expect(result.map((category) => category.Name).sort()).toEqual(['Food', 'Rent']);
+            expect(result).toEqual(
+                expect.arrayContaining([
+                    expect.objectContaining({ _id: idA, Color: '#C2410C', Name: 'Food' }),
+                    expect.objectContaining({ _id: idB, Color: '#2563EB', Name: 'Rent' }),
+                ]),
+            );
         });
 
         it('omits ids that do not resolve to a category (dangling ref), without throwing', async () => {
@@ -62,7 +81,13 @@ const runCategoryGatewayContract = (
             const idA = objectId();
             const missingId = objectId();
 
-            await insertCategory(gateway, { _id: idA, Description: 'Food desc', Name: 'Food', Tag: '', Type: 'variable' });
+            await insertCategory(gateway, {
+                _id: idA,
+                Description: 'Food desc',
+                Name: 'Food',
+                Tag: '',
+                Type: 'variable',
+            });
 
             const result = await gateway.findByIds([idA, missingId]);
 
@@ -101,6 +126,7 @@ runCategoryGatewayContract(
             Tag: category.Tag,
             Type: category.Type,
             Icon: category.Icon,
+            Color: category.Color,
         });
     },
     {
