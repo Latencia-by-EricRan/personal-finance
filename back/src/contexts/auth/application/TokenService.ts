@@ -12,6 +12,15 @@ import { TokenConfig } from './ports/AuthConfig';
 export class TokenService {
     constructor(private readonly config: TokenConfig) {}
 
+    /**
+     * Exposes the configured `expiresIn` policy value (e.g. `'1d'`) so the
+     * login controller can echo it in the response body, same as the legacy
+     * controller reading `authConfig.jwtExpiresIn` directly (PR3b).
+     */
+    get expiresIn(): string {
+        return this.config.expiresIn;
+    }
+
     sign(subject: string): string {
         return jwt.sign({ sub: subject }, this.config.secret, {
             expiresIn: this.config.expiresIn as jwt.SignOptions['expiresIn'],

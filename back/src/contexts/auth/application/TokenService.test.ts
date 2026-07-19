@@ -8,6 +8,14 @@ const SUBJECT = 'developer@local.test';
 const buildService = (expiresIn = '1d'): TokenService => new TokenService({ secret: SECRET, expiresIn });
 
 describe('TokenService', () => {
+    describe('expiresIn', () => {
+        it('exposes the configured expiresIn for callers building the login response body', () => {
+            const service = buildService('12h');
+
+            expect(service.expiresIn).toBe('12h');
+        });
+    });
+
     describe('sign', () => {
         it('signs a JWT carrying the given subject, verifiable with the configured secret', () => {
             const service = buildService();

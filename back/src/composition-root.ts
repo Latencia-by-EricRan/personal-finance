@@ -59,6 +59,11 @@ import { GetReportMonthly } from './contexts/report/application/GetReportMonthly
 import { GetReportCashflow } from './contexts/report/application/GetReportCashflow';
 import { MongooseMovementGateway as MongooseReportMovementGateway } from './contexts/report/infrastructure/MongooseMovementGateway';
 import { MongooseCategoryGateway as MongooseReportCategoryGateway } from './contexts/report/infrastructure/MongooseCategoryGateway';
+import { CredentialsConfig, TokenConfig } from './contexts/auth/application/ports/AuthConfig';
+import { CredentialsChecker } from './contexts/auth/application/CredentialsChecker';
+import { TokenService } from './contexts/auth/application/TokenService';
+import { AuthUseCases } from './contexts/auth/application/AuthUseCases';
+import { credentialsConfig, tokenConfig } from './contexts/auth/infrastructure/authConfig';
 
 export interface AppContainer {
     exampleItemRepository: ExampleItemRepository;
@@ -68,6 +73,7 @@ export interface AppContainer {
     budget: BudgetUseCases;
     recurring: RecurringUseCases;
     report: ReportUseCases;
+    auth: AuthUseCases;
 }
 
 export interface CompositionOptions {
@@ -82,6 +88,8 @@ export interface CompositionOptions {
     recurringMovementGateway?: RecurringMovementGateway;
     reportMovementGateway?: ReportMovementGateway;
     reportCategoryGateway?: ReportCategoryGateway;
+    authCredentialsConfig?: CredentialsConfig;
+    authTokenConfig?: TokenConfig;
 }
 
 const buildCategoryUseCases = (repository: CategoryRepository): CategoryUseCases => ({
@@ -151,6 +159,17 @@ const buildReportUseCases = (movementGateway: ReportMovementGateway, categoryGat
     getReportCashflow: new GetReportCashflow(movementGateway),
 });
 
+// Fifth builder (mirrors the shape, not the pattern, of the others above):
+// auth owns no repository — it bundles two injected-config application
+// services instead (design D14). `credentialsChecker` verifies login
+// credentials; `tokenService` both signs (login) and verifies (the
+// `authenticate` middleware, read directly off `container.auth.tokenService`
+// by `_routes.ts`).
+const buildAuthUseCases = (credentials: CredentialsConfig, token: TokenConfig): AuthUseCases => ({
+    credentialsChecker: new CredentialsChecker(credentials),
+    tokenService: new TokenService(token),
+});
+
 export const createCompositionRoot = (options: CompositionOptions = {}): AppContainer => ({
     exampleItemRepository: options.exampleItemRepository ?? new MongooseExampleItemRepository(),
     category: buildCategoryUseCases(options.categoryRepository ?? new MongooseCategoryRepository()),
@@ -170,6 +189,10 @@ export const createCompositionRoot = (options: CompositionOptions = {}): AppCont
     report: buildReportUseCases(
         options.reportMovementGateway ?? new MongooseReportMovementGateway(),
         options.reportCategoryGateway ?? new MongooseReportCategoryGateway(),
+    ),
+    auth: buildAuthUseCases(
+        options.authCredentialsConfig ?? credentialsConfig,
+        options.authTokenConfig ?? tokenConfig,
     ),
 });
 

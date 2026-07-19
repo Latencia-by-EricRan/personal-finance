@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import authRoute from './modules/routes/auth.route';
 import docsRoute from './modules/routes/docs.route';
-import { authenticate } from './middlewares/auth.middleware';
+import { createAuthRouter } from './contexts/auth/infrastructure/http/auth.route';
+import { createAuthenticate } from './contexts/auth/infrastructure/http/authenticate.middleware';
 import { createCategoryRouter } from './contexts/category/infrastructure/http/category.route';
 import { createMovementRouter } from './contexts/movement/infrastructure/http/movement.route';
 import { createAccountRouter } from './contexts/account/infrastructure/http/account.route';
@@ -12,9 +12,9 @@ import { getContainer } from './composition-root';
 
 const router = Router();
 
-router.use('/auth', authRoute);
+router.use('/auth', createAuthRouter(getContainer().auth));
 router.use('/docs', docsRoute); // public + before authenticate; still under global limiter
-router.use(authenticate);
+router.use(createAuthenticate(getContainer().auth.tokenService));
 router.use('/movement', createMovementRouter(getContainer().movement));
 router.use('/category', createCategoryRouter(getContainer().category));
 router.use('/account', createAccountRouter(getContainer().account));
