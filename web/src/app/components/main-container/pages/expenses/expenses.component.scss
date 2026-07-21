@@ -1,0 +1,233 @@
+:host {
+  display: block;
+  min-height: 100%;
+}
+
+.expenses {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  padding: 20px;
+  gap: 24px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.expenses__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.expenses__settings-glyph {
+  font-size: 18px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.expenses__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+// QuickExpense card — deliberately expense-tinted (border only), unlike the
+// neutral --border used elsewhere, since this card is an expense-only action.
+.quick-expense {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--expense) 20%, transparent);
+  border-radius: 20px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.quick-expense__caption {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-dim);
+}
+
+.quick-expense__amount-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quick-expense__amount-sign {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--expense);
+  flex-shrink: 0;
+}
+
+.quick-expense__amount-input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0;
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--expense);
+
+  // Hide native number spinners so the value reads as display text.
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &[type='number'] {
+    appearance: textfield;
+  }
+}
+
+.quick-expense__submit {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--bg);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.quick-expense__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: none;
+  background: var(--surface-2);
+  color: var(--text-dim);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.chip--selected {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.quick-expense__error {
+  color: var(--expense);
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  margin: 0;
+}
+
+.recent-expenses {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.recent-expenses__label {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+.recent-expenses__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+// Duplicated locally from Home's movement rows (PR3) — this codebase keeps
+// composed rows feature-local rather than cross-importing between sibling
+// feature folders like `records/` and `expenses/`.
+.expense-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 68px;
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 14px;
+  box-sizing: border-box;
+}
+
+.expense-row__icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--expense) 13%, transparent);
+}
+
+.expense-row__icon-glyph {
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--expense);
+}
+
+.expense-row__meta {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.expense-row__title {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.expense-row__subtitle {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.expense-row__amount {
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--expense);
+}

@@ -1,67 +1,78 @@
 <div class="transfer-sheet">
-  <h2 class="transfer-sheet__title">Transferir entre cuentas</h2>
+  <h2 class="transfer-sheet__title">Transfer between accounts</h2>
 
   <form class="transfer-sheet__form" [formGroup]="form" (ngSubmit)="onSubmit()">
-    <label class="transfer-sheet__label" for="from">Origen</label>
-    <select id="from" class="transfer-sheet__input" formControlName="from">
-      <option value="">Seleccioná una cuenta</option>
-      @for (acc of accounts(); track acc._id) {
-        <option [value]="acc._id ?? ''">{{ acc.Name }}</option>
-      }
-    </select>
+    <div class="boxed-field">
+      <span class="boxed-field__caption">From</span>
+      <select id="from" class="boxed-field__control" formControlName="from">
+        <option value="">Select an account</option>
+        @for (acc of accounts(); track acc._id) {
+          <option [value]="acc._id ?? ''">{{ acc.Name }}</option>
+        }
+      </select>
+      <span class="boxed-field__caret" aria-hidden="true">⌄</span>
+    </div>
 
-    <label class="transfer-sheet__label" for="to">Destino</label>
-    <select id="to" class="transfer-sheet__input" formControlName="to">
-      <option value="">Seleccioná una cuenta</option>
-      @for (acc of accounts(); track acc._id) {
-        <option [value]="acc._id ?? ''">{{ acc.Name }}</option>
-      }
-    </select>
+    <div class="boxed-field">
+      <span class="boxed-field__caption">To</span>
+      <select id="to" class="boxed-field__control" formControlName="to">
+        <option value="">Select an account</option>
+        @for (acc of accounts(); track acc._id) {
+          <option [value]="acc._id ?? ''">{{ acc.Name }}</option>
+        }
+      </select>
+      <span class="boxed-field__caret" aria-hidden="true">⌄</span>
+    </div>
     @if (form.errors?.['sameAccount'] && form.controls.to.touched) {
-      <p class="field-error">El origen y el destino no pueden ser la misma cuenta.</p>
+      <p class="field-error">Origin and destination can't be the same account.</p>
     }
 
-    <label class="transfer-sheet__label" for="amount">Monto</label>
-    <input
-      id="amount"
-      type="number"
-      step="0.01"
-      class="transfer-sheet__input"
-      formControlName="amount"
-    />
+    <div class="boxed-field">
+      <span class="boxed-field__caption">Amount</span>
+      <input
+        id="amount"
+        type="number"
+        step="0.01"
+        class="boxed-field__control"
+        formControlName="amount"
+      />
+    </div>
     @if (form.controls.amount.invalid && form.controls.amount.touched) {
-      <p class="field-error">Ingresá un monto mayor a 0.</p>
+      <p class="field-error">Enter an amount greater than 0.</p>
     }
 
-    <label class="transfer-sheet__label" for="date">Fecha</label>
-    <input id="date" type="date" class="transfer-sheet__input" formControlName="date" />
+    <div class="boxed-field">
+      <span class="boxed-field__caption">Date</span>
+      <input id="date" type="date" class="boxed-field__control" formControlName="date" />
+    </div>
 
-    <label class="transfer-sheet__label" for="description">Descripción</label>
-    <textarea
-      id="description"
-      class="transfer-sheet__input transfer-sheet__textarea"
-      formControlName="description"
-    ></textarea>
+    <div class="field-group">
+      <label class="field-group__label" for="description">Description</label>
+      <div class="boxed-field boxed-field--textarea">
+        <textarea
+          id="description"
+          class="boxed-field__control boxed-field__control--textarea"
+          formControlName="description"
+        ></textarea>
+      </div>
+    </div>
 
     @if (errorMessage()) {
       <p class="transfer-sheet__error">{{ errorMessage() }}</p>
     }
 
     <div class="transfer-sheet__actions">
-      <button
-        type="button"
-        class="transfer-sheet__cancel"
-        (click)="onCancel()"
-      >
-        Cancelar
-      </button>
-      <button
-        type="submit"
+      <app-norte-button class="transfer-sheet__cancel" variant="outline" (pressed)="onCancel()">
+        Cancel
+      </app-norte-button>
+      <app-norte-button
         class="transfer-sheet__submit"
+        variant="primary"
+        type="submit"
         [disabled]="form.invalid || submitting()"
       >
-        Transferir
-      </button>
+        Transfer
+      </app-norte-button>
     </div>
   </form>
 </div>

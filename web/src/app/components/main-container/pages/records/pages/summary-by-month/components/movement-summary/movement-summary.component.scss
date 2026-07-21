@@ -1,13 +1,14 @@
+:host {
+  display: block;
+}
+
 .movement-summary {
-  background-color: var(--surface);
-  color: var(--text);
-  padding: 0.5em;
-}
-
-.amount-expense {
-  color: var(--expense);
-}
-
-.amount-income {
-  color: var(--income);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
 }

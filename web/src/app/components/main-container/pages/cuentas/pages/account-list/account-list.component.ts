@@ -1,11 +1,22 @@
 import { Component, effect, inject, signal } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
 
 import { AccountService } from '../../../../../../core/reference';
+import { BottomSheetComponent, EmptyStateComponent, IconButtonComponent } from '../../../../../../shared/ui';
 import { TransferSheetComponent } from '../../components/transfer-sheet/transfer-sheet.component';
+import { AccountTypeLabelPipe, TotalBalancePipe } from '../../pipes';
 
 @Component({
   selector: 'app-account-list',
-  imports: [TransferSheetComponent],
+  imports: [
+    CurrencyPipe,
+    TransferSheetComponent,
+    BottomSheetComponent,
+    EmptyStateComponent,
+    IconButtonComponent,
+    AccountTypeLabelPipe,
+    TotalBalancePipe,
+  ],
   templateUrl: './account-list.component.html',
   styleUrl: './account-list.component.scss',
 })

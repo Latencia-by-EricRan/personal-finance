@@ -1,37 +1,28 @@
 @let _movement = this.movement();
-<div>
-  @if (_movement) {
-    <div class="movement-card">
-      <mat-grid-list cols="12">
+<div class="movement-card">
+  <div
+    class="movement-card__icon"
+    [class.movement-card__icon--income]="isIncome()"
+    [class.movement-card__icon--expense]="!isIncome()"
+  >
+    <span class="movement-card__icon-glyph">{{ isIncome() ? '↑' : '↓' }}</span>
+  </div>
 
-        <!-- Icon Category -->
-        <mat-grid-tile [colspan]="1" [rowspan]="2">
-          <div class="circle">
-            <mat-icon [fontIcon]="_movement.Category?.Icon ?? iconDefault" />
-          </div>
-        </mat-grid-tile>
+  <div class="movement-card__meta">
+    <span class="movement-card__title">{{ title() }}</span>
+    <span class="movement-card__subtitle">
+      <!-- IMovement currently has no dedicated Account field (known model gap) -->
+      @if (_movement.Card) {
+        {{ _movement.Card }} — {{ _movement.Date | date:'MMM d' }}
+      } @else {
+        {{ _movement.Date | date:'MMM d' }}
+      }
+    </span>
+  </div>
 
-        <!-- Description -->
-        <mat-grid-tile [colspan]="6" [rowspan]="2">
-          <span>{{ _movement.Description }}</span>
-        </mat-grid-tile>
-
-        <!-- Mount -->
-        <mat-grid-tile [colspan]="4">
-          <span>{{ _movement.Amount | currency }}</span>
-        </mat-grid-tile>
-
-        <!-- Icon Details -->
-        <mat-grid-tile [colspan]="1" [rowspan]="2">
-          <mat-icon fontIcon="arrow_forward_ios" />
-        </mat-grid-tile>
-
-        <!-- Card -->
-        <mat-grid-tile [colspan]="4">
-          <span>{{ _movement.Date | date:'EEEE, d MMM' }}</span>
-        </mat-grid-tile>
-
-      </mat-grid-list>
-    </div>
-  }
+  <span
+    class="movement-card__amount"
+    [class.movement-card__amount--income]="isIncome()"
+    [class.movement-card__amount--expense]="!isIncome()"
+  >{{ isIncome() ? '+' : '-' }}{{ _movement.Amount | currency }}</span>
 </div>

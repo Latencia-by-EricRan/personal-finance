@@ -1,37 +1,52 @@
 .movement-filter {
-  background-color: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 5px;
-  margin-bottom: 0.75rem;
-  padding: 0.75rem;
+  margin-bottom: 0.25rem;
 }
 
 .movement-filter__form {
   align-items: center;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 10px;
+}
+
+.movement-filter__chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
 }
 
 .movement-filter__select {
-  background-color: var(--surface-2);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  height: 44px;
+  padding: 0 32px 0 16px;
+  border-radius: 999px;
+  background: var(--surface-2);
   border: 1px solid var(--border);
-  border-radius: 5px;
   color: var(--text);
-  flex: 1 1 8rem;
-  padding: 0.4em;
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+.movement-filter__chevron {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-dim);
+  pointer-events: none;
 }
 
 .movement-filter__clear {
   background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 5px;
+  border: none;
   color: var(--text-dim);
   cursor: pointer;
-  padding: 0.4em 0.75em;
+  font-family: var(--font-body);
+  padding: 0.4em 0.5em;
 
   &:hover {
-    border-color: var(--gold);
     color: var(--gold);
   }
 }

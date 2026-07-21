@@ -141,7 +141,9 @@ describe('TransferSheetComponent', () => {
     const spy = jasmine.createSpy('cancelled');
     component.cancelled.subscribe(spy);
 
-    const cancelButton = fixture.nativeElement.querySelector('.transfer-sheet__cancel');
+    // NorteButtonComponent renders its own inner <button>; the class lives on
+    // the host <app-norte-button> element (PR5 restyle), so descend into it.
+    const cancelButton = fixture.nativeElement.querySelector('.transfer-sheet__cancel button');
     cancelButton.click();
 
     expect(spy).toHaveBeenCalled();

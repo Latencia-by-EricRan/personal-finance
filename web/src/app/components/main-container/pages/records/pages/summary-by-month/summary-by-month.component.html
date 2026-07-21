@@ -1,25 +1,40 @@
 <div class="summary-by-month h-100">
-  @if (respMovements$ | async; as respMovements) {
-    @let movements = filteredMovements() ?? respMovements.movements;
-    @let summary = respMovements.summary;
+  <div class="summary-by-month__nav">
+    <app-icon-button ariaLabel="Mes anterior" (pressed)="goToPreviousMonth()">
+      <span class="summary-by-month__nav-glyph">‹</span>
+    </app-icon-button>
+    <span class="summary-by-month__month-label">{{ monthLabel() }}</span>
+    <app-icon-button ariaLabel="Mes siguiente" (pressed)="goToNextMonth()">
+      <span class="summary-by-month__nav-glyph">›</span>
+    </app-icon-button>
+  </div>
 
-    <app-movement-summary [summary]="summary" />
+  @if (movementsResponse(); as respMovements) {
+    @let movements = filteredMovements() ?? respMovements.movements;
+
+    <app-movement-summary [summary]="respMovements.summary" />
 
     <app-movement-filter (filterChange)="onFilterChange($event)" />
 
     @if (movements.length === 0) {
-      <p class="summary-by-month__empty">No hay movimientos que coincidan con el filtro.</p>
-    } @else {
-      @for (movement of movements; track movement._id) {
-        <app-movement-card [movement]="movement" />
+      @if (filteredMovements() === null) {
+        <app-empty-state
+          title="No movements yet this month"
+          message="Capture your first income or expense to see it here"
+        >
+          <a class="summary-by-month__empty-cta" routerLink="/records/movement/add">Add movement</a>
+        </app-empty-state>
+      } @else {
+        <p class="summary-by-month__empty">No hay movimientos que coincidan con el filtro.</p>
       }
+    } @else {
+      <div class="summary-by-month__list">
+        @for (movement of movements; track movement._id) {
+          <app-movement-card [movement]="movement" />
+        }
+      </div>
     }
-  } @else {
-    <p>No se pudieron cargar los movimientos.</p>
+  } @else if (loadError()) {
+    <p class="summary-by-month__empty">No se pudieron cargar los movimientos.</p>
   }
-  <div class="fixed-bottom btn-add-movement w-100">
-    <button mat-fab color="primary" routerLink="/records/movement/add" class="w-100">
-      <mat-icon fontIcon="add" />
-    </button>
-  </div>
 </div>

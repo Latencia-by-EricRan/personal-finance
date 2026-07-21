@@ -1,40 +1,88 @@
-
-$size-padding-y: 0.25em;
-$size-padding-x: 0.5em;
-
-$size-margin: 0.5em;
-$size-font-icon: 1.3em;
-$size-circle: 2em;
+:host {
+  display: block;
+}
 
 .movement-card {
-  background-color: var(--surface-2);
-  border-radius: 5px;
-  border: 1px solid var(--border);
-  color: var(--text);
-  cursor: pointer;
-  margin: $size-margin;
-  padding: $size-padding-y 0 $size-padding-y $size-padding-x;
-}
-
-.circle {
-  align-items: center;
   background-color: var(--surface);
-  border-radius: 50%;
-  color: var(--gold);
+  border-radius: 16px;
+  padding: 14px;
   display: flex;
-  height: $size-circle;
-  justify-content: center;
-  width: $size-circle;
+  align-items: center;
+  gap: 12px;
+  min-height: 68px;
+  box-sizing: border-box;
 }
 
-.mat-icon {
-  font-size: $size-font-icon;
-  height: $size-font-icon;
-  line-height: 1.25em;
-  width: $size-font-icon;
+.movement-card__icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  &::before {
-    font-size: calc($size-font-icon - 10%);
-    margin: 0 auto;
-  }
+.movement-card__icon--income {
+  background: color-mix(in srgb, var(--income) 13%, transparent);
+}
+
+.movement-card__icon--expense {
+  background: color-mix(in srgb, var(--expense) 13%, transparent);
+}
+
+.movement-card__icon-glyph {
+  font-family: var(--font-body);
+  font-size: 15px;
+}
+
+.movement-card__icon--income .movement-card__icon-glyph {
+  color: var(--income);
+}
+
+.movement-card__icon--expense .movement-card__icon-glyph {
+  color: var(--expense);
+}
+
+.movement-card__meta {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.movement-card__title {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.movement-card__subtitle {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.movement-card__amount {
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.movement-card__amount--income {
+  color: var(--income);
+}
+
+.movement-card__amount--expense {
+  color: var(--expense);
 }

@@ -54,9 +54,9 @@ describe('AccountListComponent', () => {
     loadAccounts([]);
     fixture.detectChanges();
 
-    const empty = fixture.nativeElement.querySelector('.account-list__empty');
-    expect(empty).toBeTruthy();
-    expect(fixture.nativeElement.querySelectorAll('.account-list__item').length).toBe(0);
+    const empty = fixture.nativeElement.querySelector('.empty-state__title');
+    expect(empty?.textContent).toContain('No accounts yet');
+    expect(fixture.nativeElement.querySelectorAll('.account-card').length).toBe(0);
   });
 
   describe('with accounts loaded', () => {
@@ -69,7 +69,7 @@ describe('AccountListComponent', () => {
       flushBalance('acc-2', 2500);
       fixture.detectChanges();
 
-      const rows = fixture.nativeElement.querySelectorAll('.account-list__item');
+      const rows = fixture.nativeElement.querySelectorAll('.account-card');
       expect(rows.length).toBe(mockAccounts.length);
       expect(fixture.nativeElement.textContent).toContain('Efectivo');
       expect(fixture.nativeElement.textContent).toContain('Banco');
@@ -80,8 +80,52 @@ describe('AccountListComponent', () => {
       flushBalance('acc-2', 2500);
       fixture.detectChanges();
 
-      expect(fixture.nativeElement.textContent).toContain('1000');
-      expect(fixture.nativeElement.textContent).toContain('2500');
+      const balances = fixture.nativeElement.querySelectorAll('.account-card__balance');
+      expect(balances[0].textContent).toContain('1,000.00');
+      expect(balances[1].textContent).toContain('2,500.00');
+    });
+
+    it('shows a placeholder and no red tint while a balance has not loaded yet', () => {
+      flushBalance('acc-1', 1000);
+      // acc-2's balance request stays unresolved for this assertion.
+      fixture.detectChanges();
+
+      const balances = fixture.nativeElement.querySelectorAll('.account-card__balance');
+      expect(balances[1].textContent?.trim()).toBe('—');
+      expect(balances[1].classList.contains('account-card__balance--negative')).toBeFalse();
+
+      httpMock.expectOne(`${accountUrl}/acc-2/balance`).flush(2500);
+      fixture.detectChanges();
+    });
+
+    it('shows the negative-balance red tint only for accounts with a negative balance', () => {
+      flushBalance('acc-1', 1000);
+      flushBalance('acc-2', -410);
+      fixture.detectChanges();
+
+      const balances = fixture.nativeElement.querySelectorAll('.account-card__balance');
+      expect(balances[0].classList.contains('account-card__balance--negative')).toBeFalse();
+      expect(balances[1].classList.contains('account-card__balance--negative')).toBeTrue();
+    });
+
+    it('shows a "—" total balance placeholder while any balance has not loaded yet', () => {
+      flushBalance('acc-1', 1000);
+      fixture.detectChanges();
+
+      const subtitle = fixture.nativeElement.querySelector('.account-list__subtitle');
+      expect(subtitle.textContent).toContain('—');
+
+      httpMock.expectOne(`${accountUrl}/acc-2/balance`).flush(2500);
+      fixture.detectChanges();
+    });
+
+    it('shows the summed total balance once every account balance has loaded', () => {
+      flushBalance('acc-1', 1000);
+      flushBalance('acc-2', 2500);
+      fixture.detectChanges();
+
+      const subtitle = fixture.nativeElement.querySelector('.account-list__subtitle');
+      expect(subtitle.textContent).toContain('3,500.00');
     });
 
     it('opens the transfer sheet when the transfer button is clicked', () => {
@@ -121,8 +165,8 @@ describe('AccountListComponent', () => {
       flushBalance('acc-2', 2000);
       fixture.detectChanges();
 
-      expect(fixture.nativeElement.textContent).toContain('1500');
-      expect(fixture.nativeElement.textContent).toContain('2000');
+      expect(fixture.nativeElement.textContent).toContain('1,500.00');
+      expect(fixture.nativeElement.textContent).toContain('2,000.00');
     });
   });
 });

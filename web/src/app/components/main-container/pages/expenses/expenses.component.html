@@ -1,1 +1,88 @@
-<p>expenses works!</p>
+<div class="expenses">
+  <header class="expenses__header">
+    <app-icon-button ariaLabel="Settings" [disabled]="true">
+      <span class="expenses__settings-glyph">⚙</span>
+    </app-icon-button>
+    <h1 class="expenses__title">Expenses</h1>
+  </header>
+
+  <section class="quick-expense">
+    <span class="quick-expense__caption">Quick expense</span>
+
+    <div class="quick-expense__amount-row">
+      <span class="quick-expense__amount-sign">-$</span>
+      <input
+        type="number"
+        step="0.01"
+        min="0"
+        class="quick-expense__amount-input"
+        aria-label="Amount"
+        [value]="amount() || null"
+        (input)="onAmountInput($any($event.target).value)"
+      />
+      <button
+        type="button"
+        class="quick-expense__submit"
+        aria-label="Add expense"
+        [disabled]="!canSubmit()"
+        (click)="submitQuickExpense()"
+      >+</button>
+    </div>
+
+    <div class="quick-expense__chips">
+      @for (cat of quickPickCategories(); track cat._id) {
+        <button
+          type="button"
+          class="chip"
+          [class.chip--selected]="selectedCategoryId() === cat._id"
+          (click)="selectCategory(cat._id ?? '')"
+        >
+          {{ selectedCategoryId() === cat._id ? '✓ ' + cat.Name : cat.Name }}
+        </button>
+      }
+    </div>
+
+    @if (errorMessage()) {
+      <p class="quick-expense__error">{{ errorMessage() }}</p>
+    }
+  </section>
+
+  <section class="recent-expenses">
+    <span class="recent-expenses__label">Recent expenses</span>
+
+    @if (recentExpenses(); as expenses) {
+      @if (expenses.length === 0) {
+        <app-empty-state
+          title="No expenses yet"
+          message="Your recent expenses will show up here"
+        />
+      } @else {
+        <div class="recent-expenses__list">
+          @for (movement of expenses; track movement._id) {
+            <div class="expense-row">
+              <div class="expense-row__icon">
+                <span class="expense-row__icon-glyph">&darr;</span>
+              </div>
+
+              <div class="expense-row__meta">
+                <span class="expense-row__title">
+                  {{ movement.Description || movement.Category.Name }}
+                </span>
+                <span class="expense-row__subtitle">
+                  <!-- IMovement currently has no dedicated Account field (known model gap) -->
+                  @if (movement.Card) {
+                    {{ movement.Card }} — {{ movement.Date | date: 'MMM d' }}
+                  } @else {
+                    {{ movement.Date | date: 'MMM d' }}
+                  }
+                </span>
+              </div>
+
+              <span class="expense-row__amount">-{{ movement.Amount | currency }}</span>
+            </div>
+          }
+        </div>
+      }
+    }
+  </section>
+</div>
