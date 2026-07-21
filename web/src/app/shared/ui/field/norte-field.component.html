@@ -1,0 +1,7 @@
+<div class="norte-field">
+  <span class="norte-field__label">{{ label() }}</span>
+  <ng-content />
+  @if (errorMessage()) {
+    <span class="norte-field__error">{{ errorMessage() }}</span>
+  }
+</div>

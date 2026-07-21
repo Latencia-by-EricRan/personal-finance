@@ -1,0 +1,30 @@
+:host {
+  display: block;
+}
+
+.stat-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-tile__label {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.stat-tile__value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--text);
+}
+
+.stat-tile__value--income {
+  color: var(--income);
+}
+
+.stat-tile__value--expense {
+  color: var(--expense);
+}

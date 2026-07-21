@@ -1,0 +1,39 @@
+:host {
+  display: block;
+}
+
+.norte-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.norte-field__label {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.norte-field__error {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--expense);
+}
+
+// Styles the projected native control. Documented above: the consumer must
+// add `class="norte-field__control"` to its projected input/select/textarea.
+::ng-deep .norte-field__control {
+  height: 52px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 1rem;
+
+  &:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+}

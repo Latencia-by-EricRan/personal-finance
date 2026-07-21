@@ -3,10 +3,11 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../core/auth';
+import { LogoMarkComponent, NorteButtonComponent, NorteFieldComponent } from '../../shared/ui';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, LogoMarkComponent, NorteButtonComponent, NorteFieldComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })

@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideExperimentalZonelessChangeDetection } from '@angular/core';
+import { provideRouter } from '@angular/router';
 
 import { MainContainerComponent } from './main-container.component';
 
@@ -10,7 +11,10 @@ describe('MainContainerComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MainContainerComponent],
-      providers: [provideExperimentalZonelessChangeDetection()]
+      providers: [
+        provideExperimentalZonelessChangeDetection(),
+        provideRouter([]),
+      ]
     })
     .compileComponents();
 

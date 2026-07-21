@@ -1,0 +1,8 @@
+<div class="stat-tile">
+  <span class="stat-tile__label">{{ label() }}</span>
+  <span
+    class="stat-tile__value"
+    [class.stat-tile__value--income]="tone() === 'income'"
+    [class.stat-tile__value--expense]="tone() === 'expense'"
+  >{{ value() }}</span>
+</div>
