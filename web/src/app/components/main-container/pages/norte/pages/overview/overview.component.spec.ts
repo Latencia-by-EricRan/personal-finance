@@ -4,7 +4,14 @@ import { By } from '@angular/platform-browser';
 import { of, throwError } from 'rxjs';
 
 import { OverviewComponent } from './overview.component';
-import { BudgetService, ReportService, IBudgetStatus, IReportByCategory, IReportMonthly, IReportCashflow } from '../../core';
+import {
+  BudgetService,
+  ReportService,
+  IBudgetStatus,
+  IReportByCategory,
+  IReportMonthly,
+  IReportCashflow,
+} from '../../core';
 import { BudgetProgressComponent, DonutChartComponent, TrendChartComponent } from '../../components';
 import { ICategory, TypeCategory } from '../../../../../../core/reference';
 

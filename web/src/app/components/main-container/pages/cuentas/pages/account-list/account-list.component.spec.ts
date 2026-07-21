@@ -21,11 +21,7 @@ describe('AccountListComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AccountListComponent],
-      providers: [
-        provideExperimentalZonelessChangeDetection(),
-        provideHttpClient(),
-        provideHttpClientTesting(),
-      ],
+      providers: [provideExperimentalZonelessChangeDetection(), provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AccountListComponent);

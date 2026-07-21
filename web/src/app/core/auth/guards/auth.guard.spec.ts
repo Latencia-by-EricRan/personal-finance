@@ -1,11 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideExperimentalZonelessChangeDetection } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  Router,
-  RouterStateSnapshot,
-  UrlTree,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 
 import { authGuard } from './auth.guard';
 import { AuthService } from '../services';
@@ -15,9 +10,7 @@ describe('authGuard', () => {
   let router: jasmine.SpyObj<Router>;
 
   const runGuard = () =>
-    TestBed.runInInjectionContext(() =>
-      authGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot),
-    );
+    TestBed.runInInjectionContext(() => authGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot));
 
   beforeEach(() => {
     isAuthenticated = jasmine.createSpy('isAuthenticated').and.returnValue(false);

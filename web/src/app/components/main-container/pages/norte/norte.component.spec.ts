@@ -21,12 +21,8 @@ describe('NorteComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [NorteComponent],
-      providers: [
-        provideExperimentalZonelessChangeDetection(),
-        provideRouter([]),
-      ],
-    })
-    .compileComponents();
+      providers: [provideExperimentalZonelessChangeDetection(), provideRouter([])],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(NorteComponent);
     component = fixture.componentInstance;

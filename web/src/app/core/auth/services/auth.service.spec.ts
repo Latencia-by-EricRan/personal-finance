@@ -1,9 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideExperimentalZonelessChangeDetection } from '@angular/core';
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 
 import { environment } from '../../../../environments/environment';
@@ -19,10 +16,11 @@ describe('AuthService', () => {
   const credentials: ICredentials = { Email: 'user@example.com', Password: 'changeme' };
 
   beforeEach(() => {
-    const tokenStorageSpy = jasmine.createSpyObj<TokenStorageService>(
-      'TokenStorageService',
-      ['getToken', 'setToken', 'clear'],
-    );
+    const tokenStorageSpy = jasmine.createSpyObj<TokenStorageService>('TokenStorageService', [
+      'getToken',
+      'setToken',
+      'clear',
+    ]);
 
     TestBed.configureTestingModule({
       providers: [

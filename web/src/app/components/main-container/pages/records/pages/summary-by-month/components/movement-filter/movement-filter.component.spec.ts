@@ -5,12 +5,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 
 import { MovementFilterComponent } from './movement-filter.component';
 import { IMovementFilter, TypeMovement } from '../../../../core';
-import {
-  AccountType,
-  IAccount,
-  ICategory,
-  TypeCategory,
-} from '../../../../../../../../core/reference';
+import { AccountType, IAccount, ICategory, TypeCategory } from '../../../../../../../../core/reference';
 import { environment } from '../../../../../../../../../environments/environment';
 
 describe('MovementFilterComponent', () => {
@@ -22,18 +17,12 @@ describe('MovementFilterComponent', () => {
     { _id: 'cat-1', Name: 'Comida', Type: TypeCategory.VARIABLE },
     { _id: 'cat-2', Name: 'Alquiler', Type: TypeCategory.FIJO },
   ];
-  const mockAccounts: IAccount[] = [
-    { _id: 'acc-1', Name: 'Efectivo', Type: AccountType.EFECTIVO, Currency: 'ARS' },
-  ];
+  const mockAccounts: IAccount[] = [{ _id: 'acc-1', Name: 'Efectivo', Type: AccountType.EFECTIVO, Currency: 'ARS' }];
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MovementFilterComponent],
-      providers: [
-        provideExperimentalZonelessChangeDetection(),
-        provideHttpClient(),
-        provideHttpClientTesting(),
-      ],
+      providers: [provideExperimentalZonelessChangeDetection(), provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MovementFilterComponent);

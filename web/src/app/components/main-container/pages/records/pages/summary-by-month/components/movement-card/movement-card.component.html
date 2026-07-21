@@ -3,7 +3,6 @@
   @if (_movement) {
     <div class="movement-card">
       <mat-grid-list cols="12">
-
         <!-- Icon Category -->
         <mat-grid-tile [colspan]="1" [rowspan]="2">
           <div class="circle">
@@ -28,9 +27,8 @@
 
         <!-- Card -->
         <mat-grid-tile [colspan]="4">
-          <span>{{ _movement.Date | date:'EEEE, d MMM' }}</span>
+          <span>{{ _movement.Date | date: 'EEEE, d MMM' }}</span>
         </mat-grid-tile>
-
       </mat-grid-list>
     </div>
   }

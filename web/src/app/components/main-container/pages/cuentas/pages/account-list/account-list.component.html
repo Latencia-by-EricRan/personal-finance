@@ -20,18 +20,9 @@
     </ul>
   }
 
-  <button
-    type="button"
-    class="account-list__transfer-btn"
-    (click)="openTransfer()"
-  >
-    Transferir
-  </button>
+  <button type="button" class="account-list__transfer-btn" (click)="openTransfer()">Transferir</button>
 
   @if (showTransferSheet()) {
-    <app-transfer-sheet
-      (transferCompleted)="onTransferCompleted()"
-      (cancelled)="closeTransfer()"
-    />
+    <app-transfer-sheet (transferCompleted)="onTransferCompleted()" (cancelled)="closeTransfer()" />
   }
 </div>

@@ -1,9 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideExperimentalZonelessChangeDetection } from '@angular/core';
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 
 import { environment } from '../../../../environments/environment';
@@ -15,17 +12,11 @@ describe('CategoryService', () => {
   let httpMock: HttpTestingController;
   const categoryUrl = `${environment.apiUrl}/category`;
 
-  const categories: ICategory[] = [
-    { Name: 'Comida', Type: TypeCategory.VARIABLE, _id: 'cat-1' },
-  ];
+  const categories: ICategory[] = [{ Name: 'Comida', Type: TypeCategory.VARIABLE, _id: 'cat-1' }];
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        provideExperimentalZonelessChangeDetection(),
-        provideHttpClient(),
-        provideHttpClientTesting(),
-      ],
+      providers: [provideExperimentalZonelessChangeDetection(), provideHttpClient(), provideHttpClientTesting()],
     });
     service = TestBed.inject(CategoryService);
     httpMock = TestBed.inject(HttpTestingController);
