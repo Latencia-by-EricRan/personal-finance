@@ -1,37 +1,52 @@
 <div class="account-list">
-  <h1 class="account-list__title">Cuentas</h1>
+  <header class="account-list__header">
+    <!-- Settings screen is out of scope for this PR — visual-only placeholder, no route to wire up. -->
+    <app-icon-button ariaLabel="Menu" [disabled]="true">
+      <span class="account-list__menu-glyph" aria-hidden="true">☰</span>
+    </app-icon-button>
+
+    @let total = accounts() | totalBalance: balances();
+    <div class="account-list__title-block">
+      <h1 class="account-list__title">Accounts</h1>
+      <p class="account-list__subtitle">
+        @if (total === null) {
+          Total balance —
+        } @else {
+          Total balance {{ total | currency }}
+        }
+      </p>
+    </div>
+  </header>
 
   @if (accounts().length === 0) {
-    <p class="account-list__empty">No hay cuentas registradas.</p>
+    <app-empty-state title="No accounts yet" message="Add an account to start tracking balances" />
   } @else {
     <ul class="account-list__list">
       @for (acc of accounts(); track acc._id) {
-        <li class="account-list__item">
-          @if (acc.Icon) {
-            <span class="account-list__icon">{{ acc.Icon }}</span>
-          }
-          <span class="account-list__name">{{ acc.Name }}</span>
-          <span class="account-list__type">{{ acc.Type }}</span>
-          <span class="account-list__balance">
-            {{ acc._id && balances()[acc._id] !== undefined ? balances()[acc._id] : '—' }}
+        <li class="account-card">
+          <div class="account-card__meta">
+            <span class="account-card__name">{{ acc.Name }}</span>
+            <!-- Mockup implies a richer per-account note/due-date subtitle (e.g. "Credit • due Jul 28")
+                 that has no corresponding field on IAccount — known model gap, not fixed in this PR. -->
+            <span class="account-card__subtitle">{{ acc.Type | accountTypeLabel }} · {{ acc.Currency }}</span>
+          </div>
+          <span
+            class="account-card__balance"
+            [class.account-card__balance--negative]="acc._id && balances()[acc._id] < 0"
+          >
+            {{ acc._id && balances()[acc._id] !== undefined ? (balances()[acc._id] | currency) : '—' }}
           </span>
         </li>
       }
     </ul>
   }
 
-  <button
-    type="button"
-    class="account-list__transfer-btn"
-    (click)="openTransfer()"
-  >
-    Transferir
+  <button type="button" class="account-list__transfer-btn" (click)="openTransfer()">
+    <span class="account-list__transfer-glyph" aria-hidden="true">↑↓</span>
+    <span>Transfer between accounts</span>
   </button>
 
-  @if (showTransferSheet()) {
-    <app-transfer-sheet
-      (transferCompleted)="onTransferCompleted()"
-      (cancelled)="closeTransfer()"
-    />
-  }
+  <app-bottom-sheet [open]="showTransferSheet()" (closed)="closeTransfer()">
+    <app-transfer-sheet (transferCompleted)="onTransferCompleted()" (cancelled)="closeTransfer()" />
+  </app-bottom-sheet>
 </div>

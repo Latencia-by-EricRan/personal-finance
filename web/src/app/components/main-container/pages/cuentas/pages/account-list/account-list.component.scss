@@ -1,59 +1,124 @@
-.account-list {
-  background-color: var(--bg);
-  color: var(--text);
+:host {
+  display: block;
   min-height: 100%;
-  padding: 1rem;
+}
+
+.account-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 100%;
+  box-sizing: border-box;
+  background: var(--bg);
+  color: var(--text);
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.account-list__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.account-list__menu-glyph {
+  font-size: 18px;
+  color: var(--text);
+}
+
+.account-list__title-block {
+  display: flex;
+  flex-direction: column;
 }
 
 .account-list__title {
-  color: var(--text);
+  margin: 0;
   font-family: var(--font-display);
-  margin-bottom: 1rem;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
 }
 
-.account-list__empty {
+.account-list__subtitle {
+  margin: 2px 0 0;
+  font-family: var(--font-body);
+  font-size: 13px;
   color: var(--text-dim);
 }
 
 .account-list__list {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 12px;
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.account-list__item {
-  align-items: center;
-  background-color: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 5px;
+.account-card {
   display: flex;
-  gap: 0.5rem;
-  padding: 0.75em;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 18px;
 }
 
-.account-list__name {
-  flex: 1;
+.account-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
 }
 
-.account-list__type {
-  color: var(--text-dim);
-  font-size: 0.85rem;
-}
-
-.account-list__balance {
-  color: var(--gold);
+.account-card__name {
+  font-family: var(--font-body);
+  font-size: 15px;
   font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-card__subtitle {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.account-card__balance {
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.account-card__balance--negative {
+  color: var(--expense);
 }
 
 .account-list__transfer-btn {
-  background-color: var(--gold);
-  border: none;
-  border-radius: 5px;
-  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 52px;
+  background: var(--surface-2);
+  border: 1px solid var(--gold);
+  border-radius: 14px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
   cursor: pointer;
-  margin-top: 1rem;
-  padding: 0.75em 1.5em;
+}
+
+.account-list__transfer-glyph {
+  font-size: 16px;
+  line-height: 1;
 }

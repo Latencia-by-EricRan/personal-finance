@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 
 import { AccountService, ITransfer } from '../../../../../../core/reference';
+import { NorteButtonComponent } from '../../../../../../shared/ui';
 
 function sameAccountValidator(group: AbstractControl): ValidationErrors | null {
   const from = group.get('from')?.value;
@@ -17,7 +18,7 @@ function sameAccountValidator(group: AbstractControl): ValidationErrors | null {
 
 @Component({
   selector: 'app-transfer-sheet',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, NorteButtonComponent],
   templateUrl: './transfer-sheet.component.html',
   styleUrl: './transfer-sheet.component.scss',
 })
