@@ -1,0 +1,31 @@
+:host {
+  display: block;
+}
+
+.list-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 56px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.list-row__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.list-row__label {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.list-row__value {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--text);
+}

@@ -1,0 +1,16 @@
+:host {
+  display: inline-block;
+}
+
+.spinner {
+  border-radius: 50%;
+  border: 3px solid var(--surface-2);
+  border-top-color: var(--gold);
+  animation: spinner-rotate 0.8s linear infinite;
+}
+
+@keyframes spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}

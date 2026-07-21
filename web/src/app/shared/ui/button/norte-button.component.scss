@@ -1,0 +1,40 @@
+:host {
+  display: block;
+}
+
+.norte-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 56px;
+  padding: 0 20px;
+  border-radius: 14px;
+  border: 2px solid transparent;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.norte-button--full-width {
+  width: 100%;
+}
+
+.norte-button--primary {
+  background: var(--gold);
+  color: var(--bg);
+  border-color: var(--gold);
+  box-shadow: 0 8px 20px 0 color-mix(in srgb, var(--gold) 20%, transparent);
+}
+
+.norte-button--outline {
+  background: transparent;
+  color: var(--gold);
+  border-color: var(--gold);
+}

@@ -1,0 +1,8 @@
+@if (toast(); as active) {
+  <div
+    class="toast"
+    [class.toast--success]="active.tone === 'success'"
+    [class.toast--error]="active.tone === 'error'"
+    [class.toast--default]="active.tone === 'default'"
+  >{{ active.message }}</div>
+}

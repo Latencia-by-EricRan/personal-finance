@@ -1,0 +1,11 @@
+<button
+  class="norte-button"
+  [class.norte-button--primary]="variant() === 'primary'"
+  [class.norte-button--outline]="variant() === 'outline'"
+  [class.norte-button--full-width]="fullWidth()"
+  [type]="type()"
+  [disabled]="disabled()"
+  (click)="onClick()"
+>
+  <ng-content />
+</button>

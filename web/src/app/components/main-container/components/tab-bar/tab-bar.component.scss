@@ -1,0 +1,38 @@
+:host {
+  display: block;
+}
+
+.tab-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 64px;
+  padding-bottom: env(safe-area-inset-bottom);
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+
+.tab-bar__tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  flex: 1 1 0;
+  height: 100%;
+  color: var(--text-dim);
+  text-decoration: none;
+}
+
+.tab-bar__icon {
+  color: inherit;
+}
+
+.tab-bar__label {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+}
+
+.tab-bar__tab--active {
+  color: var(--gold);
+}

@@ -1,0 +1,9 @@
+@if (open()) {
+  <div class="bottom-sheet__backdrop" (click)="onBackdropClick()"></div>
+  <div class="bottom-sheet__panel">
+    <div class="bottom-sheet__handle"></div>
+    <div class="bottom-sheet__content">
+      <ng-content />
+    </div>
+  </div>
+}
