@@ -22,7 +22,11 @@ describe('TransferSheetComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [TransferSheetComponent],
-      providers: [provideExperimentalZonelessChangeDetection(), provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        provideExperimentalZonelessChangeDetection(),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TransferSheetComponent);
@@ -120,7 +124,9 @@ describe('TransferSheetComponent', () => {
     });
 
     it('shows an error message and does not emit transferCompleted when transfer() fails', () => {
-      spyOn(accountService, 'transfer').and.returnValue(throwError(() => new Error('missing or archived account')));
+      spyOn(accountService, 'transfer').and.returnValue(
+        throwError(() => new Error('missing or archived account')),
+      );
       const spy = jasmine.createSpy('transferCompleted');
       component.transferCompleted.subscribe(spy);
 

@@ -31,7 +31,8 @@ describe('MovementCardComponent', () => {
     await TestBed.configureTestingModule({
       imports: [MovementCardComponent],
       providers: [provideExperimentalZonelessChangeDetection()],
-    }).compileComponents();
+    })
+    .compileComponents();
 
     fixture = TestBed.createComponent(MovementCardComponent);
     component = fixture.componentInstance;

@@ -10,8 +10,9 @@ describe('NavbarComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [NavbarComponent],
-      providers: [provideExperimentalZonelessChangeDetection()],
-    }).compileComponents();
+      providers: [provideExperimentalZonelessChangeDetection()]
+    })
+    .compileComponents();
 
     fixture = TestBed.createComponent(NavbarComponent);
     component = fixture.componentInstance;

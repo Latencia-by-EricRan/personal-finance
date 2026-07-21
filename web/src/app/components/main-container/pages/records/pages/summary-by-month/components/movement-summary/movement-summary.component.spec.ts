@@ -27,7 +27,8 @@ describe('MovementSummaryComponent', () => {
     await TestBed.configureTestingModule({
       imports: [MovementSummaryComponent],
       providers: [provideExperimentalZonelessChangeDetection()],
-    }).compileComponents();
+    })
+    .compileComponents();
 
     fixture = TestBed.createComponent(MovementSummaryComponent);
     component = fixture.componentInstance;

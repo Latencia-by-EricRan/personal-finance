@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-expenses',
-  imports: [],
-  templateUrl: './expenses.component.html',
-  styleUrl: './expenses.component.scss',
+    selector: 'app-expenses',
+    imports: [],
+    templateUrl: './expenses.component.html',
+    styleUrl: './expenses.component.scss'
 })
-export class ExpensesComponent {}
+export class ExpensesComponent {
+
+}

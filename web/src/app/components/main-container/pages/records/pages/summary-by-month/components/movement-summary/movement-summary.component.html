@@ -1,26 +1,26 @@
 @let _summary = this.summary();
-<br />
+<br/>
 <mat-grid-list cols="12" class="movement-summary">
+
   <!-- Title -->
   <mat-grid-tile [colspan]="12" [rowspan]="1">
     <h3>Gastos del mes</h3>
   </mat-grid-tile>
+
 
   <!-- ACC Mount -->
   <mat-grid-tile [colspan]="12" [rowspan]="1">
     <h2 class="amount-expense">{{ _summary.amount.expense | currency }}</h2>
   </mat-grid-tile>
 
+
   <!-- Miscellaneous -->
   <mat-grid-tile [colspan]="12" [rowspan]="2" class="text-start">
     <section>
-      <span
-        >Ingresos: <strong class="amount-income">{{ _summary.amount.income | currency }}</strong></span
-      >
-      <br />
-      <span
-        >Movimientos: <strong>{{ _summary.items }}</strong></span
-      >
+      <span>Ingresos: <strong class="amount-income">{{ _summary.amount.income | currency }}</strong></span>
+      <br/>
+      <span>Movimientos: <strong>{{ _summary.items }}</strong></span>
     </section>
   </mat-grid-tile>
+
 </mat-grid-list>
