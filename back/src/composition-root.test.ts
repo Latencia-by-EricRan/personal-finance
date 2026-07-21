@@ -1,4 +1,6 @@
+import './composition-root.env-setup';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import bcrypt from 'bcryptjs';
 import mongoose, { Types } from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { Identity } from './shared/domain/Identity';
@@ -22,6 +24,8 @@ import { CreateBudget } from './contexts/budget/application/CreateBudget';
 import { InMemoryBudgetRepository } from './contexts/budget/infrastructure/InMemoryBudgetRepository';
 import { InMemoryMovementGateway as InMemoryBudgetMovementGateway } from './contexts/budget/infrastructure/InMemoryMovementGateway';
 import BudgetModel from './contexts/budget/infrastructure/BudgetModel';
+import { CredentialsChecker } from './contexts/auth/application/CredentialsChecker';
+import { TokenService } from './contexts/auth/application/TokenService';
 import { createCompositionRoot, getContainer } from './composition-root';
 
 describe('createCompositionRoot', () => {
@@ -282,6 +286,31 @@ describe('createCompositionRoot', () => {
         });
     });
 
+    describe('auth use cases wiring (design D14/D16, PR3b)', () => {
+        it('resolves credentialsChecker/tokenService from env-sourced authConfig by default', async () => {
+            const container = createCompositionRoot();
+
+            expect(container.auth.credentialsChecker).toBeInstanceOf(CredentialsChecker);
+            expect(container.auth.tokenService).toBeInstanceOf(TokenService);
+
+            await expect(
+                container.auth.credentialsChecker.verify('composition-root-test@local.test', 'composition-root-test-password'),
+            ).resolves.toBe(true);
+            const token = container.auth.tokenService.sign('composition-root-test@local.test');
+            expect((container.auth.tokenService.verify(token) as { sub: string }).sub).toBe('composition-root-test@local.test');
+        });
+
+        it('resolves the supplied fake credentials/token config instead of the env-sourced ones', async () => {
+            const container = createCompositionRoot({
+                authCredentialsConfig: { email: 'fake@local.test', passwordHash: bcrypt.hashSync('fake-password', 10) },
+                authTokenConfig: { secret: 'fake-secret', expiresIn: '5m' },
+            });
+
+            await expect(container.auth.credentialsChecker.verify('fake@local.test', 'fake-password')).resolves.toBe(true);
+            expect(container.auth.tokenService.expiresIn).toBe('5m');
+        });
+    });
+
     describe('getContainer (lazy singleton)', () => {
         it('returns the same container instance on repeated calls', () => {
             const first = getContainer();
@@ -292,6 +321,7 @@ describe('createCompositionRoot', () => {
             expect(first.category.saveCategory).not.toBeInstanceOf(InMemoryCategoryRepository);
             expect(first.movement.createMovement).toBeInstanceOf(CreateMovement);
             expect(first.account.createAccount).toBeInstanceOf(CreateAccount);
+            expect(first.auth.credentialsChecker).toBeInstanceOf(CredentialsChecker);
         });
     });
 });

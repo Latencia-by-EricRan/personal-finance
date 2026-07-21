@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { startTestApp, stopTestApp } from '../test-utils/start-test-app';
-import CategoryModel from '../modules/models/Category.model';
+import { CategoryModel } from '../contexts/category';
 import BudgetModel from '../contexts/budget/infrastructure/BudgetModel';
 
 /**

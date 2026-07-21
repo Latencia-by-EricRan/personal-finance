@@ -1,9 +1,9 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { startTestApp, stopTestApp } from '../test-utils/start-test-app';
-import CategoryModel from '../modules/models/Category.model';
-import AccountModel from '../modules/models/Account.model';
-import RecurringModel from '../modules/models/Recurring.model';
-import MovementModel from '../modules/models/Movement.model';
+import { CategoryModel } from '../contexts/category';
+import { AccountModel } from '../contexts/account';
+import { RecurringModel } from '../contexts/recurring';
+import { MovementModel } from '../contexts/movement';
 
 describe('Recurring run e2e', () => {
     let testApp: Awaited<ReturnType<typeof startTestApp>>;

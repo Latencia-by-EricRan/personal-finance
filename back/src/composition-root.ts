@@ -40,6 +40,30 @@ import { DeleteBudget } from './contexts/budget/application/DeleteBudget';
 import { GetBudgetStatus } from './contexts/budget/application/GetBudgetStatus';
 import { MongooseBudgetRepository } from './contexts/budget/infrastructure/MongooseBudgetRepository';
 import { MongooseMovementGateway as MongooseBudgetMovementGateway } from './contexts/budget/infrastructure/MongooseMovementGateway';
+import { RecurringRepository } from './contexts/recurring/application/ports/RecurringRepository';
+import { MovementGateway as RecurringMovementGateway } from './contexts/recurring/application/ports/MovementGateway';
+import { RecurringUseCases } from './contexts/recurring/application/RecurringUseCases';
+import { FindRecurrings } from './contexts/recurring/application/FindRecurrings';
+import { FindRecurringById } from './contexts/recurring/application/FindRecurringById';
+import { CreateRecurring } from './contexts/recurring/application/CreateRecurring';
+import { UpdateRecurring } from './contexts/recurring/application/UpdateRecurring';
+import { DeleteRecurring } from './contexts/recurring/application/DeleteRecurring';
+import { RunRecurrings } from './contexts/recurring/application/RunRecurrings';
+import { MongooseRecurringRepository } from './contexts/recurring/infrastructure/MongooseRecurringRepository';
+import { MongooseMovementGateway as MongooseRecurringMovementGateway } from './contexts/recurring/infrastructure/MongooseMovementGateway';
+import { MovementGateway as ReportMovementGateway } from './contexts/report/application/ports/MovementGateway';
+import { CategoryGateway as ReportCategoryGateway } from './contexts/report/application/ports/CategoryGateway';
+import { ReportUseCases } from './contexts/report/application/ReportUseCases';
+import { GetReportByCategory } from './contexts/report/application/GetReportByCategory';
+import { GetReportMonthly } from './contexts/report/application/GetReportMonthly';
+import { GetReportCashflow } from './contexts/report/application/GetReportCashflow';
+import { MongooseMovementGateway as MongooseReportMovementGateway } from './contexts/report/infrastructure/MongooseMovementGateway';
+import { MongooseCategoryGateway as MongooseReportCategoryGateway } from './contexts/report/infrastructure/MongooseCategoryGateway';
+import { CredentialsConfig, TokenConfig } from './contexts/auth/application/ports/AuthConfig';
+import { CredentialsChecker } from './contexts/auth/application/CredentialsChecker';
+import { TokenService } from './contexts/auth/application/TokenService';
+import { AuthUseCases } from './contexts/auth/application/AuthUseCases';
+import { credentialsConfig, tokenConfig } from './contexts/auth/infrastructure/authConfig';
 
 export interface AppContainer {
     exampleItemRepository: ExampleItemRepository;
@@ -47,6 +71,9 @@ export interface AppContainer {
     movement: MovementUseCases;
     account: AccountUseCases;
     budget: BudgetUseCases;
+    recurring: RecurringUseCases;
+    report: ReportUseCases;
+    auth: AuthUseCases;
 }
 
 export interface CompositionOptions {
@@ -57,6 +84,12 @@ export interface CompositionOptions {
     movementGateway?: MovementGateway;
     budgetRepository?: BudgetRepository;
     budgetMovementGateway?: BudgetMovementGateway;
+    recurringRepository?: RecurringRepository;
+    recurringMovementGateway?: RecurringMovementGateway;
+    reportMovementGateway?: ReportMovementGateway;
+    reportCategoryGateway?: ReportCategoryGateway;
+    authCredentialsConfig?: CredentialsConfig;
+    authTokenConfig?: TokenConfig;
 }
 
 const buildCategoryUseCases = (repository: CategoryRepository): CategoryUseCases => ({
@@ -103,6 +136,40 @@ const buildBudgetUseCases = (repository: BudgetRepository, gateway: BudgetMoveme
     getBudgetStatus: new GetBudgetStatus(repository, gateway),
 });
 
+// Third builder taking a second dependency (mirrors buildAccountUseCases/
+// buildBudgetUseCases): runRecurrings needs the recurring-local WRITE
+// MovementGateway seam to materialize a Movement per due recurring (design
+// D12), unlike category/movement's single-repository use cases.
+const buildRecurringUseCases = (repository: RecurringRepository, gateway: RecurringMovementGateway): RecurringUseCases => ({
+    findRecurrings: new FindRecurrings(repository),
+    findRecurringById: new FindRecurringById(repository),
+    createRecurring: new CreateRecurring(repository),
+    updateRecurring: new UpdateRecurring(repository),
+    deleteRecurring: new DeleteRecurring(repository),
+    runRecurrings: new RunRecurrings(repository, gateway),
+});
+
+// Fourth builder taking two dependencies (mirrors buildAccountUseCases/
+// buildBudgetUseCases/buildRecurringUseCases), but no repository — report
+// owns no aggregate/domain (design D13). getReportByCategory needs both the
+// movement and category read gateways; monthly/cashflow need movement only.
+const buildReportUseCases = (movementGateway: ReportMovementGateway, categoryGateway: ReportCategoryGateway): ReportUseCases => ({
+    getReportByCategory: new GetReportByCategory(movementGateway, categoryGateway),
+    getReportMonthly: new GetReportMonthly(movementGateway),
+    getReportCashflow: new GetReportCashflow(movementGateway),
+});
+
+// Fifth builder (mirrors the shape, not the pattern, of the others above):
+// auth owns no repository — it bundles two injected-config application
+// services instead (design D14). `credentialsChecker` verifies login
+// credentials; `tokenService` both signs (login) and verifies (the
+// `authenticate` middleware, read directly off `container.auth.tokenService`
+// by `_routes.ts`).
+const buildAuthUseCases = (credentials: CredentialsConfig, token: TokenConfig): AuthUseCases => ({
+    credentialsChecker: new CredentialsChecker(credentials),
+    tokenService: new TokenService(token),
+});
+
 export const createCompositionRoot = (options: CompositionOptions = {}): AppContainer => ({
     exampleItemRepository: options.exampleItemRepository ?? new MongooseExampleItemRepository(),
     category: buildCategoryUseCases(options.categoryRepository ?? new MongooseCategoryRepository()),
@@ -114,6 +181,18 @@ export const createCompositionRoot = (options: CompositionOptions = {}): AppCont
     budget: buildBudgetUseCases(
         options.budgetRepository ?? new MongooseBudgetRepository(),
         options.budgetMovementGateway ?? new MongooseBudgetMovementGateway(),
+    ),
+    recurring: buildRecurringUseCases(
+        options.recurringRepository ?? new MongooseRecurringRepository(),
+        options.recurringMovementGateway ?? new MongooseRecurringMovementGateway(),
+    ),
+    report: buildReportUseCases(
+        options.reportMovementGateway ?? new MongooseReportMovementGateway(),
+        options.reportCategoryGateway ?? new MongooseReportCategoryGateway(),
+    ),
+    auth: buildAuthUseCases(
+        options.authCredentialsConfig ?? credentialsConfig,
+        options.authTokenConfig ?? tokenConfig,
     ),
 });
 

@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { startTestApp, stopTestApp } from '../test-utils/start-test-app';
-import AccountModel from '../modules/models/Account.model';
-import CategoryModel from '../modules/models/Category.model';
+import { AccountModel } from '../contexts/account';
+import { CategoryModel } from '../contexts/category';
 
 /**
  * Characterization baseline for PR3 (back-hexagonal-movement, task 3.1, design D1).
@@ -144,7 +144,7 @@ describe('movement HTTP characterization (current, unwired, pre-refactor baselin
             Type: 'variable',
         });
 
-        const { default: MovementModel } = await import('../modules/models/Movement.model');
+        const { MovementModel } = await import('../contexts/movement');
         await MovementModel.insertMany([
             { Type: 'ingreso', Amount: 500, Date: new Date(1999, 2, 10), Account: summaryAccount._id, Category: summaryCategory._id },
             { Type: 'egreso', Amount: 125, Date: new Date(1999, 2, 15), Account: summaryAccount._id, Category: summaryCategory._id },
