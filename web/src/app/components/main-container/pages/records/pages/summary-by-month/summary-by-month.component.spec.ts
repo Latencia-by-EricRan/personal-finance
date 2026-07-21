@@ -58,7 +58,6 @@ describe('SummaryByMonthComponent', () => {
       summary: { items: 0, amount: { income: 0, expense: 0 } },
       movements: [],
     });
-    // Re-render so the async-piped @if block instantiates <app-movement-filter />.
     fixture.detectChanges();
 
     // MovementFilterComponent's constructor fires ensureLoaded() on both reference services.
@@ -78,6 +77,14 @@ describe('SummaryByMonthComponent', () => {
 
     expect(style.backgroundColor).toBe(resolveToken('backgroundColor', '--bg'));
     expect(style.color).toBe(resolveToken('color', '--text'));
+  });
+
+  it('shows the full empty-state (not the lighter filtered-empty message) when the month has zero movements and no filter is active', () => {
+    const emptyState = fixture.nativeElement.querySelector('app-empty-state');
+    const filteredEmptyMessage = fixture.nativeElement.querySelector('.summary-by-month__empty');
+
+    expect(emptyState).not.toBeNull();
+    expect(filteredEmptyMessage).toBeNull();
   });
 
   describe('filtering', () => {
@@ -128,6 +135,99 @@ describe('SummaryByMonthComponent', () => {
       const emptyState = fixture.nativeElement.querySelector('.summary-by-month__empty');
       expect(emptyState).not.toBeNull();
       expect(fixture.nativeElement.querySelectorAll('app-movement-card').length).toBe(0);
+    });
+  });
+
+  describe('month navigation', () => {
+    function flushMonthResponse(year: number, month: number): void {
+      const url = `${environment.apiUrl}/movement/summary/${month}/${year}`;
+      httpMock.expectOne(url).flush({
+        month,
+        year,
+        summary: { items: 0, amount: { income: 0, expense: 0 } },
+        movements: [],
+      });
+    }
+
+    it('requests the previous month on goToPreviousMonth()', () => {
+      const year = component.currentYear();
+      const month = component.currentMonth();
+
+      component.goToPreviousMonth();
+
+      const expectedMonth = month - 1 < 1 ? 12 : month - 1;
+      const expectedYear = month - 1 < 1 ? year - 1 : year;
+      expect(component.currentYear()).toBe(expectedYear);
+      expect(component.currentMonth()).toBe(expectedMonth);
+
+      flushMonthResponse(expectedYear, expectedMonth);
+    });
+
+    it('requests the next month on goToNextMonth()', () => {
+      const year = component.currentYear();
+      const month = component.currentMonth();
+
+      component.goToNextMonth();
+
+      const expectedMonth = month + 1 > 12 ? 1 : month + 1;
+      const expectedYear = month + 1 > 12 ? year + 1 : year;
+      expect(component.currentYear()).toBe(expectedYear);
+      expect(component.currentMonth()).toBe(expectedMonth);
+
+      flushMonthResponse(expectedYear, expectedMonth);
+    });
+
+    it('rolls over December -> January (and year + 1) when going to the next month', () => {
+      component.currentYear.set(2026);
+      component.currentMonth.set(12);
+
+      component.goToNextMonth();
+
+      expect(component.currentYear()).toBe(2027);
+      expect(component.currentMonth()).toBe(1);
+
+      flushMonthResponse(2027, 1);
+    });
+
+    it('rolls over January -> December (and year - 1) when going to the previous month', () => {
+      component.currentYear.set(2026);
+      component.currentMonth.set(1);
+
+      component.goToPreviousMonth();
+
+      expect(component.currentYear()).toBe(2025);
+      expect(component.currentMonth()).toBe(12);
+
+      flushMonthResponse(2025, 12);
+    });
+
+    it('resets filteredMovements so a previous filter does not leak into the new month', () => {
+      const { startDate, endDate } = currentMonthRange();
+      const filterDebugEl = fixture.debugElement.query(By.directive(MovementFilterComponent));
+      const filterComponent = filterDebugEl.componentInstance as MovementFilterComponent;
+      filterComponent.filterChange.emit({ Type: TypeMovement.EGRESO });
+
+      httpMock
+        .expectOne(`${environment.apiUrl}/movement/${startDate}/${endDate}`)
+        .flush([
+          {
+            _id: 'mov-1',
+            Amount: 500,
+            Category: { _id: 'cat-1', Name: 'Comida', Type: TypeCategory.VARIABLE },
+            Date: new Date('2026-07-01'),
+            Type: TypeMovement.EGRESO,
+          },
+        ]);
+
+      expect(component.filteredMovements()).not.toBeNull();
+
+      component.goToNextMonth();
+
+      expect(component.filteredMovements()).toBeNull();
+
+      const year = component.currentYear();
+      const month = component.currentMonth();
+      flushMonthResponse(year, month);
     });
   });
 });

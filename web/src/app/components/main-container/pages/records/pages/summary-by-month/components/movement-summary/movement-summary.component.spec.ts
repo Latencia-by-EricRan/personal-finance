@@ -4,16 +4,6 @@ import { provideExperimentalZonelessChangeDetection } from '@angular/core';
 import { MovementSummaryComponent } from './movement-summary.component';
 import { ISummary } from '../../../../core';
 
-/** Resolves a CSS custom property to its computed color value via a throwaway probe element. */
-function resolveTextToken(cssVar: string): string {
-  const probe = document.createElement('div');
-  probe.style.color = `var(${cssVar})`;
-  document.body.appendChild(probe);
-  const value = getComputedStyle(probe).color;
-  probe.remove();
-  return value;
-}
-
 describe('MovementSummaryComponent', () => {
   let component: MovementSummaryComponent;
   let fixture: ComponentFixture<MovementSummaryComponent>;
@@ -40,15 +30,45 @@ describe('MovementSummaryComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('renders the expense figure with the --expense token, not a hardcoded color', () => {
-    const expenseEl = fixture.nativeElement.querySelector('.amount-expense') as HTMLElement;
-
-    expect(getComputedStyle(expenseEl).color).toBe(resolveTextToken('--expense'));
+  it('computes net as income minus expense', () => {
+    expect(component.net()).toBe(350);
   });
 
-  it('renders the income figure with the --income token, not a hardcoded color', () => {
-    const incomeEl = fixture.nativeElement.querySelector('.amount-income') as HTMLElement;
+  it('renders three stat tiles: Income, Expense, Net', () => {
+    const tiles = fixture.nativeElement.querySelectorAll('app-stat-tile');
+    expect(tiles.length).toBe(3);
 
-    expect(getComputedStyle(incomeEl).color).toBe(resolveTextToken('--income'));
+    const labels = Array.from(tiles as NodeListOf<HTMLElement>).map(
+      (tile) => tile.querySelector('.stat-tile__label')?.textContent?.trim(),
+    );
+    expect(labels).toEqual(['Income', 'Expense', 'Net']);
+  });
+
+  it('renders the income tile with the income tone and formatted amount', () => {
+    const incomeValue = fixture.nativeElement.querySelector(
+      'app-stat-tile .stat-tile__value--income',
+    ) as HTMLElement;
+
+    expect(incomeValue).not.toBeNull();
+    expect(incomeValue.textContent?.trim()).toContain('500');
+  });
+
+  it('renders the expense tile with the expense tone and formatted amount', () => {
+    const expenseValue = fixture.nativeElement.querySelector(
+      'app-stat-tile .stat-tile__value--expense',
+    ) as HTMLElement;
+
+    expect(expenseValue).not.toBeNull();
+    expect(expenseValue.textContent?.trim()).toContain('150');
+  });
+
+  it('renders the net tile with the default (plain) tone, not income/expense colored', () => {
+    const tiles = fixture.nativeElement.querySelectorAll('app-stat-tile');
+    const netTile = tiles[2] as HTMLElement;
+    const netValue = netTile.querySelector('.stat-tile__value') as HTMLElement;
+
+    expect(netValue.classList.contains('stat-tile__value--income')).toBeFalse();
+    expect(netValue.classList.contains('stat-tile__value--expense')).toBeFalse();
+    expect(netValue.textContent?.trim()).toContain('350');
   });
 });
