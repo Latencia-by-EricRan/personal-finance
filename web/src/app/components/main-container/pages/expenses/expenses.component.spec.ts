@@ -10,9 +10,8 @@ describe('ExpensesComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ExpensesComponent],
-      providers: [provideExperimentalZonelessChangeDetection()]
-    })
-    .compileComponents();
+      providers: [provideExperimentalZonelessChangeDetection()],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ExpensesComponent);
     component = fixture.componentInstance;

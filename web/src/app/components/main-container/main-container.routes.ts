@@ -11,12 +11,12 @@ export const MainContainerRoutes: Routes = [
   {
     path: 'records',
     component: RecordsComponent,
-    children: RecordsRoutes
+    children: RecordsRoutes,
   },
   {
     path: 'cuentas',
     component: CuentasComponent,
-    children: CuentasRoutes
+    children: CuentasRoutes,
   },
   {
     path: 'expenses',
@@ -25,9 +25,11 @@ export const MainContainerRoutes: Routes = [
   {
     path: 'norte',
     component: NorteComponent,
-    children: NorteRoutes
+    children: NorteRoutes,
   },
   {
-    path: '', redirectTo: '/records', pathMatch: 'full'
-  }
+    path: '',
+    redirectTo: '/records',
+    pathMatch: 'full',
+  },
 ];

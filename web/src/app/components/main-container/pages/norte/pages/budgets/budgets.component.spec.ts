@@ -25,10 +25,7 @@ describe('BudgetsComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [BudgetsComponent],
-      providers: [
-        provideExperimentalZonelessChangeDetection(),
-        { provide: BudgetService, useValue: budgetServiceSpy },
-      ],
+      providers: [provideExperimentalZonelessChangeDetection(), { provide: BudgetService, useValue: budgetServiceSpy }],
     }).compileComponents();
 
     budgetService = TestBed.inject(BudgetService) as jasmine.SpyObj<BudgetService>;
@@ -91,9 +88,7 @@ describe('BudgetsComponent', () => {
   });
 
   it('falls back to an empty label when Category is not populated (isPopulatedCategory guard)', () => {
-    budgetService.status.and.returnValue(
-      of([{ ...buildStatus(), Category: 'cat-1' as unknown as ICategory }]),
-    );
+    budgetService.status.and.returnValue(of([{ ...buildStatus(), Category: 'cat-1' as unknown as ICategory }]));
     createComponent();
 
     fixture.detectChanges();

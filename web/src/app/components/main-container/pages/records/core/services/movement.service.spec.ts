@@ -1,9 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideExperimentalZonelessChangeDetection } from '@angular/core';
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 
 import { environment } from '../../../../../../../environments/environment';
@@ -17,11 +14,7 @@ describe('MovementService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        provideExperimentalZonelessChangeDetection(),
-        provideHttpClient(),
-        provideHttpClientTesting(),
-      ],
+      providers: [provideExperimentalZonelessChangeDetection(), provideHttpClient(), provideHttpClientTesting()],
     });
     service = TestBed.inject(MovementService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -70,9 +63,9 @@ describe('MovementService', () => {
 
     it('returns an empty list when the filter matches nothing', () => {
       let result: unknown;
-      service.getMovements('2026-07-01', '2026-07-31', { Type: TypeMovement.INGRESO }).subscribe(
-        (res) => (result = res),
-      );
+      service
+        .getMovements('2026-07-01', '2026-07-31', { Type: TypeMovement.INGRESO })
+        .subscribe((res) => (result = res));
 
       httpMock.expectOne(`${movementUrl}/2026-07-01/2026-07-31`).flush([]);
 

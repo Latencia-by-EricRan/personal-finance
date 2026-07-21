@@ -6,12 +6,7 @@
   aria-label="Donut chart"
 >
   <g [attr.transform]="'translate(' + viewBoxSize() / 2 + ',' + viewBoxSize() / 2 + ') rotate(-90)'">
-    <circle
-      class="donut-chart__track"
-      [attr.r]="radius()"
-      [attr.stroke-width]="strokeWidth()"
-      fill="none"
-    />
+    <circle class="donut-chart__track" [attr.r]="radius()" [attr.stroke-width]="strokeWidth()" fill="none" />
     @if (!isEmpty()) {
       @for (arc of donutArcs(); track arc.color + arc.dashOffset) {
         <circle

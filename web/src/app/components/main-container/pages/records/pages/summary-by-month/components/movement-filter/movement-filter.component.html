@@ -1,43 +1,25 @@
 <div class="movement-filter">
   <form class="movement-filter__form" [formGroup]="form">
-    <select
-      class="movement-filter__select"
-      formControlName="type"
-      aria-label="Filtrar por tipo"
-    >
+    <select class="movement-filter__select" formControlName="type" aria-label="Filtrar por tipo">
       <option value="">Todos los tipos</option>
       <option [value]="TypeMovement.INGRESO">Ingreso</option>
       <option [value]="TypeMovement.EGRESO">Egreso</option>
     </select>
 
-    <select
-      class="movement-filter__select"
-      formControlName="category"
-      aria-label="Filtrar por categoría"
-    >
+    <select class="movement-filter__select" formControlName="category" aria-label="Filtrar por categoría">
       <option value="">Todas las categorías</option>
       @for (cat of categories(); track cat._id) {
         <option [value]="cat._id ?? ''">{{ cat.Name }}</option>
       }
     </select>
 
-    <select
-      class="movement-filter__select"
-      formControlName="account"
-      aria-label="Filtrar por cuenta"
-    >
+    <select class="movement-filter__select" formControlName="account" aria-label="Filtrar por cuenta">
       <option value="">Todas las cuentas</option>
       @for (acc of accounts(); track acc._id) {
         <option [value]="acc._id ?? ''">{{ acc.Name }}</option>
       }
     </select>
 
-    <button
-      type="button"
-      class="movement-filter__clear"
-      (click)="onClear()"
-    >
-      Limpiar filtros
-    </button>
+    <button type="button" class="movement-filter__clear" (click)="onClear()">Limpiar filtros</button>
   </form>
 </div>

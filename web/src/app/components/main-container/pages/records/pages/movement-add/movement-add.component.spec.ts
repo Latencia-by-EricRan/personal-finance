@@ -7,12 +7,7 @@ import { of, throwError } from 'rxjs';
 
 import { MovementAddComponent } from './movement-add.component';
 import { ICreateMovement, IMovement, MovementService, TypeMovement } from '../../core';
-import {
-  AccountType,
-  IAccount,
-  ICategory,
-  TypeCategory,
-} from '../../../../../../core/reference';
+import { AccountType, IAccount, ICategory, TypeCategory } from '../../../../../../core/reference';
 import { environment } from '../../../../../../../environments/environment';
 
 describe('MovementAddComponent', () => {
@@ -26,14 +21,10 @@ describe('MovementAddComponent', () => {
     { _id: 'cat-1', Name: 'Comida', Type: TypeCategory.VARIABLE },
     { _id: 'cat-2', Name: 'Alquiler', Type: TypeCategory.FIJO },
   ];
-  const mockAccounts: IAccount[] = [
-    { _id: 'acc-1', Name: 'Efectivo', Type: AccountType.EFECTIVO, Currency: 'ARS' },
-  ];
+  const mockAccounts: IAccount[] = [{ _id: 'acc-1', Name: 'Efectivo', Type: AccountType.EFECTIVO, Currency: 'ARS' }];
 
   beforeEach(async () => {
-    const movementServiceSpy = jasmine.createSpyObj<MovementService>('MovementService', [
-      'createMovement',
-    ]);
+    const movementServiceSpy = jasmine.createSpyObj<MovementService>('MovementService', ['createMovement']);
     const routerSpy = jasmine.createSpyObj<Router>('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
@@ -152,9 +143,7 @@ describe('MovementAddComponent', () => {
     });
 
     it('shows an error message and preserves the form values when createMovement fails', () => {
-      movementService.createMovement.and.returnValue(
-        throwError(() => new Error('network error')),
-      );
+      movementService.createMovement.and.returnValue(throwError(() => new Error('network error')));
 
       component.onSubmit();
 

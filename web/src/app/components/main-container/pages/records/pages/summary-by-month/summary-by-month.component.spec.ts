@@ -44,20 +44,21 @@ describe('SummaryByMonthComponent', () => {
         provideHttpClientTesting(),
         provideRouter([]),
       ],
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SummaryByMonthComponent);
     component = fixture.componentInstance;
     httpMock = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
 
-    httpMock.expectOne(() => true).flush({
-      month: 1,
-      year: 2026,
-      summary: { items: 0, amount: { income: 0, expense: 0 } },
-      movements: [],
-    });
+    httpMock
+      .expectOne(() => true)
+      .flush({
+        month: 1,
+        year: 2026,
+        summary: { items: 0, amount: { income: 0, expense: 0 } },
+        movements: [],
+      });
     // Re-render so the async-piped @if block instantiates <app-movement-filter />.
     fixture.detectChanges();
 
@@ -109,9 +110,7 @@ describe('SummaryByMonthComponent', () => {
       };
 
       emitFilter({ Type: TypeMovement.EGRESO });
-      httpMock
-        .expectOne(`${environment.apiUrl}/movement/${startDate}/${endDate}`)
-        .flush([filteredMovement]);
+      httpMock.expectOne(`${environment.apiUrl}/movement/${startDate}/${endDate}`).flush([filteredMovement]);
       fixture.detectChanges();
 
       const cards = fixture.nativeElement.querySelectorAll('app-movement-card');

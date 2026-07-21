@@ -10,9 +10,8 @@ describe('RecordsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RecordsComponent],
-      providers: [provideExperimentalZonelessChangeDetection()]
-    })
-    .compileComponents();
+      providers: [provideExperimentalZonelessChangeDetection()],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(RecordsComponent);
     component = fixture.componentInstance;

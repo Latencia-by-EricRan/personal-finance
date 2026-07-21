@@ -29,10 +29,7 @@ describe('ReportsComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [ReportsComponent],
-      providers: [
-        provideExperimentalZonelessChangeDetection(),
-        { provide: ReportService, useValue: reportServiceSpy },
-      ],
+      providers: [provideExperimentalZonelessChangeDetection(), { provide: ReportService, useValue: reportServiceSpy }],
     }).compileComponents();
 
     reportService = TestBed.inject(ReportService) as jasmine.SpyObj<ReportService>;
@@ -61,7 +58,7 @@ describe('ReportsComponent', () => {
     expect(reportService.monthly).toHaveBeenCalledWith(now.getFullYear());
   });
 
-  it('refetches only this page\'s data when the local month selector changes (no route nav)', () => {
+  it("refetches only this page's data when the local month selector changes (no route nav)", () => {
     createComponent();
     fixture.detectChanges();
     expect(reportService.byCategory).toHaveBeenCalledTimes(1);
@@ -151,8 +148,9 @@ describe('ReportsComponent', () => {
     createComponent();
     fixture.detectChanges();
 
-    const headings = Array.from(fixture.nativeElement.querySelectorAll('.reports__section h2') as NodeListOf<HTMLElement>)
-      .map((el) => el.textContent?.trim());
+    const headings = Array.from(
+      fixture.nativeElement.querySelectorAll('.reports__section h2') as NodeListOf<HTMLElement>,
+    ).map((el) => el.textContent?.trim());
 
     expect(headings).toContain('Expenses by Category');
     expect(headings.some((h) => h?.toLowerCase().includes('income by category'))).toBe(false);

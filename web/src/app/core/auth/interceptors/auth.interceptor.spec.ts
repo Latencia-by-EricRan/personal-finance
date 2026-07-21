@@ -1,15 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideExperimentalZonelessChangeDetection } from '@angular/core';
-import {
-  HttpClient,
-  HttpErrorResponse,
-  provideHttpClient,
-  withInterceptors,
-} from '@angular/common/http';
-import {
-  HttpTestingController,
-  provideHttpClientTesting,
-} from '@angular/common/http/testing';
+import { HttpClient, HttpErrorResponse, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Router } from '@angular/router';
 
 import { authInterceptor } from './auth.interceptor';
@@ -22,10 +14,11 @@ describe('authInterceptor', () => {
   let router: jasmine.SpyObj<Router>;
 
   beforeEach(() => {
-    const tokenStorageSpy = jasmine.createSpyObj<TokenStorageService>(
-      'TokenStorageService',
-      ['getToken', 'setToken', 'clear'],
-    );
+    const tokenStorageSpy = jasmine.createSpyObj<TokenStorageService>('TokenStorageService', [
+      'getToken',
+      'setToken',
+      'clear',
+    ]);
     const routerSpy = jasmine.createSpyObj<Router>('Router', ['navigateByUrl']);
 
     TestBed.configureTestingModule({
@@ -84,10 +77,7 @@ describe('authInterceptor', () => {
     http.get('/movement').subscribe({ error: () => undefined });
 
     const req = httpMock.expectOne('/movement');
-    req.flush(
-      { message: 'Unauthorized' },
-      { status: 401, statusText: 'Unauthorized' },
-    );
+    req.flush({ message: 'Unauthorized' }, { status: 401, statusText: 'Unauthorized' });
 
     expect(tokenStorage.clear).toHaveBeenCalled();
     expect(router.navigateByUrl).toHaveBeenCalledWith('/login');
@@ -100,10 +90,7 @@ describe('authInterceptor', () => {
     http.get('/movement').subscribe({ error: (err) => (caught = err) });
 
     const req = httpMock.expectOne('/movement');
-    req.flush(
-      { message: 'Unauthorized' },
-      { status: 401, statusText: 'Unauthorized' },
-    );
+    req.flush({ message: 'Unauthorized' }, { status: 401, statusText: 'Unauthorized' });
 
     expect(caught?.status).toBe(401);
   });
@@ -114,10 +101,7 @@ describe('authInterceptor', () => {
     http.get('/movement').subscribe({ error: () => undefined });
 
     const req = httpMock.expectOne('/movement');
-    req.flush(
-      { message: 'Server error' },
-      { status: 500, statusText: 'Server Error' },
-    );
+    req.flush({ message: 'Server error' }, { status: 500, statusText: 'Server Error' });
 
     expect(tokenStorage.clear).not.toHaveBeenCalled();
     expect(router.navigateByUrl).not.toHaveBeenCalled();

@@ -5,13 +5,7 @@
   role="img"
   aria-label="Bar chart"
 >
-  <line
-    class="bar-chart__baseline"
-    [attr.x1]="0"
-    [attr.y1]="height()"
-    [attr.x2]="chartWidth()"
-    [attr.y2]="height()"
-  />
+  <line class="bar-chart__baseline" [attr.x1]="0" [attr.y1]="height()" [attr.x2]="chartWidth()" [attr.y2]="height()" />
   @for (bar of bars(); track bar.label) {
     <rect
       class="bar-chart__bar"
