@@ -40,7 +40,11 @@ export class MovementFilterComponent {
     this.form.reset({ type: NO_FILTER, category: NO_FILTER, account: NO_FILTER });
   }
 
-  private emitFilter(value: { type?: TypeMovement | ''; category?: string; account?: string }): void {
+  private emitFilter(value: {
+    type?: TypeMovement | '';
+    category?: string;
+    account?: string;
+  }): void {
     const filter: IMovementFilter = {};
 
     if (value.type) {

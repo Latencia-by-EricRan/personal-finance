@@ -6,13 +6,14 @@ import { API_BASE_URL } from '../../../../../../core/tokens/api-base-url.token';
 import { ICreateMovement, IMovement, IMovementFilter, IMovementResponse } from '../models';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class MovementService {
+
   private readonly mainUrl = inject(API_BASE_URL);
   private readonly movementUrl = this.mainUrl + '/movement';
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient) { }
 
   getMovementsByMonth(year: number, month: number): Observable<IMovementResponse> {
     const url = `${this.movementUrl}/summary/${month}/${year}`;
@@ -41,4 +42,5 @@ export class MovementService {
   deleteMovement(id: string): Observable<void> {
     return this.http.delete<void>(`${this.movementUrl}/${id}`);
   }
+
 }

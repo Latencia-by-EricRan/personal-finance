@@ -1,6 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { provideExperimentalZonelessChangeDetection } from '@angular/core';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import {
+  HttpTestingController,
+  provideHttpClientTesting,
+} from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 
 import { environment } from '../../../../environments/environment';
@@ -12,11 +15,17 @@ describe('AccountService', () => {
   let httpMock: HttpTestingController;
   const accountUrl = `${environment.apiUrl}/account`;
 
-  const accounts: IAccount[] = [{ Name: 'Efectivo', Type: AccountType.EFECTIVO, Currency: 'ARS', _id: 'acc-1' }];
+  const accounts: IAccount[] = [
+    { Name: 'Efectivo', Type: AccountType.EFECTIVO, Currency: 'ARS', _id: 'acc-1' },
+  ];
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideExperimentalZonelessChangeDetection(), provideHttpClient(), provideHttpClientTesting()],
+      providers: [
+        provideExperimentalZonelessChangeDetection(),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+      ],
     });
     service = TestBed.inject(AccountService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -65,7 +74,9 @@ describe('AccountService', () => {
       service.ensureLoaded();
       httpMock.expectOne(accountUrl).flush(accounts);
 
-      const updated: IAccount[] = [{ Name: 'Banco', Type: AccountType.BANCO, Currency: 'ARS', _id: 'acc-2' }];
+      const updated: IAccount[] = [
+        { Name: 'Banco', Type: AccountType.BANCO, Currency: 'ARS', _id: 'acc-2' },
+      ];
       service.refresh();
 
       const req = httpMock.expectOne(accountUrl);

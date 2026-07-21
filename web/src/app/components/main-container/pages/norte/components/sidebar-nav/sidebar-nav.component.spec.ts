@@ -34,7 +34,8 @@ describe('SidebarNavComponent', () => {
           { path: 'norte/budgets', component: StubComponent },
         ]),
       ],
-    }).compileComponents();
+    })
+    .compileComponents();
 
     router = TestBed.inject(Router);
     fixture = TestBed.createComponent(SidebarNavComponent);
@@ -85,9 +86,8 @@ describe('SidebarNavComponent', () => {
   it('links to /norte/overview, /norte/reports, /norte/budgets', async () => {
     await navigateAndSettle('/norte/overview');
 
-    const hrefs = Array.from(
-      fixture.nativeElement.querySelectorAll('.sidebar-nav__link') as NodeListOf<HTMLAnchorElement>,
-    ).map((a) => a.getAttribute('href'));
+    const hrefs = Array.from(fixture.nativeElement.querySelectorAll('.sidebar-nav__link') as NodeListOf<HTMLAnchorElement>)
+      .map((a) => a.getAttribute('href'));
 
     expect(hrefs).toEqual(['/norte/overview', '/norte/reports', '/norte/budgets']);
   });

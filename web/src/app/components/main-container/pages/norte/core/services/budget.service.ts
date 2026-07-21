@@ -6,13 +6,14 @@ import { API_BASE_URL } from '../../../../../../core/tokens/api-base-url.token';
 import { ICreateBudget, IBudgetDeleted, IBudgetPatch, IBudgetStatus, IBudgetView } from '../models';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class BudgetService {
+
   private readonly mainUrl = inject(API_BASE_URL);
   private readonly budgetUrl = this.mainUrl + '/budget';
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient) { }
 
   list(): Observable<IBudgetView[]> {
     return this.http.get<IBudgetView[]>(this.budgetUrl);
@@ -33,4 +34,5 @@ export class BudgetService {
   remove(id: string): Observable<IBudgetDeleted> {
     return this.http.delete<IBudgetDeleted>(`${this.budgetUrl}/${id}`);
   }
+
 }

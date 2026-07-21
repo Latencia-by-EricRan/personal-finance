@@ -8,20 +8,21 @@ import { MatFabButton } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-summary-by-month',
-  imports: [
-    AsyncPipe,
-    MovementCardComponent,
-    MovementFilterComponent,
-    MovementSummaryComponent,
-    MatIcon,
-    MatFabButton,
-    RouterLink,
-  ],
-  templateUrl: './summary-by-month.component.html',
-  styleUrl: './summary-by-month.component.scss',
+    selector: 'app-summary-by-month',
+    imports: [
+      AsyncPipe,
+      MovementCardComponent,
+      MovementFilterComponent,
+      MovementSummaryComponent,
+      MatIcon,
+      MatFabButton,
+      RouterLink,
+    ],
+    templateUrl: './summary-by-month.component.html',
+    styleUrl: './summary-by-month.component.scss'
 })
 export class SummaryByMonthComponent {
+
   private readonly movementSvc = inject(MovementService);
   private readonly now = new Date();
   public readonly respMovements$ = this.movementSvc
@@ -52,4 +53,5 @@ export class SummaryByMonthComponent {
   private static toIsoDate(date: Date): string {
     return date.toISOString().slice(0, 10);
   }
+
 }

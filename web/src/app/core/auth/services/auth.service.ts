@@ -16,12 +16,14 @@ export class AuthService {
   readonly isAuthenticated = this._isAuthenticated.asReadonly();
 
   login(credentials: ICredentials): Observable<ILoginResponse> {
-    return this.http.post<ILoginResponse>(`${this.baseUrl}/auth/login`, credentials).pipe(
-      tap((response) => {
-        this.tokenStorage.setToken(response.token);
-        this._isAuthenticated.set(true);
-      }),
-    );
+    return this.http
+      .post<ILoginResponse>(`${this.baseUrl}/auth/login`, credentials)
+      .pipe(
+        tap((response) => {
+          this.tokenStorage.setToken(response.token);
+          this._isAuthenticated.set(true);
+        }),
+      );
   }
 
   logout(): void {

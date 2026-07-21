@@ -1,1 +1,1 @@
-export * from './movement-add.component';
+export * from './movement-add.component'
