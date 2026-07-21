@@ -1,14 +1,14 @@
 import { Component, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 import { ICreateMovement, MovementService, TypeMovement } from '../../core';
 import { AccountService, CategoryService } from '../../../../../../core/reference';
+import { IconButtonComponent, NorteButtonComponent } from '../../../../../../shared/ui';
 
 @Component({
   selector: 'app-movement-add',
-  imports: [ReactiveFormsModule, MatButtonToggleModule],
+  imports: [ReactiveFormsModule, IconButtonComponent, NorteButtonComponent],
   templateUrl: './movement-add.component.html',
   styleUrl: './movement-add.component.scss',
 })
@@ -27,6 +27,10 @@ export class MovementAddComponent {
   readonly success = signal(false);
   readonly errorMessage = signal<string | null>(null);
 
+  /** Mirrors `form.controls.type.value` so the template can react to it under zoneless CD
+   *  (the toggle and the amount display both need the current type to drive their styling). */
+  readonly currentType = signal<TypeMovement>(TypeMovement.EGRESO);
+
   readonly form = this.fb.group({
     type: this.fb.control<TypeMovement>(TypeMovement.EGRESO, [Validators.required]),
     amount: this.fb.control<number>(0, [Validators.required, Validators.min(0.01)]),
@@ -43,6 +47,15 @@ export class MovementAddComponent {
 
   private static today(): string {
     return new Date().toISOString().slice(0, 10);
+  }
+
+  selectType(type: TypeMovement): void {
+    this.form.controls.type.setValue(type);
+    this.currentType.set(type);
+  }
+
+  close(): void {
+    this.router.navigate(['/records/summary-by-month']);
   }
 
   onSubmit(): void {
@@ -77,6 +90,7 @@ export class MovementAddComponent {
           date: MovementAddComponent.today(),
           description: '',
         });
+        this.currentType.set(TypeMovement.EGRESO);
         this.router.navigate(['/records/summary-by-month']);
       },
       error: () => {
