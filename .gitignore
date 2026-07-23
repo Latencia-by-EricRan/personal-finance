@@ -1,7 +1,12 @@
 # Local AI runtime state
 .atl/
 .claude/
+.playwright*/
 
 # IDE / OS
 .idea/
 .DS_Store
+
+# Source
+!src/fonts/*.zip
+!src/fonts/*.md
